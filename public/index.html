@@ -44,6 +44,10 @@
         <button id="adminPanelNavBtn" class="nav-btn" style="display: none; background: linear-gradient(135deg, #ef4444, #991b1b); box-shadow: 0 4px 12px rgba(239,68,68,0.4);" onclick="openAdminPanel()">👑 Admin Paneli</button>
         <button id="updatesNavBtn" class="nav-btn" style="background: linear-gradient(135deg, #6366f1, #a855f7); box-shadow: 0 4px 12px rgba(99,102,241,0.35); font-weight: 800;" onclick="openUpdatesModal()">📢 Yenilikler (v1.3)</button>
         <button class="nav-btn" style="background: linear-gradient(135deg, #475569, #334155); box-shadow: 0 4px 12px rgba(0,0,0,0.3);" onclick="openSettingsModal()">⚙️ Ayarlar</button>
+        <button id="globalVoiceNavBtn" class="nav-btn" style="background: linear-gradient(135deg, #334155, #1e293b); display: flex; align-items: center; gap: 6px; font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); transition: all 0.2s;" onclick="toggleGlobalVoiceChat()" title="Canlı Sesli Sohbet (Klavyeden 'C' tuşuna basarak da konuşabilirsiniz)">
+            <span id="globalVoiceIcon">🎤</span>
+            <span id="globalVoiceText">Sesli Sohbet (C)</span>
+        </button>
         <button id="chatToggleBtn" class="nav-btn btn-chat" onclick="toggleChatPanel()">💬 Chat Kapat</button>
     </div>
 
@@ -868,6 +872,10 @@
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" id="bjVoiceToggleBtn" onclick="toggleGlobalVoiceChat('blackjack')" style="padding: 4px 10px; font-size: 12px; font-weight: 800; background: linear-gradient(135deg, #475569, #334155); border: 1px solid #64748b; color: white; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.15s;" title="Blackjack Canlı Sesli Sohbet (Klavyeden 'C' tuşuna basarak da konuşabilirsiniz)">
+                        <span id="bjVoiceIcon">🎤</span>
+                        <span id="bjVoiceText">Ses Aç (C)</span>
+                    </button>
                     <div class="bj-badge bj-spectator-badge" id="bjSpectatorCountBadge">👥 <b id="bjSpectatorCount">0</b></div>
                     <div class="bj-badge bj-money-badge">💰 <b id="bjUserMoney">1000</b> TL</div>
                     <button class="bj-close-btn" onclick="closeBlackjackModal()" title="Masadan Ayrıl" style="padding: 4px 10px; font-size: 12px; font-weight: 800; background: rgba(239,68,68,0.25); border: 1px solid #ef4444; color: #fca5a5; border-radius: 6px; cursor: pointer;">✕ Kapat</button>

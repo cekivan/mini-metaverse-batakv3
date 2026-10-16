@@ -3578,3 +3578,86 @@ body {
 .paytable-item.cherry {
     color: #fca5a5;
 }
+
+/* =========================================================
+   CANLI SESLİ SOHBET (VOICE CHAT) & "C" TUŞU GÖSTERGELERİ
+   ========================================================= */
+
+/* Ses Bildirim Toast'u */
+.voice-toast {
+    position: fixed;
+    top: 75px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(15, 23, 42, 0.94);
+    color: #f8fafc;
+    border: 1.5px solid #10b981;
+    border-radius: 9999px;
+    padding: 8px 22px;
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(16, 185, 129, 0.4);
+    z-index: 100000;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+.voice-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Blackjack Masasında Konuşan Oyuncu Koltuğu Parıldaması */
+.bj-seat-box.voice-speaking {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 24px rgba(16, 185, 129, 0.9), inset 0 0 12px rgba(16, 185, 129, 0.35) !important;
+    animation: bjVoiceSeatPulse 1s infinite alternate ease-in-out !important;
+}
+
+@keyframes bjVoiceSeatPulse {
+    0% {
+        box-shadow: 0 0 16px rgba(16, 185, 129, 0.5), inset 0 0 8px rgba(16, 185, 129, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 30px rgba(16, 185, 129, 1), inset 0 0 15px rgba(16, 185, 129, 0.5);
+    }
+}
+
+/* 101 Okey ve Masalarda Konuşma Dalgaları */
+.voice-wave-bars {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 12px;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
+.voice-wave-bars span {
+    width: 2.5px;
+    background: #10b981;
+    border-radius: 1px;
+    animation: voiceBarWave 0.6s infinite ease-in-out alternate;
+}
+
+.voice-wave-bars span:nth-child(1) { height: 4px; animation-delay: 0.1s; }
+.voice-wave-bars span:nth-child(2) { height: 10px; animation-delay: 0.25s; }
+.voice-wave-bars span:nth-child(3) { height: 6px; animation-delay: 0.4s; }
+
+@keyframes voiceBarWave {
+    0% { height: 3px; }
+    100% { height: 12px; }
+}
+
+/* Üst Bar Sesli Sohbet Butonu Hover & Efekt */
+#globalVoiceNavBtn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.15);
+}
+
+#bjVoiceToggleBtn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.15);
+}

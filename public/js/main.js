@@ -295,6 +295,9 @@ function changeRoom(newRoom, targetSpawn) {
     currentRoom = newRoom;
     roomTransitionFadeAlpha = 0.95; // Sinematik mekan geçiş kararması (Fade in)
     if (typeof bgCache !== 'undefined') bgCache.invalidate();
+    if (typeof handleRoomChangedVoice === 'function') {
+        handleRoomChangedVoice(newRoom);
+    }
     if (newRoom !== 'sahil') {
         if (typeof myId !== 'undefined' && players[myId]) {
             players[myId].hasSwanBoat = false;
@@ -1555,6 +1558,14 @@ window.addEventListener('blur', () => {
 window.addEventListener('keydown', (e) => {
     let activeTag = document.activeElement ? document.activeElement.tagName : '';
     if (['INPUT', 'TEXTAREA', 'SELECT'].includes(activeTag) || document.activeElement?.isContentEditable) return;
+
+    // 'C' Tuşu ile Oyun İçi veya Oyun Dışı Sesli Sohbeti Aç / Kapat / Konuş
+    if (e.key === 'c' || e.key === 'C') {
+        if (typeof toggleGlobalVoiceChat === 'function') {
+            toggleGlobalVoiceChat();
+        }
+        return;
+    }
 
     // Aktif oyun masası veya tam ekran pencereler açıkken arka planda karakterin yürümesini engelle
     let gameModal = document.getElementById('gameModal');

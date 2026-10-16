@@ -13,6 +13,12 @@ function openBlackjackModal() {
         socket.emit('blackjack_join');
     }
 
+    if (window.switchVoiceChannel && window.isVoiceConnected) {
+        window.switchVoiceChannel('blackjack');
+    } else if (window.setVoiceTable) {
+        window.setVoiceTable('blackjack');
+    }
+
     updateBlackjackUserMoney();
     if (window.playSound) window.playSound('click');
 }
@@ -25,6 +31,12 @@ function closeBlackjackModal() {
 
     if (window.socket) {
         socket.emit('blackjack_leave');
+    }
+
+    if (window.switchVoiceChannel && window.isVoiceConnected) {
+        window.switchVoiceChannel('room_' + (window.currentRoom || 'sokak'));
+    } else if (window.setVoiceTable) {
+        window.setVoiceTable('room_' + (window.currentRoom || 'sokak'));
     }
 }
 window.closeBlackjackModal = closeBlackjackModal;
@@ -297,6 +309,12 @@ function renderSeats(table) {
             box.classList.add('active-turn');
         } else {
             box.classList.remove('active-turn');
+        }
+
+        if (window.speakingPeers && window.speakingPeers.has(seat.socketId)) {
+            box.classList.add('voice-speaking');
+        } else {
+            box.classList.remove('voice-speaking');
         }
 
         if (!isOccupied) {

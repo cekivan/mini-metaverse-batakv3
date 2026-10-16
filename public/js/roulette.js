@@ -4,8 +4,8 @@ let rouletteSelectedChip = 50;
 let rouletteBets = {};
 let isRouletteSpinning = false;
 let rouletteWheelAngle = 0;
-let rouletteBallAngle = 0;
-let rouletteBallRadius = 92;
+let rouletteBallAngle = -Math.PI / 2;
+let rouletteBallRadius = 88;
 let rouletteAnimId = null;
 
 const ROULETTE_WHEEL_ORDER = [
@@ -159,9 +159,9 @@ function drawRouletteWheel(canvas, wheelAngle, ballAngle, ballRadius) {
     const height = canvas.height;
     const centerX = width / 2;
     const centerY = height / 2;
-    const outerRadius = width / 2 - 8;
-    const pocketOuter = outerRadius - 18;
-    const pocketInner = pocketOuter - 28;
+    const outerRadius = width / 2 - 6;
+    const pocketOuter = outerRadius - 16;
+    const pocketInner = pocketOuter - 26;
     const centerRadius = pocketInner - 8;
 
     ctx.clearRect(0, 0, width, height);
@@ -181,10 +181,10 @@ function drawRouletteWheel(canvas, wheelAngle, ballAngle, ballRadius) {
     ctx.lineWidth = 3;
     ctx.stroke();
 
-    // Dış top oluğu (Ball track)
+    // Dış top oluğu (Ball track - topun ilk turları attığı pist)
     ctx.fillStyle = '#0f172a';
     ctx.beginPath();
-    ctx.arc(centerX, centerY, pocketOuter + 14, 0, Math.PI * 2);
+    ctx.arc(centerX, centerY, pocketOuter + 12, 0, Math.PI * 2);
     ctx.fill();
     ctx.strokeStyle = '#475569';
     ctx.lineWidth = 1.5;
@@ -201,10 +201,13 @@ function drawRouletteWheel(canvas, wheelAngle, ballAngle, ballRadius) {
     for (let i = 0; i < 37; i++) {
         let num = ROULETTE_WHEEL_ORDER[i];
         let color = getRouletteNumColor(num);
-        let startAngle = i * sliceAngle - sliceAngle / 2;
-        let endAngle = startAngle + sliceAngle;
 
-        // Dilim Rengi
+        // Her dilimin merkezi: -Math.PI / 2 (12 o'clock / tepe) başlangıçlı saat yönünde artan açı
+        let slotCenterAngle = i * sliceAngle - Math.PI / 2;
+        let startAngle = slotCenterAngle - sliceAngle / 2;
+        let endAngle = slotCenterAngle + sliceAngle / 2;
+
+        // Dilim Rengi (Renkli cep)
         ctx.fillStyle = color;
         ctx.beginPath();
         ctx.moveTo(0, 0);
@@ -212,21 +215,34 @@ function drawRouletteWheel(canvas, wheelAngle, ballAngle, ballRadius) {
         ctx.closePath();
         ctx.fill();
 
-        // Pirinç Bölmeler
+        // Pirinç Bölmeler (Pockets arasındaki altın ayraç çizgileri)
         ctx.strokeStyle = '#facc15';
         ctx.lineWidth = 1;
         ctx.stroke();
 
-        // Sayı Metni
+        // Sayı Metni (Pocket Number Text)
+        // Sayıyı tam olarak bu dilimin merkez çizgisine yerleştiriyoruz (asla kaymaz)
         ctx.save();
-        ctx.rotate(i * sliceAngle);
+        ctx.rotate(slotCenterAngle);
+        let textRadius = pocketOuter - 10;
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 9px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(num.toString(), 0, -pocketOuter + 14);
+
+        // Sayıyı teğetsel / dik ve merkeze doğru okunaklı çiz
+        ctx.translate(textRadius, 0);
+        ctx.rotate(Math.PI / 2);
+        ctx.fillText(num.toString(), 0, 0);
         ctx.restore();
     }
+
+    // Cep İç Kenar Pirinç Çemberi
+    ctx.strokeStyle = '#eab308';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(0, 0, pocketInner, 0, Math.PI * 2);
+    ctx.stroke();
 
     // İç Altın Göbek Çemberi
     let hubGrad = ctx.createRadialGradient(0, 0, 5, 0, 0, centerRadius);
@@ -265,7 +281,7 @@ function drawRouletteWheel(canvas, wheelAngle, ballAngle, ballRadius) {
     bGrad.addColorStop(0.7, '#f8fafc');
     bGrad.addColorStop(1, '#94a3b8');
     ctx.fillStyle = bGrad;
-    ctx.shadowColor = 'rgba(0,0,0,0.8)';
+    ctx.shadowColor = 'rgba(0,0,0,0.85)';
     ctx.shadowBlur = 6;
     ctx.beginPath();
     ctx.arc(ballX, ballY, 4.5, 0, Math.PI * 2);
@@ -304,22 +320,29 @@ function animateRouletteSpin(targetIndex, onComplete) {
     let startTime = performance.now();
     let duration = 4600; // 4.6 saniye akıcı dönüş
 
-    // Hedef açı hesaplama: 37 dilim, indeks saat yönünde dizili
-    // Top hedef cebe indiğinde: wheelAngle + (targetIndex * sliceAngle) = ballAngle - PI/2
     const sliceAngle = (Math.PI * 2) / 37;
-    let targetSliceAngle = targetIndex * sliceAngle;
 
     let initialWheelAngle = rouletteWheelAngle;
-    let totalWheelRotations = (Math.PI * 2) * 5; // 5 tam tur
+    let totalWheelRotations = (Math.PI * 2) * 5; // Çark saat yönünde 5 tam tur döner
     let finalWheelAngle = initialWheelAngle + totalWheelRotations;
 
-    // Top ters yönde 7 tur atarak yavaşlayıp cebe yerleşir
-    let initialBallAngle = rouletteBallAngle;
-    let totalBallRotations = (Math.PI * 2) * -7;
-    let finalBallAngle = initialBallAngle + totalBallRotations - (finalWheelAngle + targetSliceAngle) - Math.PI / 2;
+    // Hedef cebin bitişteki mutlak açısı:
+    // slotCenterAngle = targetIndex * sliceAngle - Math.PI / 2
+    // Çark finalWheelAngle kadar döndüğünde, hedef cep tam olarak şu mutlak açıda olur:
+    let targetSlotFinalAngle = finalWheelAngle + (targetIndex * sliceAngle) - (Math.PI / 2);
 
-    let startRadius = canvas.width / 2 - 20; // Dış pist
-    let pocketRadius = canvas.width / 2 - 38; // Cep yarıçapı
+    // Top saat yönünün tersine (negatif açıda) döner (Gerçek rulet fiziği)
+    let initialBallAngle = rouletteBallAngle;
+    let diff = (targetSlotFinalAngle - initialBallAngle) % (Math.PI * 2);
+    if (diff > 0) {
+        diff -= (Math.PI * 2);
+    }
+    // 7 tam tur ters yönde ekle
+    let totalBallDelta = diff - ((Math.PI * 2) * 7);
+    let finalBallAngle = initialBallAngle + totalBallDelta;
+
+    let startRadius = canvas.width / 2 - 14; // Dış pistte dönüş (116px)
+    let pocketRadius = 88; // Cep içindeki duruş yarıçapı (88px)
 
     function frame(now) {
         let elapsed = now - startTime;
@@ -329,9 +352,9 @@ function animateRouletteSpin(targetIndex, onComplete) {
         let easeOut = 1 - Math.pow(1 - progress, 3.5);
 
         rouletteWheelAngle = initialWheelAngle + totalWheelRotations * easeOut;
-        rouletteBallAngle = initialBallAngle + (finalBallAngle - initialBallAngle) * easeOut;
+        rouletteBallAngle = initialBallAngle + totalBallDelta * easeOut;
 
-        // Topun piste ve son 1 saniyede cebe düşmesi
+        // Topun piste ve son %35'lik kısımda cebe düşmesi
         if (progress > 0.65) {
             let dropProgress = (progress - 0.65) / 0.35;
             // Küçük sekme etkisi (bounce)
@@ -347,6 +370,8 @@ function animateRouletteSpin(targetIndex, onComplete) {
             rouletteAnimId = requestAnimationFrame(frame);
         } else {
             rouletteBallRadius = pocketRadius;
+            rouletteWheelAngle = finalWheelAngle;
+            rouletteBallAngle = finalBallAngle;
             drawRouletteWheel(canvas, rouletteWheelAngle, rouletteBallAngle, rouletteBallRadius);
             isRouletteSpinning = false;
             updateRouletteBetUI();
