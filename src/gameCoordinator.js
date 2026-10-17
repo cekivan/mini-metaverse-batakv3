@@ -582,6 +582,7 @@ function sendTavlaUpdate(game, io) {
         dice: game.dice,
         remainingMoves: game.remainingMoves,
         hasRolled: game.hasRolled,
+        noMoves: !!game.noMoves,
         winner: game.winner,
         gameOver: game.gameOver,
         playerProfiles: game.playerProfiles,
@@ -599,6 +600,17 @@ function sendTavlaUpdate(game, io) {
     }
 
     if (!game.gameOver) {
+        // Eğer oyuncu zar attıysa fakat oynayacak hamlesi yoksa, 1.6 saniye sonra sırayı devret
+        if (game.noMoves) {
+            setTimeout(() => {
+                if (game.noMoves && !game.gameOver) {
+                    tavlaEngine.passTurn(game);
+                    sendTavlaUpdate(game, io);
+                }
+            }, 1600);
+            return;
+        }
+
         let currentPid = game.players[game.turnIndex];
         let isBot = currentPid && (currentPid.startsWith('bot_') || game.playerProfiles?.[currentPid]?.isBot);
         if (isBot) {

@@ -1575,9 +1575,10 @@ window.addEventListener('keydown', (e) => {
     let ganyanModal = document.getElementById('ganyanKuponModal');
     if (ganyanModal && ganyanModal.style.display === 'flex') return;
 
-    if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') { myFacing = 'up'; standUpIfSitting('up'); keys.w = true; targetWalkPos = null; }
+    let isMounted = !!(players[myId] && players[myId].hasHorse);
+    if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') { if (!isMounted) myFacing = 'up'; standUpIfSitting('up'); keys.w = true; targetWalkPos = null; }
     if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') { myFacing = 'left'; standUpIfSitting('left'); keys.a = true; targetWalkPos = null; }
-    if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') { myFacing = 'down'; standUpIfSitting('down'); keys.s = true; targetWalkPos = null; }
+    if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') { if (!isMounted) myFacing = 'down'; standUpIfSitting('down'); keys.s = true; targetWalkPos = null; }
     if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') { myFacing = 'right'; standUpIfSitting('right'); keys.d = true; targetWalkPos = null; }
     if (e.key === 'e' || e.key === 'E') { triggerMobileInteract(); }
 });
@@ -1592,8 +1593,14 @@ window.addEventListener('keyup', (e) => {
 function setKey(dir, isPressed) {
     keys[dir] = isPressed;
     if (isPressed) {
+        let isMounted = !!(players[myId] && players[myId].hasHorse);
         let dirName = dir === 'w' ? 'up' : (dir === 's' ? 'down' : (dir === 'a' ? 'left' : 'right'));
-        myFacing = dirName;
+        if (isMounted) {
+            if (dir === 'a') myFacing = 'left';
+            else if (dir === 'd') myFacing = 'right';
+        } else {
+            myFacing = dirName;
+        }
         standUpIfSitting(dirName);
         targetWalkPos = null;
     }
@@ -1902,10 +1909,16 @@ function gameLoop(timestamp) {
 
         if (moveDx !== 0 || moveDy !== 0) {
             let curDir = keys.w ? 'up' : (keys.s ? 'down' : (keys.a ? 'left' : 'right'));
+            if (isMounted) {
+                if (keys.a) curDir = 'left';
+                else if (keys.d) curDir = 'right';
+                else curDir = (myFacing === 'left') ? 'left' : 'right';
+                myFacing = curDir;
+            }
             standUpIfSitting(curDir);
             isMoving = true;
             let prevWalkCycle = walkCycle;
-            walkCycle += isMounted ? 0.35 : 0.16;
+            walkCycle += isMounted ? 0.38 : 0.16;
 
             // Ritmik doğal adım sesi (Footsteps SFX)
             if (Math.floor(walkCycle / Math.PI) !== Math.floor(prevWalkCycle / Math.PI)) {

@@ -2,13 +2,13 @@
 const dataManager = require('../dataManager');
 
 const SYMBOL_WEIGHTS = [
-    { id: 'cherry', icon: '🍒', name: 'Kiraz', weight: 28 },
-    { id: 'lemon', icon: '🍋', name: 'Limon', weight: 24 },
+    { id: 'cherry', icon: '🍒', name: 'Kiraz', weight: 32 },
+    { id: 'lemon', icon: '🍋', name: 'Limon', weight: 15 },
     { id: 'grape', icon: '🍇', name: 'Üzüm', weight: 18 },
     { id: 'watermelon', icon: '🍉', name: 'Karpuz', weight: 14 },
-    { id: 'bell', icon: '🔔', name: 'Çan', weight: 8 },
-    { id: 'diamond', icon: '💎', name: 'Elmas', weight: 5 },
-    { id: 'seven', icon: '7️⃣', name: 'Yedi 777', weight: 3 }
+    { id: 'bell', icon: '🔔', name: 'Çan', weight: 9 },
+    { id: 'diamond', icon: '💎', name: 'Elmas', weight: 6 },
+    { id: 'seven', icon: '7️⃣', name: 'Yedi 777', weight: 6 }
 ];
 
 const ALLOWED_BETS = [10, 25, 50, 100, 250, 500, 1000];

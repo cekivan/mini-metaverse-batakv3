@@ -150,17 +150,16 @@ function spinSlot() {
 window.spinSlot = spinSlot;
 
 function animateSlotLever() {
-    const arm = document.getElementById('slotLeverArm');
-    const knob = document.getElementById('slotLeverKnob');
-    if (!arm || !knob) return;
+    const assembly = document.getElementById('slotLeverAssembly') || document.getElementById('slotLeverArm');
+    if (!assembly) return;
 
-    arm.style.transform = 'scaleY(0.35) rotate(15deg)';
-    knob.style.transform = 'translateY(55px)';
+    assembly.style.transition = 'transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1)';
+    assembly.style.transform = 'rotate(48deg) scaleY(0.65)';
 
     setTimeout(() => {
-        arm.style.transform = 'scaleY(1) rotate(0deg)';
-        knob.style.transform = 'translateY(0)';
-    }, 320);
+        assembly.style.transition = 'transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        assembly.style.transform = 'rotate(0deg) scaleY(1)';
+    }, 240);
 
     if (window.playSound) window.playSound('click');
 }

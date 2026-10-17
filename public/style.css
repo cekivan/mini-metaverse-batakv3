@@ -401,23 +401,24 @@ body {
     padding: 10px;
 }
 
-/* GERÇEKÇİ İSKAMBİL KARTI TASARIMI */
+/* GERÇEKÇİ İSKAMBİL KARTI TASARIMI (+%10 Kart Boyutu, +%15 Sembol Boyutu) */
 .card { 
-    width: 48px; 
-    height: 72px; 
+    width: 53px; 
+    height: 79px; 
     background: linear-gradient(135deg, #ffffff 0%, #f1f2f6 100%);
-    border-radius: 6px; 
+    border-radius: 7px; 
     display: flex; 
     flex-direction: column;
     justify-content: space-between;
-    padding: 4px;
+    padding: 5px;
     font-weight: 800; 
     cursor: pointer; 
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2); 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.32), 0 1px 2px rgba(0,0,0,0.2); 
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
     user-select: none;
     border: 1px solid #dcdde1;
+    box-sizing: border-box;
 }
 
 .card:hover { 
@@ -428,26 +429,34 @@ body {
 }
 
 .card .top-index {
-    font-size: 10px;
-    line-height: 1;
+    font-size: 11.5px;
+    line-height: 1.05;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
+.card .top-index span:last-child {
+    font-size: 12.5px; /* Semboller +%15 */
+}
+
 .card .center-pip {
-    font-size: 20px;
+    font-size: 23px; /* 20px -> 23px (+%15) */
     line-height: 1;
     align-self: center;
 }
 
 .card .bot-index {
-    font-size: 10px;
-    line-height: 1;
+    font-size: 11.5px;
+    line-height: 1.05;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     transform: rotate(180deg);
+}
+
+.card .bot-index span:last-child {
+    font-size: 12.5px; /* Semboller +%15 */
 }
 
 .card.red { color: #dc2626; }
@@ -678,103 +687,165 @@ body {
 
 .tavla-container {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     justify-content: center;
     align-items: stretch;
-    background: #3e2712;
-    padding: 12px;
-    border-radius: 12px;
-    border: 8px solid #271406;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 25px rgba(0,0,0,0.6);
+    background: #2b1708;
+    padding: 10px;
+    border-radius: 14px;
+    border: 7px solid #190c04;
+    box-shadow: inset 0 0 25px rgba(0,0,0,0.85), 0 12px 30px rgba(0,0,0,0.7);
+    user-select: none;
 }
 
+/* 1. KIRIK TAŞLAR (BAR) */
 .tavla-bar {
-    width: 65px;
-    background: #2b1808;
-    border-radius: 6px;
-    border: 2px dashed #78350f;
+    width: 70px;
+    background: #1a0e05;
+    border-radius: 8px;
+    border: 2px solid #4a280e;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 6px 2px;
+    justify-content: space-between;
+    padding: 6px 4px;
     cursor: pointer;
     user-select: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 .tavla-bar:hover {
     border-color: #facc15;
 }
-.bar-title {
+.bar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 120px;
+    border-radius: 6px;
+    padding: 4px;
+    transition: background 0.2s;
+}
+.bar-section.selected-point {
+    background: rgba(250, 204, 21, 0.15);
+    box-shadow: 0 0 12px 3px #facc15 !important;
+}
+.bar-sec-title {
     font-size: 10px;
-    font-weight: 700;
-    color: #f59e0b;
+    font-weight: 800;
+    color: #e2e8f0;
     text-align: center;
-    margin-bottom: 6px;
+    margin: 3px 0;
+}
+.bar-divider {
+    font-size: 10px;
+    font-weight: 900;
+    color: #ca8a04;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 4px 0;
+    border-top: 1px solid #4a280e;
+    border-bottom: 1px solid #4a280e;
+    background: rgba(0,0,0,0.4);
+    border-radius: 3px;
 }
 .bar-checkers {
     display: flex;
     flex-direction: column;
-    gap: 3px;
     align-items: center;
 }
+.bar-checkers .tavla-checker {
+    margin-bottom: -5px;
+}
 
+/* 2. TAHTA ALANI (24 KAPI) */
 .tavla-fields {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    background: #543315;
-    padding: 8px;
+    gap: 0;
+    background: #45240c;
+    padding: 6px;
     border-radius: 8px;
+    border: 2px solid #5a3010;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
 }
 
 .tavla-row {
     display: flex;
-    gap: 4px;
+    gap: 3px;
 }
 
 .tavla-middle-divider {
-    height: 35px;
-    background: rgba(0,0,0,0.4);
-    border-radius: 4px;
+    height: 26px;
+    background: linear-gradient(90deg, #1f0f04 0%, #3a1c07 50%, #1f0f04 100%);
+    border-top: 1.5px solid #78350f;
+    border-bottom: 1.5px solid #78350f;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 2px 0;
+    border-radius: 2px;
+}
+.tavla-middle-divider .middle-line {
+    width: 95%;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 0.4), transparent);
 }
 
+/* KAPILAR (ÜÇGENLER) */
 .tavla-point {
     width: 44px;
-    height: 140px;
+    height: 145px;
     position: relative;
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 0;
-    border-radius: 3px;
+    border-radius: 2px;
     transition: filter 0.15s, transform 0.1s;
     user-select: none;
+    box-sizing: border-box;
 }
 
 .tavla-point:hover {
-    filter: brightness(1.25);
+    filter: brightness(1.22);
+}
+
+.top-point {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 3px;
+}
+
+.bot-point {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 3px;
 }
 
 .tri-dark {
-    background: linear-gradient(to bottom, #8b2500 0%, #3a0d00 100%);
+    background: linear-gradient(to bottom, #7c2d12 0%, #451a03 100%);
 }
 .tri-light {
-    background: linear-gradient(to bottom, #d4a373 0%, #a06e40 100%);
+    background: linear-gradient(to bottom, #fde68a 0%, #d97706 100%);
 }
 .bot-row .tri-dark {
-    background: linear-gradient(to top, #8b2500 0%, #3a0d00 100%);
+    background: linear-gradient(to top, #7c2d12 0%, #451a03 100%);
 }
 .bot-row .tri-light {
-    background: linear-gradient(to top, #d4a373 0%, #a06e40 100%);
+    background: linear-gradient(to top, #fde68a 0%, #d97706 100%);
+}
+
+/* Ev Kapıları (Home Board) İnce Vurgusu */
+.home-point-top {
+    border-top: 2px solid rgba(250, 204, 21, 0.5);
+}
+.home-point-bot {
+    border-bottom: 2px solid rgba(250, 204, 21, 0.5);
 }
 
 .tavla-point.selected-point {
     box-shadow: 0 0 14px 4px #facc15 !important;
-    transform: scale(1.04);
+    transform: scale(1.03);
     z-index: 20;
 }
 
@@ -785,39 +856,53 @@ body {
 }
 
 @keyframes pulseTarget {
-    from { filter: brightness(1.2); }
-    to { filter: brightness(1.6); }
+    from { filter: brightness(1.15); }
+    to { filter: brightness(1.55); }
 }
 
 .point-num {
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 800;
-    color: rgba(255,255,255,0.7);
+    color: rgba(255,255,255,0.75);
     pointer-events: none;
+    line-height: 1;
+}
+.point-num-top {
+    margin-bottom: 2px;
+}
+.point-num-bot {
+    margin-top: 2px;
 }
 
+/* TAŞLARIN İSTİF DÜZENİ (ASLA ÜST ÜSTE TAŞMAZ) */
 .point-checkers-top {
     display: flex;
     flex-direction: column;
-    gap: 2px;
     align-items: center;
+}
+.point-checkers-top .tavla-checker {
+    margin-bottom: -5px; /* Sıkı 3D taş dizilimi */
 }
 
 .point-checkers-bot {
     display: flex;
     flex-direction: column-reverse;
-    gap: 2px;
     align-items: center;
 }
+.point-checkers-bot .tavla-checker {
+    margin-top: -5px; /* Sıkı 3D taş dizilimi */
+}
 
+/* 3. TAVLA PULU (CHECKER) */
 .tavla-checker {
-    width: 32px;
+    width: 34px;
     height: 24px;
     border-radius: 50%;
     position: relative;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.5), inset 0 2px 3px rgba(255,255,255,0.4);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.6), inset 0 2px 3px rgba(255,255,255,0.5);
     cursor: pointer;
-    transition: transform 0.1s;
+    transition: transform 0.12s;
+    box-sizing: border-box;
 }
 
 .checker-white {
@@ -831,8 +916,8 @@ body {
 }
 
 .checker-selected {
-    transform: scale(1.18);
-    box-shadow: 0 0 12px 3px #facc15 !important;
+    transform: scale(1.16);
+    box-shadow: 0 0 14px 4px #facc15 !important;
 }
 
 .checker-count-badge {
@@ -843,45 +928,97 @@ body {
     font-size: 11px;
     font-weight: 900;
     color: #facc15;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.9);
 }
 
-.tavla-borne-off {
-    width: 90px;
-    background: #2b1808;
-    border: 2px solid #78350f;
+/* 4. Y EKSENİNDE SİMETRİK TOPLAMA BÖLMELERİ (BORNE OFF) */
+.tavla-borne-area {
+    width: 95px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #1a0e05;
+    border-radius: 8px;
+    border: 2px solid #4a280e;
+    padding: 6px 4px;
+    box-sizing: border-box;
+}
+
+.tavla-borne-box {
+    background: #271406;
+    border: 1.5px solid #5a3010;
     border-radius: 6px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 8px 4px;
+    min-height: 125px;
     cursor: pointer;
+    transition: all 0.2s;
     user-select: none;
 }
-.tavla-borne-off.target-point {
+.tavla-borne-box:hover {
+    border-color: #facc15;
+}
+.tavla-borne-box.target-point {
     border-color: #22c55e;
     box-shadow: 0 0 14px 4px #22c55e;
+    animation: pulseTarget 1s infinite alternate;
 }
-.borne-title {
-    font-size: 11px;
+
+.borne-divider {
+    height: 1px;
+    background: #4a280e;
+    margin: 4px 0;
+}
+
+.borne-box-title {
+    font-size: 10px;
     font-weight: 800;
-    color: #facc15;
-    margin-bottom: 8px;
+    color: #e2e8f0;
+    text-align: center;
+    margin-bottom: 4px;
 }
-.borne-counts {
+.borne-box-count {
     font-size: 12px;
+    color: #facc15;
+    margin-bottom: 6px;
+}
+.borne-checkers-stack {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    align-items: center;
+    min-height: 30px;
+}
+.borne-checker-chip {
+    width: 28px;
+    height: 6px;
+    border-radius: 3px;
+    margin-top: -2px;
+}
+.borne-checker-chip.checker-white {
+    background: #e2e8f0;
+    border: 1px solid #cbd5e1;
+}
+.borne-checker-chip.checker-black {
+    background: #1e293b;
+    border: 1px solid #475569;
+}
+.empty-borne-hint {
+    font-size: 10px;
+    color: #64748b;
+    font-style: italic;
 }
 .collect-btn-badge {
-    margin-top: 8px;
+    margin-top: 6px;
     background: #22c55e;
     color: white;
     font-size: 10px;
     font-weight: 800;
     padding: 3px 6px;
     border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(34,197,94,0.4);
 }
 
 /* 3D ZAR TASARIMI */
@@ -3394,13 +3531,14 @@ body {
 
 /* Mekanik Çevirme Kolu (Lever) */
 .slot-lever-housing {
-    width: 32px;
+    width: 36px;
     height: 140px;
     position: relative;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
+    user-select: none;
 }
 
 .slot-lever-pivot {
@@ -3411,7 +3549,20 @@ body {
     border-radius: 50%;
     position: absolute;
     bottom: 20px;
+    left: 6px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.8);
+    z-index: 5;
+}
+
+.slot-lever-assembly {
+    position: absolute;
+    bottom: 30px;
+    left: 14px;
+    width: 8px;
+    height: 80px;
+    transform-origin: bottom center;
+    transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 10;
 }
 
 .slot-lever-arm {
@@ -3419,10 +3570,7 @@ body {
     height: 80px;
     background: linear-gradient(90deg, #94a3b8 0%, #f1f5f9 50%, #64748b 100%);
     border-radius: 4px;
-    position: absolute;
-    bottom: 30px;
-    transform-origin: bottom center;
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
     box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
 }
 
@@ -3433,9 +3581,11 @@ body {
     border: 2px solid #fecaca;
     border-radius: 50%;
     position: absolute;
-    top: 15px;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
     box-shadow: 0 4px 10px rgba(0,0,0,0.8);
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
 }
 
 .slot-win-banner {
