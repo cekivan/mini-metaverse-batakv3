@@ -661,6 +661,30 @@ body {
     z-index: 1; 
     box-shadow: inset 3px 3px 8px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.6); 
     border: 1px solid rgba(255,255,255,0.06);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pocket.target-glow {
+    box-shadow: 0 0 16px #22c55e, inset 0 0 10px #22c55e !important;
+    border-color: #4ade80 !important;
+    animation: pocketTargetPulse 0.7s infinite alternate ease-in-out;
+}
+@keyframes pocketTargetPulse {
+    0% { box-shadow: 0 0 8px #22c55e, inset 0 0 4px #22c55e; }
+    100% { box-shadow: 0 0 20px #4ade80, inset 0 0 12px #4ade80; }
+}
+
+/* Sedefli Elmas Nişan Noktaları (Rail Diamond Sights) */
+.billiard-diamond {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #fef08a;
+    transform: rotate(45deg);
+    border-radius: 1px;
+    box-shadow: 0 0 4px rgba(250, 204, 21, 0.8), inset 0 0 2px #fff;
+    pointer-events: none;
+    z-index: 5;
 }
 
 /* 3D GERÇEKÇİ TOP STİLLERİ */
@@ -708,6 +732,21 @@ body {
     box-shadow: 0 0 6px rgba(255,255,255,0.7), 2px 3px 6px rgba(0,0,0,0.6);
 }
 
+/* Beyaz top kırmızı turnuva noktası (Measle Dot) */
+.ball.white::before {
+    content: '';
+    position: absolute;
+    width: 3.5px;
+    height: 3.5px;
+    background: #ef4444;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 2px rgba(239, 68, 68, 0.8);
+    pointer-events: none;
+}
+
 .ball-num {
     width: 8px;
     height: 8px;
@@ -719,6 +758,36 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Mini Skor Panosu Top Rozetleri (Ball Pips) */
+.billiard-pip {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7.5px;
+    font-weight: 900;
+    color: #ffffff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    flex-shrink: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.billiard-pip.solid {
+    background: radial-gradient(circle at 35% 35%, #ff7675 0%, #d63031 65%, #7e1617 100%);
+}
+.billiard-pip.stripe {
+    background: linear-gradient(to bottom, #ffffff 20%, #f39c12 20%, #d35400 80%, #ffffff 80%);
+    color: #0f172a;
+    border: 0.5px solid rgba(0,0,0,0.25);
+}
+.billiard-pip.potted {
+    opacity: 0.16;
+    filter: grayscale(1);
+    transform: scale(0.85);
+    box-shadow: none;
 }
 
 /* 6. SABİT VE SÜRÜKLENEBİLİR CHAT PANELİ */
@@ -4374,4 +4443,37 @@ body {
     40% { transform: translate(4px, -3px); }
     60% { transform: translate(-3px, 2px); }
     80% { transform: translate(3px, -1px); }
+}
+
+/* ==========================================================
+   🟢 ÇEVRİMİÇİ OYUNCULAR (ONLINE PLAYERS) MODAL & BUTON STİLLERİ
+   ========================================================== */
+@keyframes onlineDotPulse {
+    0% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 4px #22c55e; }
+    50% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 12px #22c55e; }
+    100% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 4px #22c55e; }
+}
+
+.online-filter-chip {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    user-select: none;
+}
+
+.online-filter-chip:hover {
+    background: rgba(14, 165, 233, 0.3) !important;
+    border-color: #38bdf8 !important;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+}
+
+.online-player-card {
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.online-player-card:hover {
+    background: rgba(30, 41, 59, 0.95) !important;
+    border-color: rgba(56, 189, 248, 0.35) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4), 0 0 15px rgba(14, 165, 233, 0.15);
 }

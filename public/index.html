@@ -31,6 +31,10 @@
                 <button type="button" class="place-menu-item" style="color: #fb923c;" onclick="selectPlace('housing_portal')">🏢 Konutlar & Evler Portal</button>
             </div>
         </div>
+        <button id="onlineUsersNavBtn" class="nav-btn" style="position: relative; background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 4px 12px rgba(14, 165, 233, 0.35); font-weight: 800; display: flex; align-items: center; gap: 6px;" onclick="openOnlinePlayersModal()">
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: onlineDotPulse 1.8s infinite ease-in-out;"></span>
+            <span>🟢 Çevrimiçi (<span id="onlinePlayersCountBadge">1</span>)</span>
+        </button>
         <button id="friendsNavBtn" class="nav-btn" style="position: relative; background: linear-gradient(135deg, #10b981, #047857);" onclick="openFriendsListModal()">
             👥 Arkadaşlarım (<span id="friendsCountBadge">0</span>)
             <span id="friendRequestsBadge" style="display: none; position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 12px; border: 2px solid #0f172a; box-shadow: 0 0 10px #ef4444;">0</span>
@@ -655,6 +659,67 @@
 
             <div style="text-align: right;">
                 <button onclick="closeGiftItemModal()" style="padding: 9px 20px; background: #475569; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4.0 ÇEVRİMİÇİ OYUNCULAR (ONLINE PLAYERS) LİSTESİ MODALI -->
+    <div id="onlinePlayersModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 23500; justify-content: center; align-items: center; color: white;">
+        <div style="background: #0f172a; padding: 24px; border-radius: 20px; width: 94%; max-width: 650px; max-height: 88vh; overflow-y: auto; text-align: left; box-shadow: 0 20px 50px rgba(0,0,0,0.9); border: 2px solid #0ea5e9; backdrop-filter: blur(16px); position: relative;">
+            
+            <!-- MODAL BAŞLIĞI VE KAPAT BUTONU -->
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px; margin-bottom:14px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="font-size: 26px;">🟢</div>
+                    <div>
+                        <h2 style="color: #38bdf8; margin: 0; font-size: 20px; font-weight: 800; display:flex; align-items:center; gap:8px;">
+                            <span>Çevrimiçi Oyuncular</span>
+                            <span id="onlinePlayersModalCountBadge" style="background: rgba(14, 165, 233, 0.25); border: 1px solid #38bdf8; color: #7dd3fc; font-size: 13px; font-weight: 800; padding: 2px 9px; border-radius: 12px;">1 Kişi Aktif</span>
+                        </h2>
+                        <div style="font-size: 12px; color: #94a3b8; margin-top: 3px;">Şu an oyunda bulunan tüm kullanıcıların listesi ve anlık konumları</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button onclick="refreshOnlinePlayers()" style="background: rgba(56,189,248,0.2); border: 1px solid #38bdf8; color: #38bdf8; font-weight: bold; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.2s;">
+                        <span>🔄</span> Yenile
+                    </button>
+                    <button onclick="closeOnlinePlayersModal()" style="background: rgba(255,255,255,0.1); border:none; color:white; font-size:18px; padding:6px 12px; border-radius:8px; cursor:pointer;">✕</button>
+                </div>
+            </div>
+
+            <!-- ARAMA VE MEKAN FİLTRESİ -->
+            <div style="margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="position: relative; display: flex; align-items: center;">
+                    <span style="position: absolute; left: 12px; font-size: 14px; color: #94a3b8; pointer-events: none;">🔍</span>
+                    <input type="text" id="onlinePlayerSearchInput" placeholder="Oyuncu adı veya mekan ara..." oninput="filterOnlinePlayersList()" style="width: 100%; box-sizing: border-box; padding: 10px 14px 10px 36px; background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; color: white; outline: none; font-size: 13px;">
+                </div>
+
+                <!-- Hızlı Mekan Filtre Çipleri -->
+                <div id="onlineRoomFilterChips" style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin;">
+                    <button type="button" class="online-filter-chip active" data-room="all" onclick="setOnlineRoomFilter('all', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid #0ea5e9; background: #0284c7; color: white; white-space: nowrap;">Tümü</button>
+                    <button type="button" class="online-filter-chip" data-room="sokak" onclick="setOnlineRoomFilter('sokak', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.7); color: #cbd5e1; white-space: nowrap;">🌳 Meydan</button>
+                    <button type="button" class="online-filter-chip" data-room="kafe" onclick="setOnlineRoomFilter('kafe', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.7); color: #cbd5e1; white-space: nowrap;">☕ Kafe</button>
+                    <button type="button" class="online-filter-chip" data-room="sahil" onclick="setOnlineRoomFilter('sahil', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.7); color: #cbd5e1; white-space: nowrap;">🏖️ Sahil</button>
+                    <button type="button" class="online-filter-chip" data-room="nargile_cafe" onclick="setOnlineRoomFilter('nargile_cafe', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.7); color: #cbd5e1; white-space: nowrap;">💨 Nargile Cafe</button>
+                    <button type="button" class="online-filter-chip" data-room="ganyan" onclick="setOnlineRoomFilter('ganyan', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.7); color: #cbd5e1; white-space: nowrap;">🏇 Ganyan</button>
+                    <button type="button" class="online-filter-chip" data-room="cadde" onclick="setOnlineRoomFilter('cadde', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.7); color: #cbd5e1; white-space: nowrap;">🛣️ Cadde</button>
+                    <button type="button" class="online-filter-chip" data-room="dedenin_yeri" onclick="setOnlineRoomFilter('dedenin_yeri', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.7); color: #cbd5e1; white-space: nowrap;">⚡ Casino</button>
+                    <button type="button" class="online-filter-chip" data-room="emlakci" onclick="setOnlineRoomFilter('emlakci', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.7); color: #cbd5e1; white-space: nowrap;">🏢 Emlak</button>
+                </div>
+            </div>
+
+            <!-- OYUNCU KARTLARI LİSTESİ -->
+            <div id="onlinePlayersListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 52vh; overflow-y: auto; padding-right: 4px;">
+                <div style="text-align:center; color:#94a3b8; padding:30px;">Oyuncular yükleniyor...</div>
+            </div>
+
+            <!-- MODAL ALTI BİLGİ VE KAPAT -->
+            <div style="margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-size: 11px; color: #64748b; display: flex; align-items: center; gap: 6px;">
+                    <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #22c55e;"></span>
+                    <span>Anlık olarak güncellenir</span>
+                </div>
+                <button onclick="closeOnlinePlayersModal()" style="padding: 8px 22px; background: #334155; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px;">Kapat</button>
             </div>
         </div>
     </div>
@@ -1496,18 +1561,65 @@
         </div>
 
         <!-- BİLLARDO ALANI -->
-        <div id="billiardArea" style="display: none;">
-            <h3 style="color: white; margin-top: 0; margin-bottom: 5px;">8-Ball Bilardo</h3>
-            <div id="billiardStatus" style="color:white; font-size: 16px; margin-bottom:10px; font-weight:bold;">Sıra Bekleniyor...</div>
+        <div id="billiardArea" style="display: none; width: 100%; max-width: 640px; margin: 0 auto; box-sizing: border-box;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+                <h3 style="color: white; margin: 0; font-size: 18px; display: flex; align-items: center; gap: 8px; font-weight: 800;">
+                    <span>🎱 8-Ball Amerikan Bilardo</span>
+                </h3>
+                <div id="billiardFineTuneNotice" style="font-size: 11px; color: #94a3b8; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 3px 10px; border-radius: 6px; display: flex; align-items: center; gap: 5px;">
+                    <span>🎯</span> <span>Hassas Açı: Klavye <b>⬅️ ➡️</b></span>
+                </div>
+            </div>
+            
+            <!-- CANLI SKOR VE KALAN TOPLAR TAKİP PANOSU -->
+            <div id="billiardScoreboard" style="display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 8px 14px; margin-bottom: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.45); gap: 10px;">
+                <!-- Sol: Sen -->
+                <div id="billiardP1Score" style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                    <div style="display: flex; flex-direction: column;">
+                        <span id="billiardP1Name" style="font-weight: 800; font-size: 13px; color: #38bdf8;">Sen</span>
+                        <span id="billiardP1Suit" style="font-size: 11px; color: #94a3b8;">Renk: Belli Değil</span>
+                    </div>
+                    <div id="billiardP1Balls" style="display: flex; gap: 3px; align-items: center; flex-wrap: wrap;"></div>
+                </div>
+
+                <!-- Orta: 8-Top Durum Rozeti -->
+                <div style="text-align: center; flex-shrink: 0;">
+                    <span id="billiardCenterBadge" style="font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 9999px; background: rgba(250, 204, 21, 0.15); border: 1px solid rgba(250,204,21,0.3); color: #facc15; white-space: nowrap;">🎱 8-Top Bekliyor</span>
+                </div>
+
+                <!-- Sağ: Rakip -->
+                <div id="billiardP2Score" style="display: flex; align-items: center; gap: 8px; flex-direction: row-reverse; flex: 1;">
+                    <div style="display: flex; flex-direction: column; text-align: right;">
+                        <span id="billiardP2Name" style="font-weight: 800; font-size: 13px; color: #f87171;">Rakip</span>
+                        <span id="billiardP2Suit" style="font-size: 11px; color: #94a3b8;">Renk: Belli Değil</span>
+                    </div>
+                    <div id="billiardP2Balls" style="display: flex; gap: 3px; align-items: center; flex-wrap: wrap; flex-direction: row-reverse;"></div>
+                </div>
+            </div>
+
+            <div id="billiardStatus" style="color:white; font-size: 15px; margin-bottom:10px; font-weight:bold; text-align: center;">Sıra Bekleniyor...</div>
             
             <div id="billiardTable" style="position: relative; width: 600px; height: 300px; background: #006400; border: 10px solid #8B4513;">
-                <div class="pocket" style="position:absolute; top:-7px; left:-7px;"></div>
-                <div class="pocket" style="position:absolute; top:-12px; left:283px;"></div>
-                <div class="pocket" style="position:absolute; top:-7px; right:-7px;"></div>
-                <div class="pocket" style="position:absolute; bottom:-7px; left:-7px;"></div>
-                <div class="pocket" style="position:absolute; bottom:-12px; left:283px;"></div>
-                <div class="pocket" style="position:absolute; bottom:-7px; right:-7px;"></div>
+                <!-- 6 Köşe ve Orta Cepler -->
+                <div class="pocket" id="pocket_0" style="position:absolute; top:-7px; left:-7px;"></div>
+                <div class="pocket" id="pocket_1" style="position:absolute; top:-12px; left:283px;"></div>
+                <div class="pocket" id="pocket_2" style="position:absolute; top:-7px; right:-7px;"></div>
+                <div class="pocket" id="pocket_3" style="position:absolute; bottom:-7px; left:-7px;"></div>
+                <div class="pocket" id="pocket_4" style="position:absolute; bottom:-12px; left:283px;"></div>
+                <div class="pocket" id="pocket_5" style="position:absolute; bottom:-7px; right:-7px;"></div>
                 
+                <!-- Masa Kenarı Elmas Nişan Noktaları (Diamond Sights) -->
+                <!-- Üst Kenar -->
+                <div class="billiard-diamond" style="top: -7px; left: 140px;"></div>
+                <div class="billiard-diamond" style="top: -7px; left: 450px;"></div>
+                <!-- Alt Kenar -->
+                <div class="billiard-diamond" style="bottom: -7px; left: 140px;"></div>
+                <div class="billiard-diamond" style="bottom: -7px; left: 450px;"></div>
+                <!-- Sol Kenar -->
+                <div class="billiard-diamond" style="top: 145px; left: -7px;"></div>
+                <!-- Sağ Kenar -->
+                <div class="billiard-diamond" style="top: 145px; right: -7px;"></div>
+
                 <div id="ballsContainer"></div>
                 <canvas id="cueCanvas" width="600" height="300" style="position:absolute; top:0; left:0; z-index:10; pointer-events:none; border:none; margin:0; padding:0; outline:none;"></canvas>
             </div>
@@ -2588,6 +2700,7 @@
     <script src="js/adminPanel.js?v=2"></script>
     <script src="js/mobileControls.js?v=2"></script>
     <script src="js/social.js?v=2"></script>
+    <script src="js/onlinePlayers.js?v=1"></script>
     <script src="js/furnitureDrawers.js?v=2"></script>
     <script src="js/housing.js?v=2"></script>
     <script src="js/billboardAd.js?v=2"></script>

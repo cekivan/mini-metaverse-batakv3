@@ -36,10 +36,10 @@ app.use(express.static('public'));
 // Çevrimiçi Oyuncular Havuzu
 const players = {};
 
-// Modüler Yardımcı Fonksiyonlar & Zamanlayıcılar
 const {
     getPlayersInRoom,
     givePlayerTeaWithTimer,
+    getPlayerDetailedLocation,
     getAdminOnlineUsers,
     getAdminSanctionsList,
     playerFishingTimers,
@@ -50,11 +50,18 @@ function getRoomPlayers(roomName) {
     return getPlayersInRoom(players, roomName);
 }
 
+function broadcastOnlineCount() {
+    let count = Object.keys(players).filter(sid => players[sid] && players[sid].name).length;
+    io.emit('onlineCountUpdate', count);
+}
+
 const helpers = {
     getPlayersInRoom: (room) => getPlayersInRoom(players, room),
     givePlayerTeaWithTimer: (sid, uname, dur) => givePlayerTeaWithTimer(io, players, sid, uname, dur),
+    getPlayerDetailedLocation: (sid, p) => getPlayerDetailedLocation(sid, p),
     getAdminOnlineUsers: () => getAdminOnlineUsers(players),
     getAdminSanctionsList: () => getAdminSanctionsList(),
+    broadcastOnlineCount: () => broadcastOnlineCount(),
     playerFishingTimers,
     playerTeaTimers
 };
@@ -112,6 +119,9 @@ io.on('connection', (socket) => {
     registerSlotHandlers(io, socket, players);
     registerGanyanHandlers(io, socket, players);
     registerNargileLoungeHandlers(io, socket, players);
+
+    // Çevrimiçi Oyuncu Sayısını Gönder
+    socket.emit('onlineCountUpdate', Object.keys(players).filter(sid => players[sid] && players[sid].name).length);
 
     // Reklam Ağı Soket Dinleyicileri
     adManager.handleClientConnect(socket);
@@ -356,6 +366,7 @@ io.on('connection', (socket) => {
 
             delete players[socket.id];
             io.to(room).emit('playerDisconnected', socket.id);
+            broadcastOnlineCount();
         } else {
             removePlayerFromBlackjack(io, socket.id, players);
             tableManager.removePlayerFromLobbies(socket.id);

@@ -4,7 +4,7 @@ const gameCoordinator = require('../gameCoordinator');
 const fatherPetManager = require('../fatherPetManager');
 
 function registerAuthHandlers(io, socket, players, helpers) {
-    const { getPlayersInRoom, givePlayerTeaWithTimer } = helpers;
+    const { getPlayersInRoom, givePlayerTeaWithTimer, broadcastOnlineCount } = helpers;
 
     // Ortak Giriş Başarılı İşlemi
     function onLoginSuccess(uData, username, isAdmin) {
@@ -74,6 +74,7 @@ function registerAuthHandlers(io, socket, players, helpers) {
         socket.emit('currentPlayers', getPlayersInRoom("sokak"));
         socket.emit('activeFatherPets', fatherPetManager.getPetsInRoom("sokak"));
         socket.to("sokak").emit('newPlayer', { id: socket.id, player: players[socket.id] });
+        if (typeof broadcastOnlineCount === 'function') broadcastOnlineCount();
 
         console.log(`${username} oyuna girdi! Bakiye: ${uData.money} TL (Admin: ${isAdmin})`);
 

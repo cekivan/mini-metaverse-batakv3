@@ -9,6 +9,22 @@ let isMyTurnBilliard = false;
 let isBallInHand = false;
 let billiardWhitePos = { x: 150, y: 150 };
 
+const BILLIARD_POCKETS = [
+    { id: 'pocket_0', x: 14, y: 14 },
+    { id: 'pocket_1', x: 300, y: 10 },
+    { id: 'pocket_2', x: 586, y: 14 },
+    { id: 'pocket_3', x: 14, y: 286 },
+    { id: 'pocket_4', x: 300, y: 290 },
+    { id: 'pocket_5', x: 586, y: 286 }
+];
+
+function clearPocketGlows() {
+    for (let i = 0; i < 6; i++) {
+        let el = document.getElementById('pocket_' + i);
+        if (el) el.classList.remove('target-glow');
+    }
+}
+
 let lastBilliardTurnIndex = -1;
 let lastBilliardBalls = {};
 
@@ -29,11 +45,15 @@ socket.on('billiardUpdate', (state) => {
     if (window.setVoiceTable && state.tableId) window.setVoiceTable(state.tableId);
     window.isSpectating = !!state.isSpectator;
 
-    // Gerçekçi ses efektleri tetikleme (Topların çarpışması ve cebe düşüş)
+    // Gerçekçi fiziksel ses efektleri (Top çarpışma şiddeti, bant sekmesi, cebe düşüş)
     if (state.events && window.playSound) {
         state.events.forEach(ev => {
-            if (ev === 'hit') window.playSound('billiardHit');
-            if (ev === 'pocket') window.playSound('pocket');
+            let evType = (typeof ev === 'object' && ev !== null) ? ev.type : ev;
+            let evParam = (typeof ev === 'object' && ev !== null) ? ev.intensity : undefined;
+            if (evType === 'hit') window.playSound('billiardHit', evParam);
+            else if (evType === 'cushion') window.playSound('billiardCushion', evParam);
+            else if (evType === 'pocket') window.playSound('pocket');
+            else if (window.playSound) window.playSound(evType, evParam);
         });
     }
 
@@ -160,7 +180,114 @@ socket.on('billiardUpdate', (state) => {
     }
 
     lastBilliardBalls = state.balls || {};
+
+    if (isMoving || !isMyTurnBilliard || state.gameOver) {
+        clearPocketGlows();
+    }
+    updateBilliardScoreboard(state);
 });
+
+// Canlı Skor ve Kalan Toplar Bilardo Panosu
+function updateBilliardScoreboard(state) {
+    if (!state || !state.players) return;
+    const p1NameEl = document.getElementById('billiardP1Name');
+    const p1SuitEl = document.getElementById('billiardP1Suit');
+    const p1BallsEl = document.getElementById('billiardP1Balls');
+    const p2NameEl = document.getElementById('billiardP2Name');
+    const p2SuitEl = document.getElementById('billiardP2Suit');
+    const p2BallsEl = document.getElementById('billiardP2Balls');
+    const centerBadgeEl = document.getElementById('billiardCenterBadge');
+
+    if (!p1NameEl || !p2NameEl) return;
+
+    let isSpec = !!state.isSpectator;
+    let myPid = socket.id;
+    let p1Id = isSpec ? state.players[0] : myPid;
+    let p2Id = isSpec ? state.players[1] : (state.players.find(p => p !== myPid) || state.players[1]);
+
+    let profiles = state.playerProfiles || {};
+    let p1Name = isSpec ? (profiles[p1Id]?.name || '1. Oyuncu') : 'Sen';
+    let p2Name = profiles[p2Id]?.name || (p2Id && p2Id.startsWith('bot_') ? 'Bot Rakip' : 'Rakip');
+
+    p1NameEl.textContent = p1Name;
+    p2NameEl.textContent = p2Name;
+
+    let suits = state.playerSuits || {};
+    let p1Suit = suits[p1Id] || null;
+    let p2Suit = suits[p2Id] || null;
+
+    function formatSuitText(suit) {
+        if (suit === 'solid') return "<span style='color:#ef4444; font-weight:bold;'>🔴 Düz (1-7)</span>";
+        if (suit === 'stripe') return "<span style='color:#f59e0b; font-weight:bold;'>🟡 Çizgili (9-15)</span>";
+        return "<span style='color:#94a3b8;'>Renk: Belli Değil</span>";
+    }
+
+    if (p1SuitEl) p1SuitEl.innerHTML = formatSuitText(p1Suit);
+    if (p2SuitEl) p2SuitEl.innerHTML = formatSuitText(p2Suit);
+
+    function renderPips(container, suit) {
+        if (!container) return 0;
+        container.innerHTML = '';
+        if (!suit) {
+            for (let i = 1; i <= 7; i++) {
+                let pip = document.createElement('div');
+                pip.className = 'billiard-pip';
+                pip.style.background = 'rgba(255,255,255,0.08)';
+                pip.style.border = '1px dashed rgba(255,255,255,0.25)';
+                pip.textContent = '?';
+                container.appendChild(pip);
+            }
+            return 7;
+        }
+
+        let startNum = suit === 'solid' ? 1 : 9;
+        let endNum = suit === 'solid' ? 7 : 15;
+        let activeCount = 0;
+
+        for (let n = startNum; n <= endNum; n++) {
+            let ball = state.balls ? state.balls['ball_' + n] : null;
+            let isPotted = !ball || !ball.active || ball.x === -100;
+            if (!isPotted) activeCount++;
+
+            let pip = document.createElement('div');
+            pip.className = `billiard-pip ${suit}` + (isPotted ? ' potted' : '');
+            pip.textContent = n;
+            container.appendChild(pip);
+        }
+        return activeCount;
+    }
+
+    let p1Active = renderPips(p1BallsEl, p1Suit);
+    let p2Active = renderPips(p2BallsEl, p2Suit);
+
+    // 8-Top Rozet Durumu
+    if (centerBadgeEl) {
+        let eightBall = state.balls ? state.balls['ball_8'] : null;
+        let eightPotted = !eightBall || !eightBall.active || eightBall.x === -100;
+
+        if (state.gameOver) {
+            centerBadgeEl.innerHTML = `🏆 Oyun Bitti`;
+            centerBadgeEl.style.background = 'rgba(234, 179, 8, 0.2)';
+            centerBadgeEl.style.borderColor = 'rgba(234, 179, 8, 0.4)';
+            centerBadgeEl.style.color = '#fde047';
+        } else if (eightPotted) {
+            centerBadgeEl.innerHTML = `🎱 8-Top Cebe Girdi`;
+            centerBadgeEl.style.background = 'rgba(239, 68, 68, 0.2)';
+            centerBadgeEl.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+            centerBadgeEl.style.color = '#f87171';
+        } else if (!isSpec && p1Suit && p1Active === 0) {
+            centerBadgeEl.innerHTML = `🔥 8-Topu Cebe Atabilirsin!`;
+            centerBadgeEl.style.background = 'rgba(34, 197, 94, 0.25)';
+            centerBadgeEl.style.borderColor = '#22c55e';
+            centerBadgeEl.style.color = '#4ade80';
+        } else {
+            centerBadgeEl.innerHTML = `🎱 8-Top Bekliyor`;
+            centerBadgeEl.style.background = 'rgba(250, 204, 21, 0.15)';
+            centerBadgeEl.style.borderColor = 'rgba(250, 204, 21, 0.3)';
+            centerBadgeEl.style.color = '#facc15';
+        }
+    }
+}
 
 // Eski falso/spin kontrolleri temizlendi (Gereksiz çağrılara karşı güvenli stub)
 function resetBilliardSpin() {}
@@ -200,6 +327,7 @@ function handleBillMouseMove(e) {
     if (!isDraggingCue) return;
     if (areBilliardBallsMoving()) {
         isDraggingCue = false;
+        clearPocketGlows();
         if (cueCtx) cueCtx.clearRect(0, 0, 600, 300);
         return;
     }
@@ -215,6 +343,7 @@ function handleBillMouseMove(e) {
 function handleBillMouseUp(e) {
     if (isDraggingCue) {
         isDraggingCue = false;
+        clearPocketGlows();
         if (cueCtx) cueCtx.clearRect(0, 0, 600, 300);
 
         let dx = cueStartX - cueCurrX;
@@ -261,6 +390,7 @@ function drawCue() {
     if (!cueCanvas) { cueCanvas = document.getElementById('cueCanvas'); }
     if (!cueCtx) { cueCtx = cueCanvas.getContext('2d'); }
     cueCtx.clearRect(0, 0, cueCanvas.width, cueCanvas.height);
+    clearPocketGlows();
 
     let dx = cueStartX - cueCurrX;
     let dy = cueStartY - cueCurrY;
@@ -394,6 +524,102 @@ function drawCue() {
         cueCtx.setLineDash([3, 3]);
         cueCtx.stroke();
         cueCtx.restore();
+
+        // 🎯 HEDEF CEP HİZALAMA KILAVUZU & PARLAMA (Pocket Target Alignment Glow)
+        let bestPocket = null;
+        let bestPocketDot = 0.94; // ~19.9 derece açı toleransı
+
+        BILLIARD_POCKETS.forEach(poc => {
+            let toPocX = poc.x - hitBall.x;
+            let toPocY = poc.y - hitBall.y;
+            let distPoc = Math.hypot(toPocX, toPocY);
+            if (distPoc > 8) {
+                let pDirX = toPocX / distPoc;
+                let pDirY = toPocY / distPoc;
+                let dotP = normX * pDirX + normY * pDirY;
+                if (dotP > bestPocketDot) {
+                    bestPocketDot = dotP;
+                    bestPocket = { poc, distPoc };
+                }
+            }
+        });
+
+        if (bestPocket) {
+            let pEl = document.getElementById(bestPocket.poc.id);
+            if (pEl) pEl.classList.add('target-glow');
+
+            // Zümrüt yeşili parlak hedef cep kılavuz çizgisi
+            cueCtx.save();
+            cueCtx.shadowColor = '#22c55e';
+            cueCtx.shadowBlur = 8;
+            cueCtx.beginPath();
+            cueCtx.moveTo(hitBall.x, hitBall.y);
+            cueCtx.lineTo(bestPocket.poc.x, bestPocket.poc.y);
+            cueCtx.setLineDash([4, 4]);
+            cueCtx.strokeStyle = 'rgba(34, 197, 94, 0.9)';
+            cueCtx.lineWidth = 2;
+            cueCtx.stroke();
+            cueCtx.restore();
+        }
+    } else {
+        // 🎱 BANTTAN SEKME TAHMİNİ (BANK SHOT REFLECTION RAY)
+        let tMin = 360;
+        let cushHit = null;
+
+        if (rayDirX < 0) {
+            let t = (22 - wX) / rayDirX;
+            if (t > 0 && t < tMin) {
+                let y = wY + rayDirY * t;
+                if (y >= 20 && y <= 280) { tMin = t; cushHit = 'x'; }
+            }
+        }
+        if (rayDirX > 0) {
+            let t = (578 - wX) / rayDirX;
+            if (t > 0 && t < tMin) {
+                let y = wY + rayDirY * t;
+                if (y >= 20 && y <= 280) { tMin = t; cushHit = 'x'; }
+            }
+        }
+        if (rayDirY < 0) {
+            let t = (22 - wY) / rayDirY;
+            if (t > 0 && t < tMin) {
+                let x = wX + rayDirX * t;
+                if (x >= 20 && x <= 580) { tMin = t; cushHit = 'y'; }
+            }
+        }
+        if (rayDirY > 0) {
+            let t = (278 - wY) / rayDirY;
+            if (t > 0 && t < tMin) {
+                let x = wX + rayDirX * t;
+                if (x >= 20 && x <= 580) { tMin = t; cushHit = 'y'; }
+            }
+        }
+
+        if (cushHit && tMin < 360) {
+            let bounceX = wX + rayDirX * tMin;
+            let bounceY = wY + rayDirY * tMin;
+            let refX = cushHit === 'x' ? -rayDirX : rayDirX;
+            let refY = cushHit === 'y' ? -rayDirY : rayDirY;
+
+            cueCtx.save();
+            // Bant temas noktası parlak pips
+            cueCtx.beginPath();
+            cueCtx.arc(bounceX, bounceY, 3.5, 0, Math.PI * 2);
+            cueCtx.fillStyle = '#38bdf8';
+            cueCtx.shadowColor = '#38bdf8';
+            cueCtx.shadowBlur = 6;
+            cueCtx.fill();
+
+            // Yansıyan bant atışı çizgisi
+            cueCtx.beginPath();
+            cueCtx.moveTo(bounceX, bounceY);
+            cueCtx.lineTo(bounceX + refX * 110, bounceY + refY * 110);
+            cueCtx.setLineDash([3, 4]);
+            cueCtx.strokeStyle = 'rgba(56, 189, 248, 0.65)';
+            cueCtx.lineWidth = 1.6;
+            cueCtx.stroke();
+            cueCtx.restore();
+        }
     }
 
     // 4. GERÇEKÇİ AHŞAP ISTAKA ÇİZİMİ (REALISTIC TAPERED CUE STICK & SHADOW)
@@ -485,6 +711,10 @@ let lastBilliardRoundData = null;
 
 socket.on('billiardRoundOver', (data) => {
     lastBilliardRoundData = data;
+    isDraggingCue = false;
+    clearPocketGlows();
+    if (cueCtx) cueCtx.clearRect(0, 0, 600, 300);
+
     const overlay = document.getElementById('billiardRematchOverlay');
     if (!overlay) return;
 
@@ -532,6 +762,7 @@ socket.on('billiardRematchStatus', (data) => {
 socket.on('billiardRoundStarted', (data) => {
     const overlay = document.getElementById('billiardRematchOverlay');
     if (overlay) overlay.style.display = 'none';
+    clearPocketGlows();
     if (window.playSound) window.playSound('billiardHit');
 });
 
@@ -545,3 +776,45 @@ function acceptBilliardRematch() {
     socket.emit('billiardVoteRematch');
 }
 window.acceptBilliardRematch = acceptBilliardRematch;
+
+// Bilardo Masasından Ayrılınca veya Kapanınca Temizleme
+window.clearBilliardState = function() {
+    isDraggingCue = false;
+    clearPocketGlows();
+    if (cueCtx) cueCtx.clearRect(0, 0, 600, 300);
+};
+
+// --- KLAVYE İLE HASSAS AÇI VE NİŞAN ALMA SİSTEMİ ---
+window.addEventListener('keydown', (e) => {
+    const billiardArea = document.getElementById('billiardArea');
+    if (!billiardArea || billiardArea.style.display === 'none') return;
+    if (window.isSpectating || !isMyTurnBilliard || areBilliardBallsMoving()) return;
+
+    // Yön tuşları veya A / D ile hassas açı çevirme (±0.012 radyan ~0.7 derece)
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.code === 'KeyA' || e.code === 'KeyD') {
+        e.preventDefault();
+        let angleDelta = (e.key === 'ArrowLeft' || e.code === 'KeyA') ? -0.012 : 0.012;
+
+        let wX = billiardWhitePos.x || 150;
+        let wY = billiardWhitePos.y || 150;
+
+        if (!isDraggingCue) {
+            isDraggingCue = true;
+            cueStartX = wX;
+            cueStartY = wY;
+            cueCurrX = wX - 60;
+            cueCurrY = wY;
+        }
+
+        let dx = cueStartX - cueCurrX;
+        let dy = cueStartY - cueCurrY;
+        let r = Math.max(35, Math.hypot(dx, dy));
+        let curAngle = Math.atan2(dy, dx);
+        let nextAngle = curAngle + angleDelta;
+
+        cueCurrX = cueStartX - Math.cos(nextAngle) * r;
+        cueCurrY = cueStartY - Math.sin(nextAngle) * r;
+
+        drawCue();
+    }
+});

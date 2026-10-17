@@ -227,6 +227,7 @@ function startGameForTable(tableId, table, room, io, players) {
                     turnIndex: newGame.turnIndex,
                     players: newGame.players,
                     playerSuits: newGame.playerSuits,
+                    playerProfiles: newGame.playerProfiles || {},
                     ballInHand: newGame.ballInHand,
                     winner: newGame.winner,
                     gameOver: newGame.gameOver,

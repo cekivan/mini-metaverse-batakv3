@@ -1,20 +1,27 @@
 {
   "users": {
     "yasin": {
-      "money": 680,
+      "_id": "6ad3debb1552c02d3989a159",
+      "username": "yasin",
+      "money": 1198,
+      "gender": "male",
+      "auth": {
+        "hash": "f971b4fe5d3824a081cf8a822f54f75bef7054f50824de8e50d3d7882874c491",
+        "salt": "aad3de517daba22557ec7597bd3559d2"
+      },
+      "role": "admin",
+      "isAdmin": true,
       "avatar": {
+        "model": "classic_2",
         "hat": "kasket",
-        "face": "sunglasses",
-        "skinColor": "#ffd1a4",
-        "shirtColor": "#f59e0b",
-        "heldItem": "tespih2",
+        "face": "mustache",
+        "skinColor": "#8d5524",
+        "shirtColor": "outfit_c2_street_cool",
+        "color": "outfit_c2_street_cool",
+        "heldItem": "cocktail_pineapple",
         "shoes": "sneakers",
-        "model": "classic",
-        "pants": "pants_classic_black",
-        "outfit": null,
-        "watch": "watch_cyber_sport",
-        "shirt": "#f59e0b",
-        "color": "#f59e0b"
+        "shirt": "polo",
+        "outfit": "outfit_c2_street_cool"
       },
       "inventory": [
         "hat_bere",
@@ -48,13 +55,120 @@
         "watches_watch_cyber_sport",
         "tshirts_#f59e0b",
         "pants_pants_classic_black",
-        "faces_sunglasses"
+        "faces_sunglasses",
+        "shoes_sanalika_skate_shoes",
+        "pants_pants_jogger_black",
+        "faces_mustache",
+        "tshirts_tshirt_polo_striped",
+        "skins_#8d5524",
+        "hats_hair_sanalika_street",
+        "props_kilic",
+        "outfits_dress_bridal",
+        "outfits_outfit_goth",
+        "outfits_outfit_c2_gentleman",
+        "tshirts_polo",
+        "shoes_sneakers",
+        "outfits_outfit_c2_street_cool"
+      ],
+      "propInventory": {
+        "props_gazoz": 1,
+        "props_asagold": 1,
+        "props_baglama": 1,
+        "props_nargile": 1,
+        "props_tespih": 3,
+        "props_balon": 1,
+        "props_olta": 1,
+        "props_kahve": 1,
+        "props_tespih2": 2,
+        "props_gitar": 1,
+        "props_kupa": 1,
+        "props_oyuncak_araba": 1,
+        "props_kilic": 1
+      },
+      "furnitureInventory": [
+        "meyve_arabasi"
       ],
       "friends": [
         "rümeysa",
         "Black_Widow",
-        "maltoroz"
+        "maltoroz",
+        "taha",
+        "Elyesa"
       ],
+      "friendRequests": [],
+      "house": {
+        "type": "pool",
+        "furniture": [
+          {
+            "id": "gramofon",
+            "x": 372,
+            "y": 239,
+            "rotation": 0,
+            "facing": "right"
+          },
+          {
+            "id": "sedir",
+            "x": 620,
+            "y": 388,
+            "rotation": 3,
+            "facing": "back-right"
+          },
+          {
+            "id": "sedir",
+            "x": 623,
+            "y": 189,
+            "rotation": 0,
+            "facing": "right"
+          },
+          {
+            "id": "yemek_masasi",
+            "x": 480,
+            "y": 380,
+            "rotation": 0,
+            "facing": "front-right"
+          },
+          {
+            "id": "berjer",
+            "x": 750,
+            "y": 223
+          },
+          {
+            "id": "piyano",
+            "x": 147,
+            "y": 197,
+            "rotation": 0,
+            "facing": "right"
+          },
+          {
+            "id": "arcade",
+            "x": 286,
+            "y": 249,
+            "rotation": 0,
+            "facing": "right"
+          },
+          {
+            "id": "sedir",
+            "x": 483,
+            "y": 200,
+            "rotation": 0,
+            "facing": "right"
+          },
+          {
+            "id": "bitki",
+            "x": 660,
+            "y": 280,
+            "rotation": 1,
+            "facing": "left"
+          },
+          {
+            "id": "meyve_arabasi",
+            "x": 328,
+            "y": 400,
+            "rotation": 0
+          }
+        ],
+        "privacy": "locked"
+      },
       "houses": {
         "garden": {
           "type": "garden",
@@ -220,7 +334,8 @@
               "y": 400,
               "rotation": 0
             }
-          ]
+          ],
+          "privacy": "locked"
         },
         "standart": {
           "type": "standart",
@@ -267,129 +382,10 @@
               "x": 589,
               "y": 169
             }
-          ]
+          ],
+          "privacy": "locked"
         }
       },
-      "house": {
-        "type": "garden",
-        "furniture": [
-          {
-            "id": "somine",
-            "x": 203,
-            "y": 160,
-            "rotation": 0,
-            "facing": "front-right"
-          },
-          {
-            "id": "sedir",
-            "x": 620,
-            "y": 280,
-            "rotation": 0,
-            "facing": "front-right"
-          },
-          {
-            "id": "berjer",
-            "x": 680,
-            "y": 380,
-            "rotation": 0,
-            "facing": "front-right"
-          },
-          {
-            "id": "tv",
-            "x": 500,
-            "y": 180,
-            "rotation": 0,
-            "facing": "front-right"
-          },
-          {
-            "id": "sedir",
-            "x": 440,
-            "y": 300,
-            "rotation": 0,
-            "facing": "front-right"
-          },
-          {
-            "id": "somine",
-            "x": 740,
-            "y": 160,
-            "rotation": 0
-          },
-          {
-            "id": "akvaryum",
-            "x": 500,
-            "y": 380,
-            "rotation": 2,
-            "facing": "back-left"
-          },
-          {
-            "id": "gramofon",
-            "x": 640,
-            "y": 200,
-            "rotation": 0,
-            "facing": "front-right"
-          },
-          {
-            "id": "tv",
-            "x": 80,
-            "y": 180,
-            "rotation": 0,
-            "facing": "front-right"
-          },
-          {
-            "id": "berjer",
-            "x": 88,
-            "y": 319,
-            "rotation": 0,
-            "facing": "front-right"
-          },
-          {
-            "id": "arcade",
-            "x": 360,
-            "y": 160,
-            "rotation": 0,
-            "facing": "front-right"
-          },
-          {
-            "id": "bitki",
-            "x": 720,
-            "y": 240,
-            "rotation": 0,
-            "facing": "front-right"
-          },
-          {
-            "id": "slot_machine",
-            "x": 400,
-            "y": 400,
-            "rotation": 0
-          }
-        ]
-      },
-      "furnitureInventory": [
-        "meyve_arabasi"
-      ],
-      "friendRequests": [],
-      "propInventory": {
-        "props_gazoz": 1,
-        "props_asagold": 1,
-        "props_baglama": 1,
-        "props_nargile": 2,
-        "props_tespih": 3,
-        "props_balon": 1,
-        "props_olta": 1,
-        "props_kahve": 1,
-        "props_tespih2": 2,
-        "props_gitar": 1,
-        "props_kupa": 1,
-        "props_oyuncak_araba": 1
-      },
-      "teaExpiresAt": null,
-      "gender": "male",
-      "auth": {
-        "hash": "f971b4fe5d3824a081cf8a822f54f75bef7054f50824de8e50d3d7882874c491",
-        "salt": "aad3de517daba22557ec7597bd3559d2"
-      },
-      "role": "admin",
-      "isAdmin": true,
       "dailyQuests": {
         "date": "2026-10-17",
         "quests": [
@@ -400,7 +396,8 @@
             "target": 1,
             "reward": 60,
             "current": 0,
-            "claimed": false
+            "claimed": false,
+            "_id": "6ad3debb1552c02d3989a15a"
           },
           {
             "id": "batak_play",
@@ -409,7 +406,8 @@
             "target": 1,
             "reward": 50,
             "current": 0,
-            "claimed": false
+            "claimed": false,
+            "_id": "6ad3debb1552c02d3989a15b"
           },
           {
             "id": "tavla_play",
@@ -418,7 +416,8 @@
             "target": 1,
             "reward": 40,
             "current": 0,
-            "claimed": false
+            "claimed": false,
+            "_id": "6ad3debb1552c02d3989a15c"
           },
           {
             "id": "drink_tea",
@@ -427,7 +426,8 @@
             "target": 1,
             "reward": 20,
             "current": 0,
-            "claimed": false
+            "claimed": false,
+            "_id": "6ad3debb1552c02d3989a15d"
           },
           {
             "id": "go_fishing",
@@ -436,19 +436,43 @@
             "target": 1,
             "reward": 30,
             "current": 1,
-            "claimed": false
+            "claimed": true,
+            "_id": "6ad3debb1552c02d3989a15e"
           }
         ]
-      }
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T20:46:51.839Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
     },
     "babake": {
+      "_id": "6ad3debb1552c02d3989a15f",
+      "username": "babake",
       "money": 2000,
+      "gender": "male",
+      "auth": {
+        "hash": null,
+        "salt": null
+      },
+      "role": "user",
+      "isAdmin": false,
       "avatar": {
         "hat": "bere",
         "face": "none",
         "skinColor": "#facc15",
         "shirtColor": "#3b82f6",
-        "heldItem": "none"
+        "heldItem": "none",
+        "model": "classic",
+        "color": "#3b82f6",
+        "shoes": "sneakers",
+        "shirt": null,
+        "outfit": null
       },
       "inventory": [
         "hat_bere",
@@ -458,23 +482,50 @@
         "props_none",
         "props_nargile"
       ],
+      "propInventory": {
+        "props_nargile": 1
+      },
+      "furnitureInventory": [],
       "friends": [],
       "friendRequests": [],
       "house": null,
       "houses": {},
-      "furnitureInventory": [],
-      "propInventory": {
-        "props_nargile": 1
-      }
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T20:46:51.944Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
     },
     "rümeysa": {
+      "_id": "6ad3debc1552c02d3989a160",
+      "username": "rümeysa",
       "money": 2000,
+      "gender": "male",
+      "auth": {
+        "hash": "71145d7fae3da70bd09ef5afcf61e5aa0b3b826462c9526782f60809208a5469",
+        "salt": "0741e7df45a3dea403ca431a11975be1"
+      },
+      "role": "user",
+      "isAdmin": false,
       "avatar": {
         "hat": "bere",
         "face": "none",
         "skinColor": "#facc15",
         "shirtColor": "#3b82f6",
-        "heldItem": "none"
+        "heldItem": "none",
+        "model": "classic",
+        "color": "#3b82f6",
+        "shoes": "sneakers",
+        "shirt": null,
+        "outfit": null
       },
       "inventory": [
         "hat_bere",
@@ -484,28 +535,92 @@
         "props_none",
         "props_nargile"
       ],
+      "propInventory": {
+        "props_nargile": 2
+      },
+      "furnitureInventory": [],
       "friends": [
         "yasin"
       ],
       "friendRequests": [],
       "house": null,
       "houses": {},
-      "furnitureInventory": [],
-      "propInventory": {
-        "props_nargile": 2
+      "dailyQuests": {
+        "date": "",
+        "quests": []
       },
       "teaExpiresAt": null,
-      "auth": {
-        "hash": "71145d7fae3da70bd09ef5afcf61e5aa0b3b826462c9526782f60809208a5469",
-        "salt": "0741e7df45a3dea403ca431a11975be1"
-      }
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T20:46:52.043Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
     },
     "ahmet": {
-      "money": 20000
+      "_id": "6ad3debc1552c02d3989a161",
+      "username": "ahmet",
+      "money": 20000,
+      "gender": "male",
+      "auth": {
+        "hash": null,
+        "salt": null
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "propInventory": {},
+      "houses": {},
+      "createdAt": "2026-10-17T20:46:52.143Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
     },
     "maltoroz": {
+      "_id": "6ad3debc1552c02d3989a162",
+      "username": "maltoroz",
       "money": 100339,
       "gender": "male",
+      "auth": {
+        "hash": "56da0af9c8e3a77e251ac38c3dc72c02169cc0dcf2434826fd6d708a2861bfb5",
+        "salt": "0c67d12a896ae972a59653f291d74bbe"
+      },
+      "role": "admin",
+      "isAdmin": true,
       "avatar": {
         "hat": "cowboy",
         "face": "none",
@@ -513,7 +628,10 @@
         "shirtColor": "hoodie",
         "color": "hoodie",
         "heldItem": "asagold",
-        "shoes": "classic"
+        "shoes": "classic",
+        "model": "classic",
+        "shirt": null,
+        "outfit": null
       },
       "inventory": [
         "hats_bere",
@@ -528,22 +646,16 @@
         "props_nargile",
         "props_asagold"
       ],
+      "propInventory": {
+        "props_nargile": 1,
+        "props_asagold": 1
+      },
+      "furnitureInventory": [],
       "friends": [
         "yasin"
       ],
       "friendRequests": [],
       "house": null,
-      "furnitureInventory": [],
-      "propInventory": {
-        "props_nargile": 1,
-        "props_asagold": 1
-      },
-      "auth": {
-        "hash": "56da0af9c8e3a77e251ac38c3dc72c02169cc0dcf2434826fd6d708a2861bfb5",
-        "salt": "0c67d12a896ae972a59653f291d74bbe"
-      },
-      "role": "admin",
-      "isAdmin": true,
       "dailyQuests": {
         "date": "2026-10-16",
         "quests": [
@@ -554,7 +666,8 @@
             "target": 1,
             "reward": 60,
             "current": 0,
-            "claimed": false
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a163"
           },
           {
             "id": "batak_play",
@@ -563,7 +676,8 @@
             "target": 1,
             "reward": 50,
             "current": 1,
-            "claimed": false
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a164"
           },
           {
             "id": "tavla_play",
@@ -572,7 +686,8 @@
             "target": 1,
             "reward": 40,
             "current": 0,
-            "claimed": false
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a165"
           },
           {
             "id": "drink_tea",
@@ -581,7 +696,8 @@
             "target": 1,
             "reward": 20,
             "current": 0,
-            "claimed": false
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a166"
           },
           {
             "id": "go_fishing",
@@ -590,14 +706,33 @@
             "target": 1,
             "reward": 30,
             "current": 0,
-            "claimed": false
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a167"
           }
         ]
-      }
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "houses": {},
+      "createdAt": "2026-10-17T20:46:52.241Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
     },
     "denemelik": {
+      "_id": "6ad3debc1552c02d3989a168",
+      "username": "denemelik",
       "money": 2000,
       "gender": "male",
+      "auth": {
+        "hash": null,
+        "salt": null
+      },
+      "role": "user",
+      "isAdmin": false,
       "avatar": {
         "hat": "bere",
         "face": "none",
@@ -605,7 +740,10 @@
         "shirtColor": "#3b82f6",
         "color": "#3b82f6",
         "heldItem": "none",
-        "shoes": "sneakers"
+        "shoes": "sneakers",
+        "model": "classic",
+        "shirt": null,
+        "outfit": null
       },
       "inventory": [
         "hats_bere",
@@ -615,13 +753,29 @@
         "face_none",
         "props_none"
       ],
+      "propInventory": {},
+      "furnitureInventory": [],
       "friends": [],
       "friendRequests": [],
       "house": null,
-      "furnitureInventory": [],
-      "propInventory": {}
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "houses": {},
+      "createdAt": "2026-10-17T20:46:52.347Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
     },
     "qwdqd": {
+      "_id": "6ad3debc1552c02d3989a169",
+      "username": "qwdqd",
       "money": 2000,
       "gender": "male",
       "auth": {
@@ -637,7 +791,10 @@
         "shirtColor": "#3b82f6",
         "color": "#3b82f6",
         "heldItem": "none",
-        "shoes": "sneakers"
+        "shoes": "sneakers",
+        "model": "classic",
+        "shirt": null,
+        "outfit": null
       },
       "inventory": [
         "hats_bere",
@@ -647,14 +804,29 @@
         "face_none",
         "props_none"
       ],
+      "propInventory": {},
+      "furnitureInventory": [],
       "friends": [],
       "friendRequests": [],
       "house": null,
       "houses": {},
-      "furnitureInventory": [],
-      "propInventory": {}
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T20:46:52.447Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
     },
     "aşldkwşlqkd": {
+      "_id": "6ad3debc1552c02d3989a16a",
+      "username": "aşldkwşlqkd",
       "money": 2000,
       "gender": "male",
       "auth": {
@@ -670,7 +842,10 @@
         "shirtColor": "#3b82f6",
         "color": "#3b82f6",
         "heldItem": "none",
-        "shoes": "sneakers"
+        "shoes": "sneakers",
+        "model": "classic",
+        "shirt": null,
+        "outfit": null
       },
       "inventory": [
         "hats_bere",
@@ -680,14 +855,29 @@
         "face_none",
         "props_none"
       ],
+      "propInventory": {},
+      "furnitureInventory": [],
       "friends": [],
       "friendRequests": [],
       "house": null,
       "houses": {},
-      "furnitureInventory": [],
-      "propInventory": {}
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T20:46:52.545Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
     },
     "taktukhamdi": {
+      "_id": "6ad3debc1552c02d3989a16b",
+      "username": "taktukhamdi",
       "money": 2000,
       "gender": "male",
       "auth": {
@@ -703,7 +893,10 @@
         "shirtColor": "#3b82f6",
         "color": "#3b82f6",
         "heldItem": "none",
-        "shoes": "sneakers"
+        "shoes": "sneakers",
+        "model": "classic",
+        "shirt": null,
+        "outfit": null
       },
       "inventory": [
         "hats_bere",
@@ -713,14 +906,29 @@
         "face_none",
         "props_none"
       ],
+      "propInventory": {},
+      "furnitureInventory": [],
       "friends": [],
       "friendRequests": [],
       "house": null,
       "houses": {},
-      "furnitureInventory": [],
-      "propInventory": {}
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T20:46:52.645Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
     },
     "Black_Widow": {
+      "_id": "6ad3debc1552c02d3989a16c",
+      "username": "Black_Widow",
       "money": 14051,
       "gender": "male",
       "auth": {
@@ -730,6 +938,621 @@
       "role": "user",
       "isAdmin": false,
       "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "model": "classic",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [
+        "yasin"
+      ],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "2026-10-15",
+        "quests": [
+          {
+            "id": "okey101_play",
+            "title": "🀄 101 Okey Partisi",
+            "desc": "101 Okey masasında 1 el tamamla",
+            "target": 1,
+            "reward": 60,
+            "current": 1,
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a16d"
+          },
+          {
+            "id": "batak_play",
+            "title": "🃏 Koz Batak Ustası",
+            "desc": "Batak masasında 1 el tamamla",
+            "target": 1,
+            "reward": 50,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a16e"
+          },
+          {
+            "id": "tavla_play",
+            "title": "🎲 Tavla Mücadelesi",
+            "desc": "Tavla masasında 1 oyun tamamla",
+            "target": 1,
+            "reward": 40,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a16f"
+          },
+          {
+            "id": "drink_tea",
+            "title": "☕ Tavşan Kanı Çay",
+            "desc": "Kıraathane çay ocağından taze çay iç",
+            "target": 1,
+            "reward": 20,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a170"
+          },
+          {
+            "id": "go_fishing",
+            "title": "🎣 Göl Kenarı Balıkçısı",
+            "desc": "Göl kenarında 1 kez olta atıp balık tut",
+            "target": 1,
+            "reward": 30,
+            "current": 1,
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a171"
+          }
+        ]
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T20:46:52.748Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "deneme": {
+      "_id": "6ad3debc1552c02d3989a172",
+      "username": "deneme",
+      "money": 3382,
+      "gender": "male",
+      "auth": {
+        "hash": "3f5a6b2fc1b6c285f920e9f1e0eee7c81a53970115e7a043b8526d5a0177907e",
+        "salt": "a7101794e25769581147bbe8d1447938"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_sanalika_street",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "tshirt_divalar",
+        "color": "tshirt_divalar",
+        "heldItem": "sirtcantasi",
+        "shoes": "sanalika_skate_shoes",
+        "shirt": "tshirt_divalar",
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "shoes_sanalika_skate_shoes",
+        "props_sirtcantasi",
+        "hats_hair_sanalika_street"
+      ],
+      "propInventory": {
+        "props_sirtcantasi": 1
+      },
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "2026-10-16",
+        "quests": [
+          {
+            "id": "okey101_play",
+            "title": "🀄 101 Okey Partisi",
+            "desc": "101 Okey masasında 1 el tamamla",
+            "target": 1,
+            "reward": 60,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a173"
+          },
+          {
+            "id": "batak_play",
+            "title": "🃏 Koz Batak Ustası",
+            "desc": "Batak masasında 1 el tamamla",
+            "target": 1,
+            "reward": 50,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a174"
+          },
+          {
+            "id": "tavla_play",
+            "title": "🎲 Tavla Mücadelesi",
+            "desc": "Tavla masasında 1 oyun tamamla",
+            "target": 1,
+            "reward": 40,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a175"
+          },
+          {
+            "id": "drink_tea",
+            "title": "☕ Tavşan Kanı Çay",
+            "desc": "Kıraathane çay ocağından taze çay iç",
+            "target": 1,
+            "reward": 20,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a176"
+          },
+          {
+            "id": "go_fishing",
+            "title": "🎣 Göl Kenarı Balıkçısı",
+            "desc": "Göl kenarında 1 kez olta atıp balık tut",
+            "target": 1,
+            "reward": 30,
+            "current": 1,
+            "claimed": false,
+            "_id": "6ad3debc1552c02d3989a177"
+          }
+        ]
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T20:46:52.847Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "mehmet": {
+      "_id": "6ad3debc1552c02d3989a178",
+      "username": "mehmet",
+      "money": 17000,
+      "gender": "male",
+      "auth": {
+        "hash": null,
+        "salt": null
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "propInventory": {},
+      "houses": {},
+      "createdAt": "2026-10-17T20:46:52.953Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "cemal": {
+      "_id": "6ad3debd1552c02d3989a179",
+      "username": "cemal",
+      "money": 23000,
+      "gender": "male",
+      "auth": {
+        "hash": null,
+        "salt": null
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "propInventory": {},
+      "houses": {},
+      "createdAt": "2026-10-17T20:46:53.094Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "kadın": {
+      "_id": "6ad3debd1552c02d3989a17a",
+      "username": "kadın",
+      "money": 510,
+      "gender": "female",
+      "auth": {
+        "hash": "5705842ad9517df27276d1a380379f061bf7a50927d7fa46cdce7b44f8e76d81",
+        "salt": "2c0cc5319799ab2b0709db52aaf3c864"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_bridal",
+        "color": "dress_bridal",
+        "heldItem": "none",
+        "shoes": "flats",
+        "model": "classic",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none",
+        "shirts_dress_bridal"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T20:46:53.196Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "ceki": {
+      "_id": "6ad3debd1552c02d3989a17b",
+      "username": "ceki",
+      "money": 165,
+      "gender": "male",
+      "auth": {
+        "hash": "e49b662847948e32bb2bc51e2c8fa7f774e67a0e3e80c88103c9fc6f48deabb6",
+        "salt": "2e02ec00ceb143e3c3daede3284a7367"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "korsan",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "sanalika_striped_polo",
+        "color": "sanalika_striped_polo",
+        "heldItem": "cocktail_mojito",
+        "shoes": "sanalika_skate_shoes",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "shoes_sanalika_skate_shoes",
+        "hats_korsan",
+        "shirts_sanalika_striped_polo"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T20:46:53.295Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "Elyesa": {
+      "_id": "6ad3f0c9435135d09468fd7c",
+      "username": "Elyesa",
+      "money": 49250,
+      "gender": "male",
+      "auth": {
+        "hash": "2c4e1c2934b78d3cc80bd5bd12278faa269f8b53a37b29acce0f3324accd6bfe",
+        "salt": "a0c565f9a68986398b5a1e0b64aaf4f5"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic_2",
+        "hat": "korsan",
+        "face": "beard",
+        "skinColor": "#8d5524",
+        "shirtColor": "#0f172a",
+        "color": "#0f172a",
+        "heldItem": "kilic",
+        "shoes": "boots",
+        "shirt": "#0f172a",
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "hats_kasket",
+        "faces_sunglasses",
+        "skins_#d2996c",
+        "tshirts_leather",
+        "shoes_boots_thigh_high",
+        "props_kilic",
+        "props_tespih2",
+        "hats_cowboy",
+        "tshirts_polo",
+        "shoes_classic",
+        "hats_korsan",
+        "skins_#8d5524",
+        "shoes_boots",
+        "pants_pants_classic_black",
+        "tshirts_#0f172a",
+        "faces_beard"
+      ],
+      "propInventory": {
+        "props_kilic": 1,
+        "props_tespih2": 1
+      },
+      "furnitureInventory": [],
+      "friends": [
+        "taha",
+        "yasin"
+      ],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:03:53.473Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "taha": {
+      "_id": "6ad3f0d2435135d09468fd7d",
+      "username": "taha",
+      "money": 17000,
+      "gender": "male",
+      "auth": {
+        "hash": "842a99575bfa97b0986f219326188070926c863c19362c20f4a3fe169743d582",
+        "salt": "b4984cf40fd9dbe2d4d37b03d49dcb1d"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic_2",
+        "hat": "korsan",
+        "face": "mustache",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "leather",
+        "color": "leather",
+        "heldItem": "kilic",
+        "shoes": "boots",
+        "shirt": "leather",
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "faces_mustache",
+        "hats_korsan",
+        "shoes_classic",
+        "tshirts_leather",
+        "pants_pants_classic_cargo_olive",
+        "shoes_boots",
+        "props_kilic",
+        "props_nargile"
+      ],
+      "propInventory": {
+        "props_kilic": 1,
+        "props_nargile": 1
+      },
+      "furnitureInventory": [],
+      "friends": [
+        "yasin",
+        "Elyesa"
+      ],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:04:02.082Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "sebon": {
+      "_id": "6ad3f2fc435135d0946903ff",
+      "username": "sebon",
+      "money": 8865,
+      "gender": "male",
+      "auth": {
+        "hash": "0eac7e9bdc1e185930f42795692f82c7a38f2dad25bfd838d4ff31f22c3573e4",
+        "salt": "e142d689ad3b2d5f91c30542f2b18037"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic_2",
+        "hat": "bere",
+        "face": "sunglasses",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "leather",
+        "color": "leather",
+        "heldItem": "cay",
+        "shoes": "sneakers",
+        "shirt": "leather",
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "tshirts_leather",
+        "faces_sunglasses",
+        "props_kilic"
+      ],
+      "propInventory": {
+        "props_kilic": 2,
+        "props_cay": 1
+      },
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": 1792279836465,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:13:16.672Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "Pelin": {
+      "_id": "6ad3f82f435135d094690824",
+      "username": "Pelin",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "6a119301907e23a5fbc7a97763b9dab5f0e4ed9795bd2f913b4bf0b53ee6f700",
+        "salt": "6fca53d6a752add60c3152fb1105ecf7"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
         "hat": "bere",
         "face": "none",
         "skinColor": "#ffd1a4",
@@ -746,86 +1569,103 @@
         "face_none",
         "props_none"
       ],
-      "friends": [
-        "yasin"
-      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
       "friendRequests": [],
       "house": null,
       "houses": {},
-      "furnitureInventory": [],
-      "propInventory": {},
       "dailyQuests": {
-        "date": "2026-10-15",
-        "quests": [
-          {
-            "id": "okey101_play",
-            "title": "🀄 101 Okey Partisi",
-            "desc": "101 Okey masasında 1 el tamamla",
-            "target": 1,
-            "reward": 60,
-            "current": 1,
-            "claimed": false
-          },
-          {
-            "id": "batak_play",
-            "title": "🃏 Koz Batak Ustası",
-            "desc": "Batak masasında 1 el tamamla",
-            "target": 1,
-            "reward": 50,
-            "current": 0,
-            "claimed": false
-          },
-          {
-            "id": "tavla_play",
-            "title": "🎲 Tavla Mücadelesi",
-            "desc": "Tavla masasında 1 oyun tamamla",
-            "target": 1,
-            "reward": 40,
-            "current": 0,
-            "claimed": false
-          },
-          {
-            "id": "drink_tea",
-            "title": "☕ Tavşan Kanı Çay",
-            "desc": "Kıraathane çay ocağından taze çay iç",
-            "target": 1,
-            "reward": 20,
-            "current": 0,
-            "claimed": false
-          },
-          {
-            "id": "go_fishing",
-            "title": "🎣 Göl Kenarı Balıkçısı",
-            "desc": "Göl kenarında 1 kez olta atıp balık tut",
-            "target": 1,
-            "reward": 30,
-            "current": 1,
-            "claimed": false
-          }
-        ]
+        "date": "",
+        "quests": []
       },
-      "teaExpiresAt": null
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:35:27.389Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
     },
-    "deneme": {
-      "money": 3382,
-      "gender": "male",
+    "Pelinn": {
+      "_id": "6ad3f888435135d094690825",
+      "username": "Pelinn",
+      "money": 30,
+      "gender": "female",
       "auth": {
-        "hash": "3f5a6b2fc1b6c285f920e9f1e0eee7c81a53970115e7a043b8526d5a0177907e",
-        "salt": "a7101794e25769581147bbe8d1447938"
+        "hash": "b3966ca90f284579b3b74a8a47ece9faf1305caff8eaa320ca67e1cbca7c8049",
+        "salt": "9e2d895c5689f319055e8de6b58a665f"
       },
       "role": "user",
       "isAdmin": false,
       "avatar": {
-        "hat": "hair_sanalika_street",
+        "model": "classic",
+        "hat": "hair_blonde_curls",
         "face": "none",
         "skinColor": "#ffd1a4",
-        "shirtColor": "tshirt_divalar",
-        "color": "tshirt_divalar",
-        "heldItem": "sirtcantasi",
-        "shoes": "sanalika_skate_shoes",
-        "model": "classic",
-        "shirt": "tshirt_divalar",
+        "shirtColor": "skirt_crop",
+        "color": "skirt_crop",
+        "heldItem": "balon",
+        "shoes": "heels",
+        "shirt": "skirt_crop",
         "outfit": null
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none",
+        "tshirts_skirt_crop",
+        "shoes_heels",
+        "hats_hair_blonde_curls",
+        "props_balon"
+      ],
+      "propInventory": {
+        "props_balon": 1
+      },
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:36:56.686Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "amdöndüren": {
+      "_id": "6ad3fa06435135d094690862",
+      "username": "amdöndüren",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "220ec6406bb36b6b23d9f93f50f5247077044f8398b3d0c1553ba285a120e00c",
+        "salt": "42294b874fe934edaed1271cd450d43f"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
       },
       "inventory": [
         "hats_bere",
@@ -833,91 +1673,46 @@
         "shirts_#3b82f6",
         "shoes_sneakers",
         "face_none",
-        "props_none",
-        "shoes_sanalika_skate_shoes",
-        "props_sirtcantasi",
-        "hats_hair_sanalika_street"
+        "props_none"
       ],
+      "propInventory": {},
+      "furnitureInventory": [],
       "friends": [],
       "friendRequests": [],
       "house": null,
       "houses": {},
-      "furnitureInventory": [],
-      "propInventory": {
-        "props_sirtcantasi": 1
-      },
       "dailyQuests": {
-        "date": "2026-10-16",
-        "quests": [
-          {
-            "id": "okey101_play",
-            "title": "🀄 101 Okey Partisi",
-            "desc": "101 Okey masasında 1 el tamamla",
-            "target": 1,
-            "reward": 60,
-            "current": 0,
-            "claimed": false
-          },
-          {
-            "id": "batak_play",
-            "title": "🃏 Koz Batak Ustası",
-            "desc": "Batak masasında 1 el tamamla",
-            "target": 1,
-            "reward": 50,
-            "current": 0,
-            "claimed": false
-          },
-          {
-            "id": "tavla_play",
-            "title": "🎲 Tavla Mücadelesi",
-            "desc": "Tavla masasında 1 oyun tamamla",
-            "target": 1,
-            "reward": 40,
-            "current": 0,
-            "claimed": false
-          },
-          {
-            "id": "drink_tea",
-            "title": "☕ Tavşan Kanı Çay",
-            "desc": "Kıraathane çay ocağından taze çay iç",
-            "target": 1,
-            "reward": 20,
-            "current": 0,
-            "claimed": false
-          },
-          {
-            "id": "go_fishing",
-            "title": "🎣 Göl Kenarı Balıkçısı",
-            "desc": "Göl kenarında 1 kez olta atıp balık tut",
-            "target": 1,
-            "reward": 30,
-            "current": 1,
-            "claimed": false
-          }
-        ]
-      }
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:43:18.083Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
     },
-    "mehmet": {
-      "money": 17000
-    },
-    "cemal": {
-      "money": 23000
-    },
-    "kadın": {
-      "money": 510,
+    "kaşar": {
+      "_id": "6ad3fa23435135d0946908c7",
+      "username": "kaşar",
+      "money": 1000,
       "gender": "female",
       "auth": {
-        "hash": "5705842ad9517df27276d1a380379f061bf7a50927d7fa46cdce7b44f8e76d81",
-        "salt": "2c0cc5319799ab2b0709db52aaf3c864"
+        "hash": "de0a2694ac73501d9da514a88ed1941c664747a58e90e52e81a7923c0ef10ca1",
+        "salt": "a8489ccfd566e55f5e881bc2fb59724b"
       },
       "role": "user",
       "isAdmin": false,
       "avatar": {
+        "model": "classic",
         "hat": "hair_long",
         "face": "none",
         "skinColor": "#ffd1a4",
-        "shirtColor": "dress_bridal",
-        "color": "dress_bridal",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
         "heldItem": "none",
         "shoes": "flats"
       },
@@ -927,34 +1722,49 @@
         "shirts_dress_pink",
         "shoes_flats",
         "face_none",
-        "props_none",
-        "shirts_dress_bridal"
+        "props_none"
       ],
+      "propInventory": {},
+      "furnitureInventory": [],
       "friends": [],
       "friendRequests": [],
       "house": null,
       "houses": {},
-      "furnitureInventory": [],
-      "propInventory": {}
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:43:47.889Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
     },
-    "ceki": {
-      "money": 165,
+    "bacıdürten": {
+      "_id": "6ad3fa42435135d0946908c8",
+      "username": "bacıdürten",
+      "money": 360,
       "gender": "male",
       "auth": {
-        "hash": "e49b662847948e32bb2bc51e2c8fa7f774e67a0e3e80c88103c9fc6f48deabb6",
-        "salt": "2e02ec00ceb143e3c3daede3284a7367"
+        "hash": "b348840da4bf298f1fc288fb31b2fc55957f06f0425cee170bfce6b3dde2df7e",
+        "salt": "8cdd1a7f3ad40c191a21c8f002ca3de2"
       },
       "role": "user",
       "isAdmin": false,
       "avatar": {
-        "hat": "korsan",
+        "model": "classic",
+        "hat": "kasket",
         "face": "none",
         "skinColor": "#ffd1a4",
-        "shirtColor": "sanalika_striped_polo",
-        "color": "sanalika_striped_polo",
-        "heldItem": "cocktail_mojito",
-        "shoes": "sanalika_skate_shoes",
-        "model": "classic"
+        "shirtColor": "dress_black",
+        "color": "dress_black",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "outfit": "dress_black"
       },
       "inventory": [
         "hats_bere",
@@ -963,9 +1773,1074 @@
         "shoes_sneakers",
         "face_none",
         "props_none",
-        "shoes_sanalika_skate_shoes",
+        "hats_kasket",
+        "outfits_dress_black"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:44:18.585Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "EskişehirKaşarı": {
+      "_id": "6ad3fa62435135d0946908c9",
+      "username": "EskişehirKaşarı",
+      "money": 580,
+      "gender": "male",
+      "auth": {
+        "hash": "4f6a20450ad1972af27d604396e6cccd0c8397171cc2078ac874d545bdb155f4",
+        "salt": "8b0ce08cbebde3b55ad4b212e54d079c"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "hoodie",
+        "color": "hoodie",
+        "heldItem": "olta",
+        "shoes": "sneakers",
+        "shirt": "hoodie",
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "props_olta",
+        "tshirts_hoodie"
+      ],
+      "propInventory": {
+        "props_olta": 1
+      },
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:44:50.287Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "BacıKovalayan": {
+      "_id": "6ad3fa85435135d0946908ca",
+      "username": "BacıKovalayan",
+      "money": 100,
+      "gender": "female",
+      "auth": {
+        "hash": "c97ec45d45de5b913be56785bd5043ee029a0cf242c3a51952eb73f789e8014a",
+        "salt": "7d9537364f04f746bd974192746f6eac"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "beret_pink",
+        "face": "sunglasses",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_emerald",
+        "color": "dress_emerald",
+        "heldItem": "none",
+        "shoes": "flats",
+        "outfit": "dress_emerald"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none",
+        "outfits_dress_emerald",
+        "faces_sunglasses",
+        "hats_beret_pink"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:45:25.282Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "KırmıziŞortli": {
+      "_id": "6ad3faa2435135d0946908cb",
+      "username": "KırmıziŞortli",
+      "money": 760,
+      "gender": "male",
+      "auth": {
+        "hash": "cccbe2f0a8fe2caeb749aec6c8f5885fea774ae3d643194e68ef3cb4187fafaf",
+        "salt": "893bacd1db55da5ea6ec955a63d11567"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "skirt_denim",
+        "color": "skirt_denim",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": "skirt_denim",
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "tshirts_skirt_denim"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:45:54.383Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "BabaNoluyooo": {
+      "_id": "6ad3faf2435135d0946908cc",
+      "username": "BabaNoluyooo",
+      "money": 650,
+      "gender": "male",
+      "auth": {
+        "hash": "3bc9a297a2e327ee01e71124a407c6e491e1c6e60643cd48e0e136a624957041",
+        "salt": "44b9e78099fbf5365044d042c017f093"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "leather",
+        "color": "leather",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": "leather",
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "tshirts_leather"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:47:14.481Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "Kimolumbu": {
+      "_id": "6ad3fb0d435135d0946908cd",
+      "username": "Kimolumbu",
+      "money": 750,
+      "gender": "male",
+      "auth": {
+        "hash": "6586bde30eea311aa866bde3fbb8728c9a01dbd2fc845a0c9908bc1af0d418e4",
+        "salt": "88045df391ded7d7e8860131f76f0077"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_hijab",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "hats_hair_hijab"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:47:41.580Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "BenTahayım": {
+      "_id": "6ad3fc1e435135d0946909aa",
+      "username": "BenTahayım",
+      "money": 400,
+      "gender": "male",
+      "auth": {
+        "hash": "e0bcbe835e8bcc7ead21c49cbbd5253c205bbf217bea3e6beafb8273e412fa35",
+        "salt": "5f326f4e3e426bf3c63e53dbd76502f4"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "fes",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "outfit": "dress_pink"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "hats_fes",
+        "outfits_dress_pink"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:52:14.273Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "Benİbneyim": {
+      "_id": "6ad3fc2a435135d0946909ab",
+      "username": "Benİbneyim",
+      "money": 140,
+      "gender": "male",
+      "auth": {
+        "hash": "d92dda356d121d60c14d4b777e8dca4ab11551a57e140b9d9d5ae62b30880ecb",
+        "salt": "3d339a7633adfdd47b4617fea493faee"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "kasket",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "skirt_crop",
+        "color": "skirt_crop",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": "skirt_crop",
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "hats_kasket",
+        "tshirts_hoodie",
+        "tshirts_polo",
+        "tshirts_skirt_crop"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:52:26.886Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "BenElyesayımAmaİbne": {
+      "_id": "6ad3fc41435135d0946909ac",
+      "username": "BenElyesayımAmaİbne",
+      "money": 390,
+      "gender": "male",
+      "auth": {
+        "hash": "81231fe0a8fd54a62a99af8902877bbae594cf76ef10ba43f0435ee24551c744",
+        "salt": "bbd9d3899df8b4898211ae946bb4b33e"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "kasket",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "leather",
+        "color": "leather",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": "leather",
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "hats_kasket",
+        "tshirts_leather"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:52:49.390Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "tahaKALPpelin": {
+      "_id": "6ad3fc63435135d094690a25",
+      "username": "tahaKALPpelin",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "35c4eebec549dca29db2757498ca81fe97fd0caac91bded6eae996fefbe1742c",
+        "salt": "f51325638a67123f416887511a68fc7f"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:53:23.085Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "YasinimBen": {
+      "_id": "6ad3fc81435135d094690a4e",
+      "username": "YasinimBen",
+      "money": 80,
+      "gender": "male",
+      "auth": {
+        "hash": "c252127e225ce0b2913469b720c58b5a55bdb3137a5eccb5d387a651f99c6203",
+        "salt": "073e2ae56d5e0d5928d975a7addbda14"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "cowboy",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "outfit": "dress_pink"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "hats_kasket",
+        "hats_cowboy",
+        "outfits_dress_pink"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:53:53.780Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "SonerKüçük": {
+      "_id": "6ad3fcac435135d094690a8b",
+      "username": "SonerKüçük",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "2732fac454db6e43db0c73f0877e4071546158158347ff8fe18641e4fd281371",
+        "salt": "db3bc4fc560edb4d7cbd1c12482a54f0"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:54:36.279Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "test_u_24315": {
+      "_id": "6ad3fcc81fd55de735818083",
+      "username": "test_u_24315",
+      "money": 1000,
+      "gender": "female",
+      "auth": {
+        "hash": "7bf6bb7aacba16635e9e6e28739acb6ce93c5dd85121ef3cca816b01669f03ff",
+        "salt": "413a2daf02ecfb19647ed068a986b1a8"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:55:04.360Z",
+      "updatedAt": "2026-10-17T22:55:04.360Z",
+      "__v": 0
+    },
+    "test_u_15175": {
+      "_id": "6ad3fcc81fd55de735818084",
+      "username": "test_u_15175",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "aa22b6decf374e2599525feb7b7491418739c6a72441f12f7ea3a4b766f2f47d",
+        "salt": "006f367cf65655c42c954c2baf91c0f9"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:55:04.493Z",
+      "updatedAt": "2026-10-17T22:55:04.493Z",
+      "__v": 0
+    },
+    "ÖmerÇelik": {
+      "_id": "6ad3fccc435135d094690a8c",
+      "username": "ÖmerÇelik",
+      "money": 110,
+      "gender": "male",
+      "auth": {
+        "hash": "9041ada563786d66573dc8377b09b9dbd4b113ceb1c1e14aa2060a80dbbad5b4",
+        "salt": "aea876349ca104dbaf07fe6e10d229f9"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "kasket",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_lavender",
+        "color": "dress_lavender",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "outfit": "dress_lavender"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "hats_kasket",
+        "outfits_dress_emerald",
+        "outfits_dress_lavender"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:55:08.280Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "MuzcuArman": {
+      "_id": "6ad3fcfd435135d094690ac9",
+      "username": "MuzcuArman",
+      "money": 460,
+      "gender": "male",
+      "auth": {
+        "hash": "13b95358e0dd52608bd7f19abe224d880b9dd8e1a01568b91f0c0fda9fd883b0",
+        "salt": "f78145b7e6c2a9f0741d171959cf6a47"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic_2",
+        "hat": "korsan",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "balon",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
         "hats_korsan",
-        "shirts_sanalika_striped_polo"
+        "props_balon"
+      ],
+      "propInventory": {
+        "props_balon": 1
+      },
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:55:57.276Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "KüçükElyesa": {
+      "_id": "6ad3fd5c435135d094690b06",
+      "username": "KüçükElyesa",
+      "money": 332,
+      "gender": "male",
+      "auth": {
+        "hash": "36f7042c33e780de53616c5fec28f4818d29a683ff94636ab2e63c344fe0f43e",
+        "salt": "3cf818ddb9cec5589f6065fc95f613ce"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "cowboy",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "leather",
+        "color": "leather",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": "leather",
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "hats_cowboy",
+        "tshirts_leather"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "2026-10-17",
+        "quests": [
+          {
+            "id": "okey101_play",
+            "title": "🀄 101 Okey Partisi",
+            "desc": "101 Okey masasında 1 el tamamla",
+            "target": 1,
+            "reward": 60,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad404b6435135d0946926ed"
+          },
+          {
+            "id": "batak_play",
+            "title": "🃏 Koz Batak Ustası",
+            "desc": "Batak masasında 1 el tamamla",
+            "target": 1,
+            "reward": 50,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad404b6435135d0946926ee"
+          },
+          {
+            "id": "tavla_play",
+            "title": "🎲 Tavla Mücadelesi",
+            "desc": "Tavla masasında 1 oyun tamamla",
+            "target": 1,
+            "reward": 40,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad404b6435135d0946926ef"
+          },
+          {
+            "id": "drink_tea",
+            "title": "☕ Tavşan Kanı Çay",
+            "desc": "Kıraathane çay ocağından taze çay iç",
+            "target": 1,
+            "reward": 20,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad404b6435135d0946926f0"
+          },
+          {
+            "id": "go_fishing",
+            "title": "🎣 Göl Kenarı Balıkçısı",
+            "desc": "Göl kenarında 1 kez olta atıp balık tut",
+            "target": 1,
+            "reward": 30,
+            "current": 1,
+            "claimed": false,
+            "_id": "6ad404b6435135d0946926f1"
+          }
+        ]
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:57:32.480Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "yav": {
+      "_id": "6ad3fd8e435135d094690b2f",
+      "username": "yav",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "d642ddd3fdd6eeb6de7596fdc5a79048be15602931d8ee855434475cc0d94d20",
+        "salt": "a5fdd3e4d714950baff55aaaccbd0c72"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T22:58:22.380Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "HarryPother": {
+      "_id": "6ad3ffb7435135d094690e28",
+      "username": "HarryPother",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "996129f58c47c7ed687cea32e12b0afa2c283a76853303443df695baa6b8d4e3",
+        "salt": "4c9d0717d9b1b7b61de66cbf93f09384"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T23:07:35.985Z",
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "bil_u1_56913": {
+      "username": "bil_u1_56913",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "b2c06b6f056d6b4577fbf92b9d5a0a03f1e306da845b8c30940afdad509ff927",
+        "salt": "b23ac0be65776b6133724c621fb0910a"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bil_u2_80101": {
+      "username": "bil_u2_80101",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "3b219add7dab2022031e071ddfd4fb0ac6de3dcbe6f2793f0aefb5e7e74ca98e",
+        "salt": "3201098f2e1aad7064747eb8aa622271"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
       ],
       "friends": [],
       "friendRequests": [],

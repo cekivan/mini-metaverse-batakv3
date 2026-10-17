@@ -90,10 +90,17 @@ function appendChatMessageToHistory(itemOrName, msg, channel, room) {
         line.appendChild(roomBadge);
     }
 
+    if (item.channel === 'whisper') {
+        line.style.background = 'rgba(236, 72, 153, 0.16)';
+        line.style.borderLeft = '3px solid #ec4899';
+        line.style.padding = '3px 8px';
+        line.style.borderRadius = '5px';
+    }
+
     // Gönderici Adı
     let b = document.createElement('b');
     b.textContent = item.name + ': ';
-    b.style.color = item.channel === 'all' ? '#fde047' : '#5eead4';
+    b.style.color = item.channel === 'whisper' ? '#f472b6' : (item.channel === 'all' ? '#fde047' : '#5eead4');
     line.appendChild(b);
 
     // Mesaj Metni

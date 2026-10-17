@@ -129,7 +129,7 @@ const unlockAudio = () => {
 };
 ['click', 'keydown', 'touchstart'].forEach(evt => window.addEventListener(evt, unlockAudio, { once: true, passive: true }));
 
-function playSound(type) {
+function playSound(type, param) {
     if (!audioCtx) return;
     if (audioCtx.state === 'suspended') {
         audioCtx.resume();
@@ -364,6 +364,18 @@ function playSound(type) {
             gain.connect(sfxGainNode);
             osc.start(now);
             osc.stop(now + 0.5);
+        }
+        else if (type === 'billiardHit' || type === 'billiard_hit' || type === 'billiard' || type === 'hit') {
+            playRealisticBilliardHit(now, param);
+        }
+        else if (type === 'billiardCushion' || type === 'cushion') {
+            playRealisticBilliardCushion(now, param);
+        }
+        else if (type === 'cueShoot') {
+            playRealisticCueShoot(now, param);
+        }
+        else if (type === 'pocket') {
+            playRealisticPocket(now);
         }
         else if (CASINO_SOUND_FILES[type] || ['chip', 'wheel', 'roulette_spin', 'bet_start', 'card_deal', 'lose', 'spin', 'slot_spin', 'jackpot'].includes(type)) {
             playCasinoSound(type);
@@ -615,6 +627,9 @@ function playSynthesizedCasinoSound(name) {
         else if (name === 'billiardHit' || name === 'billiard_hit' || name === 'billiard') {
             playRealisticBilliardHit(now);
         }
+        else if (name === 'billiardCushion' || name === 'cushion') {
+            playRealisticBilliardCushion(now);
+        }
         else if (name === 'cueShoot') {
             playRealisticCueShoot(now);
         }
@@ -625,94 +640,140 @@ function playSynthesizedCasinoSound(name) {
 }
 
 /**
- * 🎱 GERÇEKÇİ AKUSTİK BİLARDO TOPU ÇARPIŞMA SENTEZLEYİCİSİ (Aramith Phenolic Resin Acoustics)
+ * 🎱 ULTRA GERÇEKÇİ AKUSTİK BİLARDO TOPU ÇARPIŞMASI (Aramith Phenolic Resin Acoustics)
+ * @param {number} [now]
+ * @param {number} [intensity=0.8] - 0.1 ile 1.0 arası vuruş hızı/şiddeti
  */
-function playRealisticBilliardHit(now) {
+function playRealisticBilliardHit(now, intensity = 0.8) {
     if (!audioCtx) return;
     const t = now || audioCtx.currentTime;
+    const power = Math.max(0.12, Math.min(1.0, (typeof intensity === 'number' && !isNaN(intensity)) ? intensity : 0.8));
 
-    // Doğal akustik çeşitlilik (Her çarpışma farklı bir açı ve güçtedir)
-    const jitter = (Math.random() - 0.5) * 80;
-    const crackFreq = 3400 + jitter * 2;
-    const bodyFreq1 = 1180 + jitter;
-    const bodyFreq2 = 2450 + jitter * 1.5;
+    // Doğal akustik varyasyon (Her topta farklı Hertz mikrosapması)
+    const jitter = (Math.random() - 0.5) * 70;
+    const crackFreq = 4800 + jitter * 2;
+    const mode1 = 1260 + jitter;
+    const mode2 = 3150 + jitter * 1.5;
 
-    // 1. Sert Fenolik Reçine Çarpışma Transient'i (Aramith 'CRACK' İmpulsu - 3400Hz -> 1400Hz)
-    let oscCrack = audioCtx.createOscillator();
-    let gainCrack = audioCtx.createGain();
-    oscCrack.type = 'triangle';
-    oscCrack.frequency.setValueAtTime(crackFreq, t);
-    oscCrack.frequency.exponentialRampToValueAtTime(1400, t + 0.008);
+    // 1. Sert Kristalin Kontak İmpulsu (Hertzian Ultra-Fast Contact Crack - 0.003s)
+    let oscClick = audioCtx.createOscillator();
+    let gainClick = audioCtx.createGain();
+    let filterClick = audioCtx.createBiquadFilter();
 
-    gainCrack.gain.setValueAtTime(0.55, t);
-    gainCrack.gain.exponentialRampToValueAtTime(0.001, t + 0.012);
+    oscClick.type = 'triangle';
+    oscClick.frequency.setValueAtTime(crackFreq, t);
+    oscClick.frequency.exponentialRampToValueAtTime(1200, t + 0.005);
 
-    oscCrack.connect(gainCrack);
-    gainCrack.connect(sfxGainNode);
-    oscCrack.start(t);
-    oscCrack.stop(t + 0.015);
+    filterClick.type = 'bandpass';
+    filterClick.frequency.setValueAtTime(crackFreq, t);
+    filterClick.Q.setValueAtTime(3.5, t);
 
-    // 2. Masif Reçine Gövde Tınlaması (Katı Küre Rezonansı - 1180 Hz)
-    let oscBody1 = audioCtx.createOscillator();
-    let gainBody1 = audioCtx.createGain();
-    oscBody1.type = 'sine';
-    oscBody1.frequency.setValueAtTime(bodyFreq1, t);
-    oscBody1.frequency.exponentialRampToValueAtTime(bodyFreq1 * 0.88, t + 0.045);
+    gainClick.gain.setValueAtTime(0.75 * power, t);
+    gainClick.gain.exponentialRampToValueAtTime(0.001, t + 0.007);
 
-    gainBody1.gain.setValueAtTime(0.35, t);
-    gainBody1.gain.exponentialRampToValueAtTime(0.001, t + 0.045);
+    oscClick.connect(filterClick);
+    filterClick.connect(gainClick);
+    gainClick.connect(sfxGainNode);
+    oscClick.start(t);
+    oscClick.stop(t + 0.009);
 
-    oscBody1.connect(gainBody1);
-    gainBody1.connect(sfxGainNode);
-    oscBody1.start(t);
-    oscBody1.stop(t + 0.05);
+    // 2. Fenolik Reçine Katı Küre Titreşimi (Solid Phenolic Sphere Resonance - 1260 Hz)
+    let oscMode1 = audioCtx.createOscillator();
+    let gainMode1 = audioCtx.createGain();
+    oscMode1.type = 'sine';
+    oscMode1.frequency.setValueAtTime(mode1, t);
+    oscMode1.frequency.exponentialRampToValueAtTime(mode1 * 0.92, t + 0.045);
 
-    // 3. Yüksek Cam/Seramik Parlaklığı (Harmonik Rezonans - 2450 Hz)
-    let oscBody2 = audioCtx.createOscillator();
-    let gainBody2 = audioCtx.createGain();
-    oscBody2.type = 'triangle';
-    oscBody2.frequency.setValueAtTime(bodyFreq2, t);
-    oscBody2.frequency.exponentialRampToValueAtTime(1800, t + 0.025);
+    let ringDecay = 0.025 + power * 0.035;
+    gainMode1.gain.setValueAtTime(0.48 * power, t);
+    gainMode1.gain.exponentialRampToValueAtTime(0.001, t + ringDecay);
 
-    gainBody2.gain.setValueAtTime(0.25, t);
-    gainBody2.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+    oscMode1.connect(gainMode1);
+    gainMode1.connect(sfxGainNode);
+    oscMode1.start(t);
+    oscMode1.stop(t + ringDecay + 0.005);
 
-    oscBody2.connect(gainBody2);
-    gainBody2.connect(sfxGainNode);
-    oscBody2.start(t);
-    oscBody2.stop(t + 0.035);
+    // 3. Üst Harmonik Çınlama (High Harmonic Ring - 3150 Hz)
+    let oscMode2 = audioCtx.createOscillator();
+    let gainMode2 = audioCtx.createGain();
+    oscMode2.type = 'triangle';
+    oscMode2.frequency.setValueAtTime(mode2, t);
+    oscMode2.frequency.exponentialRampToValueAtTime(2200, t + 0.02);
 
-    // 4. Çuha ve Mermer Masa Tokluğu (170 gramlık ağır topun fiziksel ağırlık hissi - Low-End Thump)
-    let oscThud = audioCtx.createOscillator();
-    let gainThud = audioCtx.createGain();
-    oscThud.type = 'sine';
-    oscThud.frequency.setValueAtTime(220 + (Math.random() - 0.5) * 30, t);
-    oscThud.frequency.exponentialRampToValueAtTime(75, t + 0.04);
+    let highDecay = 0.012 + power * 0.016;
+    gainMode2.gain.setValueAtTime(0.32 * power, t);
+    gainMode2.gain.exponentialRampToValueAtTime(0.001, t + highDecay);
 
-    gainThud.gain.setValueAtTime(0.42, t);
-    gainThud.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+    oscMode2.connect(gainMode2);
+    gainMode2.connect(sfxGainNode);
+    oscMode2.start(t);
+    oscMode2.stop(t + highDecay + 0.005);
 
-    oscThud.connect(gainThud);
-    gainThud.connect(sfxGainNode);
-    oscThud.start(t);
-    oscThud.stop(t + 0.045);
+    // 4. Mermer Tabla ve Çuha Bas Darbesi (Slate Bed Thud - 140Hz -> 48Hz)
+    let oscSlate = audioCtx.createOscillator();
+    let gainSlate = audioCtx.createGain();
+    oscSlate.type = 'sine';
+    oscSlate.frequency.setValueAtTime(140 + (Math.random() - 0.5) * 20, t);
+    oscSlate.frequency.exponentialRampToValueAtTime(48, t + 0.035);
+
+    gainSlate.gain.setValueAtTime(0.38 * power, t);
+    gainSlate.gain.exponentialRampToValueAtTime(0.001, t + 0.038);
+
+    oscSlate.connect(gainSlate);
+    gainSlate.connect(sfxGainNode);
+    oscSlate.start(t);
+    oscSlate.stop(t + 0.042);
+}
+
+/**
+ * 🎱 BANT ÇARPMA SESİ (Rubber Cushion & Felt Bounce)
+ * @param {number} [now]
+ * @param {number} [intensity=0.8]
+ */
+function playRealisticBilliardCushion(now, intensity = 0.8) {
+    if (!audioCtx) return;
+    const t = now || audioCtx.currentTime;
+    const power = Math.max(0.15, Math.min(1.0, (typeof intensity === 'number' && !isNaN(intensity)) ? intensity : 0.8));
+
+    // Kauçuk tampon ve çuha darbesi (Muffled rubbery thud)
+    let osc = audioCtx.createOscillator();
+    let gain = audioCtx.createGain();
+    let filter = audioCtx.createBiquadFilter();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(130 + (Math.random() - 0.5) * 15, t);
+    osc.frequency.exponentialRampToValueAtTime(45, t + 0.065);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(380, t);
+    filter.frequency.exponentialRampToValueAtTime(100, t + 0.065);
+
+    gain.gain.setValueAtTime(0.40 * power, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(sfxGainNode);
+    osc.start(t);
+    osc.stop(t + 0.075);
 }
 
 /**
  * 🎱 ISTAKA VURUŞ SESİ (Leather Cue Tip Impact)
  */
-function playRealisticCueShoot(now) {
+function playRealisticCueShoot(now, power = 1.0) {
     if (!audioCtx) return;
     const t = now || audioCtx.currentTime;
+    const p = Math.max(0.2, Math.min(1.0, (typeof power === 'number' && !isNaN(power)) ? power : 1.0));
 
     // Deri tebeşirli ıstaka ucu darbesi
     let osc = audioCtx.createOscillator();
     let gain = audioCtx.createGain();
     osc.type = 'triangle';
-    osc.frequency.setValueAtTime(750, t);
-    osc.frequency.exponentialRampToValueAtTime(140, t + 0.05);
+    osc.frequency.setValueAtTime(780, t);
+    osc.frequency.exponentialRampToValueAtTime(130, t + 0.05);
 
-    gain.gain.setValueAtTime(0.48, t);
+    gain.gain.setValueAtTime(0.55 * p, t);
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.055);
 
     osc.connect(gain);
@@ -720,14 +781,14 @@ function playRealisticCueShoot(now) {
     osc.start(t);
     osc.stop(t + 0.06);
 
-    // Ahşap gövde şaft titreşimi
+    // Ahşap akçaağaç şaft titreşimi
     let oscWood = audioCtx.createOscillator();
     let gainWood = audioCtx.createGain();
     oscWood.type = 'sine';
-    oscWood.frequency.setValueAtTime(280, t);
-    oscWood.frequency.exponentialRampToValueAtTime(90, t + 0.04);
+    oscWood.frequency.setValueAtTime(290, t);
+    oscWood.frequency.exponentialRampToValueAtTime(85, t + 0.04);
 
-    gainWood.gain.setValueAtTime(0.25, t);
+    gainWood.gain.setValueAtTime(0.30 * p, t);
     gainWood.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
 
     oscWood.connect(gainWood);
@@ -743,18 +804,34 @@ function playRealisticPocket(now) {
     if (!audioCtx) return;
     const t = now || audioCtx.currentTime;
 
+    // 1. Deri/file cep tabanına ağır düşüş darbesi (Heavy pocket bottom thud)
     let osc = audioCtx.createOscillator();
     let gain = audioCtx.createGain();
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(175, t);
-    osc.frequency.exponentialRampToValueAtTime(45, t + 0.12);
+    osc.frequency.setValueAtTime(115, t);
+    osc.frequency.exponentialRampToValueAtTime(36, t + 0.14);
 
-    gain.gain.setValueAtTime(0.55, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+    gain.gain.setValueAtTime(0.65, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
 
     osc.connect(gain);
     gain.connect(sfxGainNode);
     osc.start(t);
-    osc.stop(t + 0.13);
+    osc.stop(t + 0.15);
+
+    // 2. Ağ ve deri çıtırtısı (Pocket leather rattle)
+    let oscRattle = audioCtx.createOscillator();
+    let gainRattle = audioCtx.createGain();
+    oscRattle.type = 'triangle';
+    oscRattle.frequency.setValueAtTime(320, t + 0.02);
+    oscRattle.frequency.exponentialRampToValueAtTime(80, t + 0.12);
+
+    gainRattle.gain.setValueAtTime(0.28, t + 0.02);
+    gainRattle.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+
+    oscRattle.connect(gainRattle);
+    gainRattle.connect(sfxGainNode);
+    oscRattle.start(t + 0.02);
+    oscRattle.stop(t + 0.13);
 }
 

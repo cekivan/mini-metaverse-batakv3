@@ -2,7 +2,7 @@ const dataManager = require('../dataManager');
 const { checkRateLimit } = require('../utils/securityUtils');
 
 function registerSocialHandlers(io, socket, players, helpers) {
-    const { givePlayerTeaWithTimer, playerTeaTimers } = helpers;
+    const { givePlayerTeaWithTimer, playerTeaTimers, getPlayerDetailedLocation } = helpers;
 
     // 1. SOHBET MESAJI (50 KARAKTER LİMİTİ & SPAM KORUMASI: 1 SN'DE 3 MESAJ -> 3 SN BEKLEME)
     socket.chatTimestamps = [];
@@ -67,6 +67,48 @@ function registerSocialHandlers(io, socket, players, helpers) {
         socket.chatTimestamps.push(now);
 
         let cleanMsg = dataManager.sanitizeString(rawMsg, 50); // Maksimum 50 karakter
+        let senderRoom = players[socket.id].room;
+
+        // Fısıltı / Özel Mesaj Desteği: /w <nick> <mesaj>, /pm <nick> <mesaj>, /fisilda <nick> <mesaj>
+        let whisperMatch = cleanMsg.match(/^\/(?:w|pm|fisilda|msg)\s+([^\s]+)\s+(.+)$/i);
+        if (whisperMatch) {
+            let targetNick = whisperMatch[1].trim();
+            let privText = whisperMatch[2].trim();
+            if (privText) {
+                let targetSid = null;
+                for (let sid in players) {
+                    if (players[sid]?.name && players[sid].name.toLowerCase() === targetNick.toLowerCase()) {
+                        targetSid = sid;
+                        break;
+                    }
+                }
+                if (targetSid) {
+                    let targetRealName = players[targetSid].name;
+                    // Gönderene göster
+                    socket.emit('chatUpdate', {
+                        id: socket.id,
+                        name: `🔒 [Fısıltı -> ${targetRealName}]`,
+                        room: senderRoom,
+                        msg: privText,
+                        channel: 'whisper'
+                    });
+                    // Alıcıya ilet
+                    if (targetSid !== socket.id) {
+                        io.to(targetSid).emit('chatUpdate', {
+                            id: socket.id,
+                            name: `🔒 [${senderName} fısıldadı]`,
+                            room: players[targetSid].room,
+                            msg: privText,
+                            channel: 'whisper'
+                        });
+                    }
+                    return;
+                } else {
+                    socket.emit('systemMessage', `⚠️ ${targetNick} adlı oyuncu şu anda oyunda bulunamadı.`);
+                    return;
+                }
+            }
+        }
 
         // Geliştirici / Test Kısayolu: /testbaba (Yalnızca Admin)
         if ((cleanMsg === '/testbaba' || cleanMsg === '/baba') && players[socket.id]?.isAdmin) {
@@ -81,7 +123,6 @@ function registerSocialHandlers(io, socket, players, helpers) {
             return;
         }
 
-        let senderRoom = players[socket.id].room;
         players[socket.id].msg = cleanMsg;
 
         if (targetChannel === 'all' || targetChannel === 'global') {
@@ -515,6 +556,63 @@ function registerSocialHandlers(io, socket, players, helpers) {
         let uData = dataManager.persistentData.users[uKey];
         socket.emit('friendListUpdate', dataManager.getFriendListData(uKey, players));
         socket.emit('friendRequestsUpdate', uData?.friendRequests || []);
+    });
+
+    // 11. ÇEVRİMİÇİ OYUNCULARI LİSTELEME
+    socket.on('getOnlinePlayers', () => {
+        if (!players[socket.id]) return;
+
+        let requester = players[socket.id];
+        let requesterName = requester.name;
+        let requesterData = dataManager.persistentData.users[requesterName] || {};
+        let requesterFriends = Array.isArray(requesterData.friends) 
+            ? requesterData.friends.map(f => (typeof f === 'string' ? f : (f.name || f.username || '')).toLowerCase()) 
+            : [];
+
+        let list = [];
+        for (let sid in players) {
+            let p = players[sid];
+            if (!p || !p.name) continue;
+
+            let uData = dataManager.persistentData.users[p.name] || {};
+            let rawLoc = (typeof getPlayerDetailedLocation === 'function') 
+                ? getPlayerDetailedLocation(sid, p) 
+                : (p.room || 'sokak');
+
+            let friendlyLoc = (rawLoc || '').replace(/\s*\(X:\s*-?\d+,\s*Y:\s*-?\d+\)/gi, '').trim();
+
+            let isSelf = (sid === socket.id);
+            let isFriend = requesterFriends.includes(p.name.toLowerCase());
+
+            list.push({
+                id: sid,
+                username: p.name,
+                gender: p.gender || uData.gender || 'male',
+                room: p.room || 'sokak',
+                location: friendlyLoc || '🌳 Meydan',
+                isAdmin: !!p.isAdmin,
+                isVip: !!(uData.isVip || (p.money && p.money >= 50000)),
+                isFishing: !!p.isFishing,
+                hasTea: !!p.hasTea,
+                isSelf: isSelf,
+                isFriend: isFriend,
+                money: p.money || 0,
+                house: uData.house || (uData.houses ? Object.values(uData.houses)[0] : null)
+            });
+        }
+
+        list.sort((a, b) => {
+            if (a.isSelf) return -1;
+            if (b.isSelf) return 1;
+            if (a.isFriend && !b.isFriend) return -1;
+            if (!a.isFriend && b.isFriend) return 1;
+            return a.username.localeCompare(b.username, 'tr');
+        });
+
+        socket.emit('onlinePlayersListUpdate', {
+            total: list.length,
+            players: list
+        });
     });
 }
 

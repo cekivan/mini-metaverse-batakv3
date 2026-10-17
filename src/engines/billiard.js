@@ -228,29 +228,50 @@ function evaluateShot(gameData) {
 
                 // Bantlardan Sekme (Cushion Bounces)
                 let spinTangent = (ball.type === 'white' && ball.spinX) ? ball.spinX * 0.8 : 0;
+                let bounced = false;
+                let bounceSpeed = 0;
 
                 if (ball.x < minX) {
                     ball.x = minX;
-                    ball.vx = Math.abs(ball.vx) * 0.95;
+                    bounceSpeed = Math.abs(ball.vx);
+                    ball.vx = bounceSpeed * 0.95;
                     ball.vy += spinTangent;
                     if (ball.type === 'white') ball.spinX *= 0.4;
+                    bounced = true;
                 } else if (ball.x > maxX) {
                     ball.x = maxX;
-                    ball.vx = -Math.abs(ball.vx) * 0.95;
+                    bounceSpeed = Math.abs(ball.vx);
+                    ball.vx = -bounceSpeed * 0.95;
                     ball.vy -= spinTangent;
                     if (ball.type === 'white') ball.spinX *= 0.4;
+                    bounced = true;
                 }
 
                 if (ball.y < minY) {
                     ball.y = minY;
+                    bounceSpeed = Math.max(bounceSpeed, Math.abs(ball.vy));
                     ball.vy = Math.abs(ball.vy) * 0.95;
                     ball.vx += spinTangent;
                     if (ball.type === 'white') ball.spinX *= 0.4;
+                    bounced = true;
                 } else if (ball.y > maxY) {
                     ball.y = maxY;
+                    bounceSpeed = Math.max(bounceSpeed, Math.abs(ball.vy));
                     ball.vy = -Math.abs(ball.vy) * 0.95;
                     ball.vx -= spinTangent;
                     if (ball.type === 'white') ball.spinX *= 0.4;
+                    bounced = true;
+                }
+
+                if (bounced && bounceSpeed > 0.5) {
+                    gameData.soundEvents = gameData.soundEvents || [];
+                    let hasCushion = gameData.soundEvents.some(ev => (typeof ev === 'object' ? ev.type : ev) === 'cushion');
+                    if (!hasCushion) {
+                        gameData.soundEvents.push({
+                            type: 'cushion',
+                            intensity: Math.min(1.0, Math.max(0.2, bounceSpeed / 9))
+                        });
+                    }
                 }
             }
         }
@@ -297,10 +318,15 @@ function evaluateShot(gameData) {
                         b2.vx += impulse * nx;
                         b2.vy += impulse * ny;
 
-                        if (p > 0.4) {
+                        if (p > 0.2) {
                             gameData.soundEvents = gameData.soundEvents || [];
-                            if (!gameData.soundEvents.includes('hit')) {
-                                gameData.soundEvents.push('hit');
+                            let hitIntensity = Math.min(1.0, Math.max(0.18, p / 8.5));
+                            let hitCount = gameData.soundEvents.filter(ev => (typeof ev === 'object' ? ev.type : ev) === 'hit').length;
+                            if (hitCount < 3) {
+                                gameData.soundEvents.push({
+                                    type: 'hit',
+                                    intensity: hitIntensity
+                                });
                             }
                         }
                     }

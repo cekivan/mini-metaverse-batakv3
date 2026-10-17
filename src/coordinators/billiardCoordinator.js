@@ -304,6 +304,7 @@ function startBilliardPhysicsLoop(io, players = {}) {
                         turnIndex: game.turnIndex,
                         players: game.players,
                         playerSuits: game.playerSuits,
+                        playerProfiles: game.playerProfiles || {},
                         ballInHand: game.ballInHand,
                         winner: game.winner,
                         gameOver: game.gameOver,
