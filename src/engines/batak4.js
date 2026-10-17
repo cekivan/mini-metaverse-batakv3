@@ -21,21 +21,23 @@ function sortHand(hand) {
 
 function startBatakGame(players, existingScores = null, roundNumber = 1) {
     let deck = createAndShuffleDeck();
+    let numRounds = Math.max(1, Number(roundNumber) || 1);
+    let startTurn = (players && players.length > 0) ? (numRounds - 1) % players.length : 0;
     let gameData = {
         phase: 'ihale', 
         players: [...players], // 4 Kişi
         hands: {},
         tableCards: [], // Gömmeli kart yok
-        turnIndex: 0,
-        forcedPlayerIndex: 0, 
-        bid: { current: 3, highestBidder: null }, // İhale 4'ten başlayacak
+        turnIndex: startTurn,
+        forcedPlayerIndex: startTurn, 
+        bid: { current: 4, highestBidder: null }, // İhale 4'ten başlar, pas denirse 4 kalır
         passedPlayers: [], 
         trump: null,
         tricksTaken: {},
-        starterIndex: 0,
+        starterIndex: startTurn,
         trumpBroken: false,
         scores: existingScores || {},
-        roundNumber: roundNumber
+        roundNumber: numRounds
     };
 
     players.forEach((pid) => {
@@ -108,24 +110,39 @@ function isValidMove(gameData, hand, playedCard, tableCards) {
     let ledSuit = tableCards[0].card.suit; 
     let highestLedValue = Math.max(...tableCards.filter(tc => tc.card.suit === ledSuit).map(tc => RANKS[tc.card.value]));
     let sameSuitCards = hand.filter(c => c.suit === ledSuit);
+    let isTrumped = tableCards.some(tc => tc.card.suit === trump && ledSuit !== trump);
     
+    // 1. Dönen renkten elde varsa:
     if (sameSuitCards.length > 0) {
         if (playedCard.suit !== ledSuit) return { valid: false, msg: `Elinde ${ledSuit} varken başka renk atamazsın!` };
-        let higherCards = sameSuitCards.filter(c => RANKS[c.value] > highestLedValue);
-        if (higherCards.length > 0 && RANKS[playedCard.value] < highestLedValue) {
-            return { valid: false, msg: `Elinde daha yüksek bir ${ledSuit} varken küçüğünü atamazsın!` };
+        
+        // Araya koz girmediyse ve elde daha büyük renk varsa büyütmek zorundadır
+        if (!isTrumped) {
+            let higherCards = sameSuitCards.filter(c => RANKS[c.value] > highestLedValue);
+            if (higherCards.length > 0 && RANKS[playedCard.value] < highestLedValue) {
+                return { valid: false, msg: `Elinde daha yüksek bir ${ledSuit} varken küçüğünü atamazsın!` };
+            }
         }
+        // Araya koz girdiyse veya elde daha büyük renk yoksa elindeki küçük/büyük her rengi atabilir
         return { valid: true };
-    } else {
+    } 
+    // 2. Dönen renkten elde yoksa:
+    else {
         let hasTrump = hand.some(c => c.suit === trump);
         if (hasTrump) {
-            if (playedCard.suit !== trump) return { valid: false, msg: `Dönen renkten elinde yok. Koz (${trump}) çakmak zorundasın!` };
             let trumpsOnTable = tableCards.filter(tc => tc.card.suit === trump);
             if (trumpsOnTable.length > 0) {
                 let highestTrumpValue = Math.max(...trumpsOnTable.map(tc => RANKS[tc.card.value]));
                 let higherTrumpsInHand = hand.filter(c => c.suit === trump && RANKS[c.value] > highestTrumpValue);
-                if (higherTrumpsInHand.length > 0 && RANKS[playedCard.value] < highestTrumpValue) {
-                    return { valid: false, msg: "Yerdeki kozdan daha büyük bir koz atmak zorundasın!" };
+                if (higherTrumpsInHand.length > 0) {
+                    if (playedCard.suit !== trump || RANKS[playedCard.value] < highestTrumpValue) {
+                        return { valid: false, msg: "Yerdeki kozdan daha büyük bir koz atmak zorundasın!" };
+                    }
+                }
+                // Masadaki kozu geçemiyorsa küçük koz da atabilir, yan renk (çöp) de kaçabilir
+            } else {
+                if (playedCard.suit !== trump) {
+                    return { valid: false, msg: `Dönen renkten elinde yok. Koz (${trump}) çakmak zorundasın!` };
                 }
             }
         }

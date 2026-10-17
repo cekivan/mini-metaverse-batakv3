@@ -1,14 +1,20 @@
 {
   "users": {
     "yasin": {
-      "money": 6715,
+      "money": 680,
       "avatar": {
-        "hat": "cowboy",
-        "face": "beard",
+        "hat": "kasket",
+        "face": "sunglasses",
         "skinColor": "#ffd1a4",
-        "shirtColor": "#3b82f6",
-        "heldItem": "none",
-        "shoes": "sneakers"
+        "shirtColor": "#f59e0b",
+        "heldItem": "tespih2",
+        "shoes": "sneakers",
+        "model": "classic",
+        "pants": "pants_classic_black",
+        "outfit": null,
+        "watch": "watch_cyber_sport",
+        "shirt": "#f59e0b",
+        "color": "#f59e0b"
       },
       "inventory": [
         "hat_bere",
@@ -25,7 +31,24 @@
         "props_baglama",
         "props_nargile",
         "props_cay",
-        "props_tespih"
+        "props_tespih",
+        "pants_pants_jeans_street",
+        "props_balon",
+        "props_olta",
+        "props_kahve",
+        "pants_pants_classic_cargo_olive",
+        "watches_watch_leather_classic",
+        "props_tespih2",
+        "props_gitar",
+        "props_kupa",
+        "watches_watch_gold_rolex",
+        "props_oyuncak_araba",
+        "tshirts_skirt_denim",
+        "tshirts_skirt_crop",
+        "watches_watch_cyber_sport",
+        "tshirts_#f59e0b",
+        "pants_pants_classic_black",
+        "faces_sunglasses"
       ],
       "friends": [
         "rümeysa",
@@ -118,6 +141,12 @@
               "y": 240,
               "rotation": 0,
               "facing": "front-right"
+            },
+            {
+              "id": "slot_machine",
+              "x": 400,
+              "y": 400,
+              "rotation": 0
             }
           ]
         },
@@ -134,7 +163,9 @@
             {
               "id": "sedir",
               "x": 620,
-              "y": 388
+              "y": 388,
+              "rotation": 3,
+              "facing": "back-right"
             },
             {
               "id": "sedir",
@@ -240,70 +271,94 @@
         }
       },
       "house": {
-        "type": "pool",
+        "type": "garden",
         "furniture": [
           {
-            "id": "gramofon",
-            "x": 372,
-            "y": 239,
+            "id": "somine",
+            "x": 203,
+            "y": 160,
             "rotation": 0,
-            "facing": "right"
+            "facing": "front-right"
           },
           {
             "id": "sedir",
             "x": 620,
-            "y": 388
-          },
-          {
-            "id": "sedir",
-            "x": 623,
-            "y": 189,
-            "rotation": 0,
-            "facing": "right"
-          },
-          {
-            "id": "yemek_masasi",
-            "x": 480,
-            "y": 380,
+            "y": 280,
             "rotation": 0,
             "facing": "front-right"
           },
           {
             "id": "berjer",
-            "x": 750,
-            "y": 223
+            "x": 680,
+            "y": 380,
+            "rotation": 0,
+            "facing": "front-right"
           },
           {
-            "id": "piyano",
-            "x": 147,
-            "y": 197,
+            "id": "tv",
+            "x": 500,
+            "y": 180,
             "rotation": 0,
-            "facing": "right"
-          },
-          {
-            "id": "arcade",
-            "x": 286,
-            "y": 249,
-            "rotation": 0,
-            "facing": "right"
+            "facing": "front-right"
           },
           {
             "id": "sedir",
-            "x": 483,
+            "x": 440,
+            "y": 300,
+            "rotation": 0,
+            "facing": "front-right"
+          },
+          {
+            "id": "somine",
+            "x": 740,
+            "y": 160,
+            "rotation": 0
+          },
+          {
+            "id": "akvaryum",
+            "x": 500,
+            "y": 380,
+            "rotation": 2,
+            "facing": "back-left"
+          },
+          {
+            "id": "gramofon",
+            "x": 640,
             "y": 200,
             "rotation": 0,
-            "facing": "right"
+            "facing": "front-right"
+          },
+          {
+            "id": "tv",
+            "x": 80,
+            "y": 180,
+            "rotation": 0,
+            "facing": "front-right"
+          },
+          {
+            "id": "berjer",
+            "x": 88,
+            "y": 319,
+            "rotation": 0,
+            "facing": "front-right"
+          },
+          {
+            "id": "arcade",
+            "x": 360,
+            "y": 160,
+            "rotation": 0,
+            "facing": "front-right"
           },
           {
             "id": "bitki",
-            "x": 660,
-            "y": 280,
-            "rotation": 1,
-            "facing": "left"
+            "x": 720,
+            "y": 240,
+            "rotation": 0,
+            "facing": "front-right"
           },
           {
-            "id": "meyve_arabasi",
-            "x": 328,
+            "id": "slot_machine",
+            "x": 400,
             "y": 400,
             "rotation": 0
           }
@@ -317,8 +372,15 @@
         "props_gazoz": 1,
         "props_asagold": 1,
         "props_baglama": 1,
-        "props_nargile": 1,
-        "props_tespih": 1
+        "props_nargile": 2,
+        "props_tespih": 3,
+        "props_balon": 1,
+        "props_olta": 1,
+        "props_kahve": 1,
+        "props_tespih2": 2,
+        "props_gitar": 1,
+        "props_kupa": 1,
+        "props_oyuncak_araba": 1
       },
       "teaExpiresAt": null,
       "gender": "male",
@@ -432,13 +494,17 @@
       "propInventory": {
         "props_nargile": 2
       },
-      "teaExpiresAt": null
+      "teaExpiresAt": null,
+      "auth": {
+        "hash": "71145d7fae3da70bd09ef5afcf61e5aa0b3b826462c9526782f60809208a5469",
+        "salt": "0741e7df45a3dea403ca431a11975be1"
+      }
     },
     "ahmet": {
       "money": 20000
     },
     "maltoroz": {
-      "money": 100329,
+      "money": 100339,
       "gender": "male",
       "avatar": {
         "hat": "cowboy",
@@ -446,7 +512,7 @@
         "skinColor": "#ffd1a4",
         "shirtColor": "hoodie",
         "color": "hoodie",
-        "heldItem": "none",
+        "heldItem": "asagold",
         "shoes": "classic"
       },
       "inventory": [
@@ -458,7 +524,9 @@
         "props_none",
         "shoes_classic",
         "shirts_hoodie",
-        "hats_cowboy"
+        "hats_cowboy",
+        "props_nargile",
+        "props_asagold"
       ],
       "friends": [
         "yasin"
@@ -466,7 +534,10 @@
       "friendRequests": [],
       "house": null,
       "furnitureInventory": [],
-      "propInventory": {},
+      "propInventory": {
+        "props_nargile": 1,
+        "props_asagold": 1
+      },
       "auth": {
         "hash": "56da0af9c8e3a77e251ac38c3dc72c02169cc0dcf2434826fd6d708a2861bfb5",
         "salt": "0c67d12a896ae972a59653f291d74bbe"
@@ -3790,7 +3861,7 @@
       "propInventory": {}
     },
     "deneme": {
-      "money": 4002,
+      "money": 3382,
       "gender": "male",
       "auth": {
         "hash": "3f5a6b2fc1b6c285f920e9f1e0eee7c81a53970115e7a043b8526d5a0177907e",
@@ -3799,13 +3870,16 @@
       "role": "user",
       "isAdmin": false,
       "avatar": {
-        "hat": "bere",
+        "hat": "hair_sanalika_street",
         "face": "none",
         "skinColor": "#ffd1a4",
-        "shirtColor": "#3b82f6",
-        "color": "#3b82f6",
-        "heldItem": "none",
-        "shoes": "sneakers"
+        "shirtColor": "tshirt_divalar",
+        "color": "tshirt_divalar",
+        "heldItem": "sirtcantasi",
+        "shoes": "sanalika_skate_shoes",
+        "model": "classic",
+        "shirt": "tshirt_divalar",
+        "outfit": null
       },
       "inventory": [
         "hats_bere",
@@ -3813,14 +3887,19 @@
         "shirts_#3b82f6",
         "shoes_sneakers",
         "face_none",
-        "props_none"
+        "props_none",
+        "shoes_sanalika_skate_shoes",
+        "props_sirtcantasi",
+        "hats_hair_sanalika_street"
       ],
       "friends": [],
       "friendRequests": [],
       "house": null,
       "houses": {},
       "furnitureInventory": [],
-      "propInventory": {},
+      "propInventory": {
+        "props_sirtcantasi": 1
+      },
       "dailyQuests": {
         "date": "2026-10-16",
         "quests": [
@@ -3873,7 +3952,7 @@
       }
     },
     "user_rot_4680": {
-      "money": 260,
+      "money": 275,
       "gender": "male",
       "auth": {
         "hash": "7508f42aebfff4b260f273f4c702c3b72ce5c7802acc622d4930119df5593e8d",
@@ -8359,6 +8438,2487 @@
       "houses": {},
       "furnitureInventory": [],
       "propInventory": {}
+    },
+    "kadın": {
+      "money": 510,
+      "gender": "female",
+      "auth": {
+        "hash": "5705842ad9517df27276d1a380379f061bf7a50927d7fa46cdce7b44f8e76d81",
+        "salt": "2c0cc5319799ab2b0709db52aaf3c864"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_bridal",
+        "color": "dress_bridal",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none",
+        "shirts_dress_bridal"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "p1_38771": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "6b7ba73b58ecc3b4b9bd37639e5b5ac88afd09e307280d9158d23d00427b6aa9",
+        "salt": "e9daed1f81a37d77cb4326061923910f"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "p2_82554": {
+      "money": 1000,
+      "gender": "female",
+      "auth": {
+        "hash": "2281540662a694395b06adfa5716978bf728efb8745059405585e1ff8ca2884c",
+        "salt": "2bd33009038b718b99ea5c97a776f9ab"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "p3_89313": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "dd875441b1acec4ac0c4c18015265c89f660c4525587e191b731cd8d309ac5b5",
+        "salt": "1a906ea79e473bd4f57130c4f16ba1a1"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "r_tester_8750": {
+      "money": 800,
+      "gender": "male",
+      "auth": {
+        "hash": "5c289b721a257b7a546defa7a3a842311a84cf94c47c13184effdf4b9303e6d2",
+        "salt": "7842d6a0c24c3512e7294dd3d4903ef3"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p1_9575": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "e432376a80241e29c5ef0af6e4fe2cba9ea61ff0ad46475a7e41f20e6b2cf7b1",
+        "salt": "5b414cb113fb3789dae4c361e2f2ee5f"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p2_698": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "c3bf3708b7b8dcd8003eaecce4ff4d914c7d07e3db7f42e4ecb96d030b6077d3",
+        "salt": "aaf6fdf76897760204c925e9080d438a"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "testuser_38062": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "dde30be066993b0b186e1622e734407dcdb560dcf4cc9958b32ec3a8c24425c8",
+        "salt": "62aa331ffd93237716616c2ba20c4f4d"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p4_spec_179220694": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "0e5b442fd15219ea5dcc7fd9546b845cf175a7808bff19ee8dca9a5379a1ed9b",
+        "salt": "f4aabf0a401bb597bd5d6410d85c6ad3"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p1_1792206940830": {
+      "money": 900,
+      "gender": "male",
+      "auth": {
+        "hash": "36de4c34f933e9aa9810015e9cb967a43540d2f248ab3d756226e430558a3570",
+        "salt": "19f8600750860f0222b4206dfeb76acf"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p2_1792206940830": {
+      "money": 950,
+      "gender": "male",
+      "auth": {
+        "hash": "0818d63a8c6ee319ee3d45b1718920be2a57431abb531296c0681a66ca750d5f",
+        "salt": "5ccc8e57449478b68e48709e9c3831f4"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p3_1792206940830": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "8f61d6008985ab3b612f58e1d91278d3c6aa6eaa6c9a9b43e0433ee78e54b718",
+        "salt": "4e7417a3a194500525703aa6608c59ea"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p5_dc_17922069408": {
+      "money": 900,
+      "gender": "male",
+      "auth": {
+        "hash": "9c34d26cdb51da467c2d855acc06ad06a02342abb428a42ec2790cd1ee000d59",
+        "salt": "f949f9b5b83e13db719a1d3a81001d88"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p6_round_17922069": {
+      "money": 800,
+      "gender": "male",
+      "auth": {
+        "hash": "f9f887e71406c36177874a232a0f8debc0c82e8af08210c22767a85321d54ea0",
+        "salt": "a3ec8040eb3cc0295b36850ac64d576b"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p4_spec_179220699": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "b03d157dde29277c32cfc9bf0d31e3d2da26c43d643f8c30d3d898b0a4f8f807",
+        "salt": "1590d11df8b7496e6ac41c54dd8949f2"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p1_1792206992974": {
+      "money": 900,
+      "gender": "male",
+      "auth": {
+        "hash": "e78cb9bbd82fba4eb74f952d61eec5ccc432bdc4e202447a490acdf3c7b1e6dd",
+        "salt": "cadbd197871e63aafb1c6978683d2d8b"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p2_1792206992974": {
+      "money": 950,
+      "gender": "male",
+      "auth": {
+        "hash": "3bac2f79cdd387eb495b848371c2f5083c5489617bc652cccecda8288648ada6",
+        "salt": "f205f6e6b9e70c9e7456d28669b0960a"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p3_1792206992974": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "c1e72e06f5265dc9c369bd3cf982ba28a5076f53c258a498e746dfe65284152e",
+        "salt": "68a2981a7347d8112ddbae8bc65aaace"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p5_dc_17922069929": {
+      "money": 900,
+      "gender": "male",
+      "auth": {
+        "hash": "cd6099bb8a95c290058e3947b92f767901afafd1ceafc0374448df9dc8801b5a",
+        "salt": "6e302a69f66bc28b401dbf3b6f6b3856"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "testuser_63686": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "7f4ef15fe8e18ac5d63be74ffe4af91b2d1265420c069a3d904797ff36e7aabd",
+        "salt": "d3d968f7d572d1d71b5656c0baee998d"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "testuser_98122": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "dc2e931f7947e7de41d3103255a9ca4ce9eed9de43025be2e6ff19dc0f9a0634",
+        "salt": "933d1829ceec2bfb844725b80778565b"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "ceki": {
+      "money": 165,
+      "gender": "male",
+      "auth": {
+        "hash": "e49b662847948e32bb2bc51e2c8fa7f774e67a0e3e80c88103c9fc6f48deabb6",
+        "salt": "2e02ec00ceb143e3c3daede3284a7367"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "hat": "korsan",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "sanalika_striped_polo",
+        "color": "sanalika_striped_polo",
+        "heldItem": "cocktail_mojito",
+        "shoes": "sanalika_skate_shoes",
+        "model": "classic"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "shoes_sanalika_skate_shoes",
+        "hats_korsan",
+        "shirts_sanalika_striped_polo"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "gamer_515": {
+      "money": 900,
+      "gender": "male",
+      "auth": {
+        "hash": "f9a37dc086b64456b472e417857f4d39395a21d07c17a4fb43d94565d3deec58",
+        "salt": "32f09a62784e8a175c35b38c20acce9c"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "gamer_6333": {
+      "money": 900,
+      "gender": "male",
+      "auth": {
+        "hash": "fb922194b1a9772df41244b83a8f2d7496a554de18b5c42269e2759886de5022",
+        "salt": "6dde4f5becbe9e4b9c1b1868eec898b8"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "gamer_4322": {
+      "money": 700,
+      "gender": "male",
+      "auth": {
+        "hash": "c97ac3d652d69c05dee428c1a2c1e557513b94aa4dc767366b4c67047309a47d",
+        "salt": "63eca8d148a6a6f548c0be61ae9be181"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "spectator_7151": {
+      "money": 1000,
+      "gender": "female",
+      "auth": {
+        "hash": "e63789008b8e91e9d6c451a41fd4b6bb7075bc4ac33c126d55e981e0f2359d01",
+        "salt": "d0ca76bb8038d85dd0dd33abc70a0221"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p1_4290": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "e2f85ce2d6f833d2624766c352b9d1074fea7982f76e81b5ff3c7dc439f5cb16",
+        "salt": "480a8189f5088e46f31ed30e52219742"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p2_645": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "876ef8b4d36f7100885e7df17a072c3fa1f7116da0f3ddcc66d6cebb79227427",
+        "salt": "062c1e46ae8404d573d9dba7c05125a3"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "gamer_2900": {
+      "money": 700,
+      "gender": "male",
+      "auth": {
+        "hash": "d6cd0cab7e76451f6003590454059a78463c77731fe42e8338f53bada20c2be5",
+        "salt": "e37385c55b09f503ae66a6de1d00600e"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "spectator_7087": {
+      "money": 1000,
+      "gender": "female",
+      "auth": {
+        "hash": "9e1b620901e20386c11a474df70d68d9bc127080461695b61cdd11bd2aef66e3",
+        "salt": "3111fe745f783e52d184be73ef1bd31a"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p1_4967": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "8f1afad64440056a17be52842f23b2776cca317cbff35d478a5c1140e0f2511c",
+        "salt": "40d1afbc54a336bdf36b7f0d29261a63"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p2_7437": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "35c52eeefc67026741356bea4bb2d6915bbe2e93bf44811bf518b3bb06946d19",
+        "salt": "ce65810a217db3b28612a11f981ab046"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p3_1792245298533": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "284f512ab14c3b4364c96a7978480570eb4115952f57b16c0f65ad21cdede2cf",
+        "salt": "4ff704994bff8feb248e3487885fb080"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p4_spec_179224529": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "84c7f099ff56e44c90bbf07c33464ced28ed7e7ded95e43e2929c065af80e53f",
+        "salt": "4cd915187feb72c44715d8734b2e0573"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p1_1792245298533": {
+      "money": 900,
+      "gender": "male",
+      "auth": {
+        "hash": "a8bd6db023ca0edea79833b45f9d4fedbb5daf4ad7f26bc617a6a65657d7bdfa",
+        "salt": "a51cda53ad65730b25e51bc36a8af425"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p2_1792245298533": {
+      "money": 950,
+      "gender": "male",
+      "auth": {
+        "hash": "7f3d99322da68f9d3a3a899dda9a8a5b5339d32410dab53c521c47ce39d6973d",
+        "salt": "e8d0dd5d90d6470a3a8a87c6cc7fc2f0"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p5_dc_17922452985": {
+      "money": 900,
+      "gender": "male",
+      "auth": {
+        "hash": "c7990c840e683e26876ce33a4e2d5cbdead54f0c6d04b9bc72cd203dd2aa6545",
+        "salt": "fb6cbc662ba00e63661d2abc5d37dec9"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p6_round_17922452": {
+      "money": 900,
+      "gender": "male",
+      "auth": {
+        "hash": "98cd917533595fb0e91405bf6c37a59d62166622040545f8b26e86f7067c3076",
+        "salt": "cf95d2e349e18327a80e00eb533af283"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "gamer_1015": {
+      "money": 700,
+      "gender": "male",
+      "auth": {
+        "hash": "31a91427e835c414a51a294c8343a08fbb36402bdcf476db3089036c0e5c900e",
+        "salt": "312b11e5f17c6339a7f32ca0e09efa7b"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "spectator_9487": {
+      "money": 1000,
+      "gender": "female",
+      "auth": {
+        "hash": "d6fbf48c44138463d09f60945ff69f6e775cf91697887b808c5f5f73af0d4815",
+        "salt": "8de731c4c558359f26b69623ed153394"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p1_1616": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "a382549d60ad2ce6741d386e0496d8566bd7dc74031db74e391e374877a0013c",
+        "salt": "0b7bfc4cf16226cc835e6078d438ed3b"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p2_924": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "28d4b3ac2ebcd41872d32d0c4c89fb9ce47a7e333af23970065093ae0165b520",
+        "salt": "f0ccc57117636f3bd113443c6e689bca"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p3_1792246630235": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "f6ceac8053a3d0b7891be24cf6d6fe69faa561cbcd06127ad66e4cf4461aa708",
+        "salt": "c4ac2e9c05e60a5feb70131b2987aea8"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p4_spec_179224663": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "144457ccdfeaa7685d5261aa41e7b7da5e4e456c0cfb316b50afd31adfd0de57",
+        "salt": "ef8c2395b8c1acaf549fc7a48905aa8f"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p1_1792246630235": {
+      "money": 900,
+      "gender": "male",
+      "auth": {
+        "hash": "a22e43011d9e491aa8de740e5e6f547f2988997d76d85c35a343e01942256c75",
+        "salt": "7021d096c13192c04b880d2682bb130c"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p2_1792246630235": {
+      "money": 1050,
+      "gender": "male",
+      "auth": {
+        "hash": "a070446d8b2fb67c6a820325575c2e82cf0d330071169511edf246ad5135d3b8",
+        "salt": "8dfd1d3d1bdbc2510588e6a639eb97d7"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p5_dc_17922466302": {
+      "money": 900,
+      "gender": "male",
+      "auth": {
+        "hash": "990885210b2cb3f177cca8a45e2f739a77fb87080c0aae63987da7086d034dc1",
+        "salt": "18c03b77e4abeb466c8edb09aeb3f284"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bj_p6_round_17922466": {
+      "money": 1100,
+      "gender": "male",
+      "auth": {
+        "hash": "d06ebb28bb19cb48d1df4159d0d829cb6597b21673e239a7c1fc804e6cba9fa3",
+        "salt": "cbdf54e4694ef1e9303d55e1075e04c7"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "gamer_8596": {
+      "money": 700,
+      "gender": "male",
+      "auth": {
+        "hash": "38dc7c851d3e67377392498210a225179a9bdfb3379435815f1492587611aad0",
+        "salt": "a25b35128748c57c990f3ac9a484f077"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "spectator_3114": {
+      "money": 1000,
+      "gender": "female",
+      "auth": {
+        "hash": "ebee393119d87d62d0f0209e98530c606b3746ae4d54ac34c46a585b180886ba",
+        "salt": "f9dd13c6cb84f70f8a4770cf0c4e1d15"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p1_58": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "0b5e478540bb05d57bc164c7ba0eaff1dd17cef92cf0c6111c93c89a429464fd",
+        "salt": "81c4b80f6b4c940698abcc2443327689"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p2_3667": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "3d67e19c49aa5eb4f7ab42d3a0647b18a398a974f12d1bf2aefa35ca2c606037",
+        "salt": "b4b0030eb96bdaf1a3e1fe3e7cc00311"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "slothost_7227": {
+      "money": 168,
+      "gender": "male",
+      "auth": {
+        "hash": "83065a2dde3d024e1b8e57cc7d6769f2ad086e9e3405212a6688602cb06507f6",
+        "salt": "c2e480bc620bd90344e65df30c8eb330"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [
+        "roulette_table"
+      ],
+      "propInventory": {}
+    },
+    "slotguest_9127": {
+      "money": 1000,
+      "gender": "female",
+      "auth": {
+        "hash": "9759b65edca3406104584250d07dc22da82db29caae51a461edd41504a5fb2a2",
+        "salt": "a1312357889ad88862c39a9c59a52774"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "slothost_7717": {
+      "money": 168,
+      "gender": "male",
+      "auth": {
+        "hash": "2b64b12b2cd5780770be27e173ac162ee86b85b59bd8dac07adc1bc4e390370a",
+        "salt": "1369e48b0fdfd37e8802bcd99f648f24"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [
+        "roulette_table"
+      ],
+      "propInventory": {}
+    },
+    "slotguest_2157": {
+      "money": 1350,
+      "gender": "female",
+      "auth": {
+        "hash": "cf9f5626f49dc3b3e15d594adcf85f995d107ef4989ab4986cd0206dc5c255bb",
+        "salt": "cae23135e3b317011ad5bf6b642d1243"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "slothost_9047": {
+      "money": 168,
+      "gender": "male",
+      "auth": {
+        "hash": "3957a62ee267fed80f086f339ec2ef1afcd42b2d7e435ce079e2837137fd8c68",
+        "salt": "6085fbe69d6ea6adc7fcda6bf72c8f06"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [
+        "roulette_table"
+      ],
+      "propInventory": {}
+    },
+    "slotguest_8962": {
+      "money": 650,
+      "gender": "female",
+      "auth": {
+        "hash": "153040e0b1e0482cf29eb89aaa3650a3b440390dd55b76532295f58353069629",
+        "salt": "d4bfe74059cede1410c316e38be5a4bd"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "gamer_2271": {
+      "money": 700,
+      "gender": "male",
+      "auth": {
+        "hash": "719280be64b6dd76d4d05f689b7899feb1db721f7237538a727a24c827e3d9e6",
+        "salt": "de9be9896fc2e2e6b8677403af18c55e"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "spectator_4097": {
+      "money": 1000,
+      "gender": "female",
+      "auth": {
+        "hash": "6d1f66d0053a409c8eb7406bd71f6ed4689fc7d566f1ff7948693f0df392e980",
+        "salt": "46ab48d34f3fd33e3db1aeccbe18374d"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p1_6265": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "d562eff2ecf4f9bbcaa2d157fa3a3681f6d8747f945e79a0369ab73bcf0a10eb",
+        "salt": "2b11b9096ed54cbee31c84ce10d3607c"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p2_4747": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "a317060ff079435a427189f3dcad03c7c0e1304099a270d3aa7385a48a963391",
+        "salt": "b6632fa1255fae0f30404f9cf10f116b"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "slothost_4978": {
+      "money": 168,
+      "gender": "male",
+      "auth": {
+        "hash": "7ab67a2e282cd785bf1af9571132e871ddc54b1f05962a4d3cb3d15c0c8df5ee",
+        "salt": "5d382a65246873ab056b9b85389f21b2"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [
+        "roulette_table"
+      ],
+      "propInventory": {}
+    },
+    "slotguest_9060": {
+      "money": 650,
+      "gender": "female",
+      "auth": {
+        "hash": "d74af16f9a27a93006db7c2353bdd835d7b614b40965950f8a293102032fe85d",
+        "salt": "575330683784112278f7591c8ae8cd11"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "gamer_852": {
+      "money": 700,
+      "gender": "male",
+      "auth": {
+        "hash": "4285ff9d26155a3a320449c7dda1dd35d3040112a2acb79e23ad2f4f3d0b1628",
+        "salt": "ec532c252631e37805cd9237c79ed0cd"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "spectator_5461": {
+      "money": 1000,
+      "gender": "female",
+      "auth": {
+        "hash": "3d09892734917fd153f0515e209beba1ab587c1b12b39e96b918ec17423d90e9",
+        "salt": "702b83165ba94152d13946ebd64159be"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p1_5502": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "eb5b2205828914466f367f8243bfd4e2c84e1f3b6e89542bbb9d3313b46a3135",
+        "salt": "79d7fa8c2ff760b180aad8d2c290735b"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "tavla_p2_8409": {
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "d1404b5348749608440affa48e75ff79d6227f2fe0396f28181308e0bbd3c68f",
+        "salt": "0c2d65419b9c323a55a5a9ec878721e3"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "slothost_7226": {
+      "money": 168,
+      "gender": "male",
+      "auth": {
+        "hash": "d0b37d6021b0d2209e3139cd59ee0061be3851d9a381e6e74e42b66fb4abc7f6",
+        "salt": "efcd816d32706b6ca993c9527d9db8a3"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [
+        "roulette_table"
+      ],
+      "propInventory": {}
+    },
+    "slotguest_8281": {
+      "money": 650,
+      "gender": "female",
+      "auth": {
+        "hash": "19458253fbae9b94bdb311b4934427790b073f2925e09330e08ac6676e54d7ac",
+        "salt": "9499bd6e3aa1736dbe45a59beb2fb42e"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "slothost_8291": {
+      "money": 168,
+      "gender": "male",
+      "auth": {
+        "hash": "29a327b922366dfb1468b1943f56be947607318c14b224365020fda9300046ce",
+        "salt": "ecee8e6eb64fff9a19def005b9172a6f"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [
+        "roulette_table"
+      ],
+      "propInventory": {}
+    },
+    "slotguest_4193": {
+      "money": 650,
+      "gender": "female",
+      "auth": {
+        "hash": "1854b18d4ad8d6a68667ec979e6bfa60d373a83521fcf3eb749e216d219562a7",
+        "salt": "a7e233c7c0531a3131ee6b98712efb02"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "hair_long",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "dress_pink",
+        "color": "dress_pink",
+        "heldItem": "none",
+        "shoes": "flats"
+      },
+      "inventory": [
+        "hats_hair_long",
+        "skins_#ffd1a4",
+        "shirts_dress_pink",
+        "shoes_flats",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "c2_tester_7307": {
+      "money": 120,
+      "gender": "male",
+      "auth": {
+        "hash": "a76be890f4b6cc4b49b3110bad9f250a3b1a295cd832adaba8fc1bfdcdd48820",
+        "salt": "32c43222ac78a9ef6a955398ca317937"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic_2",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "outfit_c2_gentleman",
+        "color": "outfit_c2_gentleman",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "watch": "watch_gold_rolex",
+        "outfit": "outfit_c2_gentleman"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none",
+        "watches_watch_gold_rolex",
+        "outfits_outfit_c2_gentleman"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
     }
   },
   "leaderboard": {
@@ -8380,6 +10940,8 @@
     },
     "okey101": {
       "yasin": 1
-    }
+    },
+    "xox": {},
+    "amiral": {}
   }
 }

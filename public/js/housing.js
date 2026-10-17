@@ -82,21 +82,21 @@ window.updateHouseEditButtonVisibility = updateHouseEditButtonVisibility;
 const HOUSE_INFO = {
     'standart': {
         name: 'Standart Şehir Dairesi',
-        price: 1250,
+        price: 1375,
         emoji: '🏢',
         color: '#38bdf8',
         desc: 'Sıcak ve konforlu 1+1 şehir dairesi. Ahşap parke zemin ve modern tavan aydınlatması.'
     },
     'garden': {
         name: 'Verandalı Bahçeli Ev',
-        price: 2500,
+        price: 2750,
         emoji: '🏡',
         color: '#22c55e',
         desc: 'Doğayla iç içe müstakil yaşam! Geniş ahşap veranda, elma ağaçları ve yemyeşil bahçe manzarası.'
     },
     'pool': {
         name: 'Bahçeli & Havuzlu Villa',
-        price: 3750,
+        price: 4125,
         emoji: '🏰',
         color: '#f59e0b',
         desc: 'Lüksün zirvesi! Özel turkuaz yüzme havuzu, güneşlenme şezlongları ve mermer teras.'
@@ -162,14 +162,73 @@ function renderRealEstateUI() {
     }
 }
 
+let pendingHouseBuyType = null;
+
 function confirmBuyHouse(type) {
     let h = HOUSE_INFO[type];
     if (!h) return;
-    if (confirm(`${h.name} satın almak istiyor musunuz? (${h.price} TL)`)) {
-        socket.emit('buyHouse', type);
+
+    pendingHouseBuyType = type;
+
+    let modal = document.getElementById('houseBuyConfirmModal');
+    let userMoney = (window.myMoney !== undefined) ? window.myMoney : ((typeof players !== 'undefined' && typeof myId !== 'undefined' && players[myId]) ? players[myId].money : 0);
+
+    const emojiEl = document.getElementById('houseConfirmEmoji');
+    const nameEl = document.getElementById('houseConfirmName');
+    const priceEl = document.getElementById('houseConfirmPrice');
+    const balanceEl = document.getElementById('houseConfirmBalance');
+    const yesBtn = document.getElementById('houseConfirmYesBtn');
+
+    if (emojiEl) {
+        emojiEl.innerText = (type === 'pool' ? '🏰' : (type === 'garden' ? '🏡' : '🏢'));
     }
+    if (nameEl) nameEl.innerText = h.name;
+    if (priceEl) priceEl.innerText = h.price.toLocaleString('tr-TR') + ' TL';
+
+    if (balanceEl) {
+        let isEnough = userMoney >= h.price;
+        balanceEl.innerHTML = `Mevcut Bakiyeniz: <b>${userMoney.toLocaleString('tr-TR')} TL</b> ` + 
+            (isEnough 
+                ? `<span style="color:#4ade80;">(Kalan: ${(userMoney - h.price).toLocaleString('tr-TR')} TL)</span>`
+                : `<br><span style="color:#f87171; font-weight:bold;">⚠️ Yetersiz Bakiye! (${(h.price - userMoney).toLocaleString('tr-TR')} TL eksik)</span>`);
+    }
+
+    if (yesBtn) {
+        if (userMoney < h.price) {
+            yesBtn.disabled = true;
+            yesBtn.style.opacity = '0.5';
+            yesBtn.style.cursor = 'not-allowed';
+            yesBtn.innerHTML = `<span>⚠️</span> Yetersiz Bakiye (${h.price.toLocaleString('tr-TR')} TL)`;
+        } else {
+            yesBtn.disabled = false;
+            yesBtn.style.opacity = '1';
+            yesBtn.style.cursor = 'pointer';
+            yesBtn.innerHTML = `<span>✅</span> Evet, Satın Al (${h.price.toLocaleString('tr-TR')} TL)`;
+        }
+    }
+
+    if (modal) modal.style.display = 'flex';
+    if (window.playSound) window.playSound('click');
 }
 window.confirmBuyHouse = confirmBuyHouse;
+
+function executeHouseBuy() {
+    if (!pendingHouseBuyType) return;
+    const type = pendingHouseBuyType;
+    closeHouseConfirmModal();
+    if (window.socket) {
+        socket.emit('buyHouse', type);
+    }
+    if (window.playSound) window.playSound('coin');
+}
+window.executeHouseBuy = executeHouseBuy;
+
+function closeHouseConfirmModal() {
+    pendingHouseBuyType = null;
+    const modal = document.getElementById('houseBuyConfirmModal');
+    if (modal) modal.style.display = 'none';
+}
+window.closeHouseConfirmModal = closeHouseConfirmModal;
 
 // --- 1.1 ÖRNEK DAİRE GEZİSİ (DEMO TUR) FONKSİYONLARI ---
 function previewHouseTour(type) {
@@ -264,20 +323,22 @@ window.closeMaketInspectModal = closeMaketInspectModal;
 
 // --- 2. MOBİLYA VE EV MARKETİ MODALI ---
 const FURNITURE_CATALOG = {
-    'bitki': { name: 'Dev Salon Deve Tabanı', price: 200, emoji: '🪴', image: '/images/furniture/bitki.jpg', w: 48, h: 62, desc: 'Seramik saksıda dekoratif parlak yapraklı Monstera.' },
-    'hali': { name: 'Anadolu Dokuma Halısı', price: 240, emoji: '🧶', image: '/images/furniture/hali.jpg', w: 126, h: 76, desc: 'Saçaklı, çift bordürlü otantik el dokuma salon halısı.' },
-    'sedir': { name: 'Otantik Şark Sediri', price: 280, emoji: '🛋️', image: '/images/furniture/sedir.jpg', w: 94, h: 54, desc: 'Kadife minderli, altın püsküllü otantik şark sediri.' },
-    'kitaplik': { name: 'Masif Ahşap Kütüphane', price: 320, emoji: '📚', image: '/images/furniture/kitaplik.jpg', w: 74, h: 80, desc: 'Deri ciltli kitaplar ve antika küreli oymalı meşe kitaplık.' },
-    'berjer': { name: 'Lüks Deri Berjer', price: 360, emoji: '🪑', image: '/images/furniture/berjer.jpg', w: 56, h: 52, desc: 'Hakiki kapitone deri dikişli, konforlu berjer koltuk.' },
-    'yemek_masasi': { name: 'Masif Ahşap Yemek Masası', price: 400, emoji: '🪑', image: '/images/furniture/yemek_masasi.jpg', w: 92, h: 60, desc: 'Dantel runner örtülü, vazolu ve sandalyeli yemek masası.' },
-    'akvaryum': { name: 'Canlı Resif Akvaryumu', price: 440, emoji: '🐠', image: '/images/furniture/akvaryum.jpg', w: 76, h: 56, desc: 'İçinde balıkların yüzdüğü, aydınlatmalı lüks akvaryum.' },
-    'tv': { name: 'Smart Curved TV Konsolu', price: 480, emoji: '📺', image: '/images/furniture/tv.jpg', w: 90, h: 62, desc: 'Kavisli plazma ekran ve şık lake TV ünitesi.' },
-    'gramofon': { name: 'Antika Pirinç Gramofon', price: 520, emoji: '🎺', image: '/images/furniture/gramofon.jpg', w: 54, h: 54, desc: 'Ceviz sandıklı, döner plaklı nostaljik altın gramofon.' },
-    'somine': { name: 'Doğal Taş Şömine', price: 550, emoji: '🪵', image: '/images/furniture/somine.jpg', w: 84, h: 70, desc: 'Doğal taş kemerli, çıtırdayan odunlu rustik şömine.' },
-    'bilgisayar': { name: 'RGB Oyuncu Battle Station', price: 570, emoji: '🖥️', image: '/images/furniture/bilgisayar.jpg', w: 88, h: 64, desc: 'Çift kavisli monitör, RGB neon kasa ve profesyonel oyuncu koltuğu.' },
-    'arcade': { name: 'Retro Atari Oyun Kabini', price: 590, emoji: '🕹️', image: '/images/furniture/arcade.jpg', w: 56, h: 72, desc: 'Işıklı tabelalı, jetonlu klasik Space Invaders retro atari kabini.' },
-    'piyano': { name: 'Lüks Kuyruklu Konser Piyanosu', price: 600, emoji: '🎹', image: '/images/furniture/piyano.jpg', w: 96, h: 78, desc: 'Açık kapaklı, altın telli siyah lake konser piyanosu.' },
-    'meyve_arabasi': { name: 'Limonata Standı', price: 490, emoji: '🍋', image: '', w: 78, h: 68, desc: 'Tentesi, taze sıkılmış limonata sürahisi, bardakları ve tekerlekleriyle seyyar Limonata Standı. Tıklayan misafirlere limonata satarak ev sahibine kazanç sağlar.' }
+    'bitki': { name: 'Dev Salon Deve Tabanı', price: 200, emoji: '🪴', w: 48, h: 62, desc: 'Seramik saksıda dekoratif parlak yapraklı Monstera.' },
+    'hali': { name: 'Anadolu Dokuma Halısı', price: 240, emoji: '🧶', w: 126, h: 76, desc: 'Saçaklı, çift bordürlü otantik el dokuma salon halısı.' },
+    'sedir': { name: 'Otantik Şark Sediri', price: 280, emoji: '🛋️', w: 94, h: 54, desc: 'Kadife minderli, altın püsküllü otantik şark sediri.' },
+    'kitaplik': { name: 'Masif Ahşap Kütüphane', price: 320, emoji: '📚', w: 74, h: 80, desc: 'Deri ciltli kitaplar ve antika küreli oymalı meşe kitaplık.' },
+    'berjer': { name: 'Lüks Deri Berjer', price: 360, emoji: '🪑', w: 56, h: 52, desc: 'Hakiki kapitone deri dikişli, konforlu berjer koltuk.' },
+    'yemek_masasi': { name: 'Masif Ahşap Yemek Masası', price: 400, emoji: '🪑', w: 92, h: 60, desc: 'Dantel runner örtülü, vazolu ve sandalyeli yemek masası.' },
+    'akvaryum': { name: 'Canlı Resif Akvaryumu', price: 440, emoji: '🐠', w: 76, h: 56, desc: 'İçinde balıkların yüzdüğü, aydınlatmalı lüks akvaryum.' },
+    'tv': { name: 'Smart Curved TV Konsolu', price: 480, emoji: '📺', w: 90, h: 62, desc: 'Kavisli plazma ekran ve şık lake TV ünitesi.' },
+    'gramofon': { name: 'Antika Pirinç Gramofon', price: 520, emoji: '🎺', w: 54, h: 54, desc: 'Ceviz sandıklı, döner plaklı nostaljik altın gramofon.' },
+    'somine': { name: 'Doğal Taş Şömine', price: 550, emoji: '🪵', w: 84, h: 70, desc: 'Doğal taş kemerli, çıtırdayan odunlu rustik şömine.' },
+    'bilgisayar': { name: 'RGB Oyuncu Battle Station', price: 570, emoji: '🖥️', w: 88, h: 64, desc: 'Çift kavisli monitör, RGB neon kasa ve profesyonel oyuncu koltuğu.' },
+    'arcade': { name: 'Retro Atari Oyun Kabini', price: 590, emoji: '🕹️', w: 56, h: 72, desc: 'Işıklı tabelalı, jetonlu klasik Space Invaders retro atari kabini.' },
+    'piyano': { name: 'Lüks Kuyruklu Konser Piyanosu', price: 600, emoji: '🎹', w: 96, h: 78, desc: 'Açık kapaklı, altın telli siyah lake konser piyanosu.' },
+    'meyve_arabasi': { name: 'Limonata Standı', price: 490, emoji: '🍋', w: 78, h: 68, desc: 'Tentesi, taze sıkılmış limonata sürahisi, bardakları ve tekerlekleriyle seyyar Limonata Standı. Tıklayan misafirlere limonata satarak ev sahibine kazanç sağlar.' },
+    'slot_machine': { name: 'Vegas Slot Makinesi', price: 750, emoji: '🎰', w: 58, h: 74, desc: 'Evinize lüks bir Vegas Slot Makinesi kurun! Evinizi ziyaret eden misafirleriniz veya siz oynadıkça, her çevirmeden ev sahibine %5 komisyon kazandırır.' },
+    'roulette_table': { name: 'VIP Rulet Masası', price: 850, emoji: '🎡', w: 88, h: 64, desc: 'Evinize özel lüks Avrupa Rulet Masası! Tıklayarak arkadaşlarınızla veya tek başınıza rulet oynayabilirsiniz.' }
 };
 window.FURNITURE_CATALOG = FURNITURE_CATALOG;
 
@@ -292,17 +353,121 @@ function getFurnitureRotationInfo(rot) {
 }
 window.getFurnitureRotationInfo = getFurnitureRotationInfo;
 
+window.furnitureMarketRotations = window.furnitureMarketRotations || {};
+let furnitureMarketAnimFrame = null;
+
+function rotateFurnitureMarketPreview(id, delta) {
+    if (!window.furnitureMarketRotations) window.furnitureMarketRotations = {};
+    let cur = window.furnitureMarketRotations[id] || 0;
+    let next = ((cur + (delta || 1)) % 4 + 4) % 4;
+    window.furnitureMarketRotations[id] = next;
+
+    const badge = document.getElementById(`marketRotBadge_${id}`);
+    if (badge && typeof getFurnitureRotationInfo === 'function') {
+        badge.innerText = getFurnitureRotationInfo(next).short;
+    }
+    drawSingleFurnitureMarketPreview(id, next, Date.now());
+}
+window.rotateFurnitureMarketPreview = rotateFurnitureMarketPreview;
+
+function drawSingleFurnitureMarketPreview(id, rot, now) {
+    const canvas = document.getElementById(`furnitureMarketCanvas_${id}`);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (!now) now = Date.now();
+    let r = ((rot !== undefined ? rot : (window.furnitureMarketRotations && window.furnitureMarketRotations[id])) || 0) % 4;
+    let cat = FURNITURE_CATALOG[id] || { w: 60, h: 45 };
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    let isTransposed = (r === 1 || r === 3);
+    let effW = isTransposed ? cat.h : cat.w;
+    let effH = isTransposed ? cat.w : cat.h;
+
+    let cX = canvas.width / 2;
+    let cY = canvas.height / 2 + 10;
+
+    let maxDim = Math.max(effW, effH);
+    let scale = 1.0;
+    if (maxDim > 105) {
+        scale = 96 / maxDim;
+    } else if (maxDim < 58) {
+        scale = 1.15;
+    }
+
+    ctx.save();
+    ctx.translate(cX, cY);
+    ctx.scale(scale, scale);
+
+    // 1. Zemin Podyumu (Hafif vitrin halesi)
+    let podGrad = ctx.createRadialGradient(0, (effH / 2) - 4, 6, 0, (effH / 2) - 4, Math.max(effW * 0.72, 45));
+    podGrad.addColorStop(0, 'rgba(56, 189, 248, 0.16)');
+    podGrad.addColorStop(0.65, 'rgba(30, 41, 59, 0.35)');
+    podGrad.addColorStop(1, 'rgba(15, 23, 42, 0)');
+    ctx.fillStyle = podGrad;
+    ctx.beginPath();
+    ctx.ellipse(0, (effH / 2) - 4, Math.max(effW * 0.65, 42), Math.max(effH * 0.28, 16), 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. Oyun İçi Birebir Zemin Gölgesi (Oyun içindekiyle %100 aynı)
+    ctx.fillStyle = "rgba(0, 0, 0, 0.42)";
+    ctx.beginPath();
+    ctx.ellipse(0, (effH / 2) - 4, effW * 0.46, Math.max(6, effH * 0.16), 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 3. Oyun İçi Birebir Çizim Motoru
+    if (window.FURNITURE_DRAWERS && typeof window.FURNITURE_DRAWERS[id] === 'function') {
+        window.FURNITURE_DRAWERS[id](ctx, 0, 0, r, now);
+    } else {
+        ctx.font = '36px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(cat.emoji || '🪑', 0, 0);
+    }
+
+    ctx.restore();
+}
+window.drawSingleFurnitureMarketPreview = drawSingleFurnitureMarketPreview;
+
+function startFurnitureMarketAnimation() {
+    stopFurnitureMarketAnimation();
+    function loop() {
+        const modal = document.getElementById('furnitureMarketModal');
+        if (!modal || modal.style.display !== 'flex') {
+            stopFurnitureMarketAnimation();
+            return;
+        }
+        let now = Date.now();
+        for (let id in FURNITURE_CATALOG) {
+            drawSingleFurnitureMarketPreview(id, undefined, now);
+        }
+        furnitureMarketAnimFrame = requestAnimationFrame(loop);
+    }
+    furnitureMarketAnimFrame = requestAnimationFrame(loop);
+}
+
+function stopFurnitureMarketAnimation() {
+    if (furnitureMarketAnimFrame) {
+        cancelAnimationFrame(furnitureMarketAnimFrame);
+        furnitureMarketAnimFrame = null;
+    }
+}
+
 function openFurnitureMarketModal() {
     const modal = document.getElementById('furnitureMarketModal');
     if (!modal) return;
     renderFurnitureMarketUI();
     modal.style.display = 'flex';
+    startFurnitureMarketAnimation();
 }
 window.openFurnitureMarketModal = openFurnitureMarketModal;
 
 function closeFurnitureMarketModal() {
     const modal = document.getElementById('furnitureMarketModal');
     if (modal) modal.style.display = 'none';
+    stopFurnitureMarketAnimation();
 }
 window.closeFurnitureMarketModal = closeFurnitureMarketModal;
 
@@ -320,6 +485,9 @@ function renderFurnitureMarketUI() {
     for (let id in FURNITURE_CATALOG) {
         let item = FURNITURE_CATALOG[id];
         let ownedCount = inv.filter(k => k === id).length;
+        let rot = (window.furnitureMarketRotations && window.furnitureMarketRotations[id]) || 0;
+        let rotInfo = getFurnitureRotationInfo(rot);
+
         let card = document.createElement('div');
         card.style.cssText = "background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.2s, border-color 0.2s;";
         card.onmouseenter = () => { card.style.transform = 'translateY(-3px)'; card.style.borderColor = '#38bdf8'; };
@@ -330,10 +498,15 @@ function renderFurnitureMarketUI() {
 
         card.innerHTML = `
             <div>
-                <div style="position: relative; width: 100%; height: 145px; border-radius: 10px; overflow: hidden; background: #0f172a; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 0 20px rgba(0,0,0,0.6);">
-                    <img src="${item.image || ''}" alt="${item.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span style="display:${item.image ? 'none' : 'block'}; font-size: 42px;">${item.emoji}</span>
-                    <span style="position: absolute; top: 8px; right: 8px; font-size: 11px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 12px; color: #f8fafc; font-weight: 700;">Sahip: ${ownedCount}</span>
+                <div style="position: relative; width: 100%; height: 145px; border-radius: 10px; overflow: hidden; background: radial-gradient(circle at center, #1e293b 0%, #090d16 100%); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(56, 189, 248, 0.2); box-shadow: inset 0 0 25px rgba(0,0,0,0.8); cursor: pointer;" onclick="rotateFurnitureMarketPreview('${id}', 1)" title="Görünüm açısını döndürmek için tıklayın">
+                    <canvas id="furnitureMarketCanvas_${id}" width="210" height="145" style="width: 100%; height: 100%; display: block;"></canvas>
+                    <span style="position: absolute; top: 8px; right: 8px; font-size: 11px; background: rgba(15, 23, 42, 0.88); border: 1px solid rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 12px; color: #f8fafc; font-weight: 700; pointer-events: none;">Sahip: ${ownedCount}</span>
+                    <div style="position: absolute; bottom: 6px; left: 6px; display: flex; align-items: center; gap: 4px; z-index: 2;" onclick="event.stopPropagation();">
+                        <button onclick="rotateFurnitureMarketPreview('${id}', -1)" title="Sola Döndür" style="width: 24px; height: 24px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 5px; color: #38bdf8; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center;">↶</button>
+                        <span id="marketRotBadge_${id}" style="font-size: 10px; font-weight: 700; color: #94a3b8; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255,255,255,0.15); padding: 3px 6px; border-radius: 5px; min-width: 30px; text-align: center;">${rotInfo.short}</span>
+                        <button onclick="rotateFurnitureMarketPreview('${id}', 1)" title="Sağa Döndür" style="width: 24px; height: 24px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 5px; color: #38bdf8; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center;">↷</button>
+                    </div>
+                    <span style="position: absolute; bottom: 6px; right: 6px; font-size: 9px; font-weight: 800; color: #38bdf8; background: rgba(14, 165, 233, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); padding: 2px 6px; border-radius: 6px; letter-spacing: 0.5px; pointer-events: none;">CANLI 3D</span>
                 </div>
                 <div style="font-weight: 800; color: #f8fafc; font-size: 15px; margin-bottom: 4px;">${item.name}</div>
                 <div style="font-size: 12px; color: #94a3b8; line-height: 1.35;">${item.desc}</div>
@@ -345,7 +518,13 @@ function renderFurnitureMarketUI() {
         `;
         container.appendChild(card);
     }
+
+    // İlk çizimleri yap
+    for (let id in FURNITURE_CATALOG) {
+        drawSingleFurnitureMarketPreview(id, undefined, Date.now());
+    }
 }
+window.renderFurnitureMarketUI = renderFurnitureMarketUI;
 
 function confirmBuyFurniture(itemId) {
     let item = FURNITURE_CATALOG[itemId];
@@ -388,23 +567,56 @@ function openHousingPortalModal() {
             </div>
         `;
     }
-    socket.emit('getAvailableHouses');
+    let activeSocket = window.socket || (typeof socket !== 'undefined' ? socket : null);
+    if (activeSocket) {
+        activeSocket.emit('getAvailableHouses');
+    }
+
+    // Güvenlik Önlemi: Eğer sunucu yanıtı gecikirse kullanıcının yerel ev verileriyle listeyi doldur
+    if (window._housingPortalFallbackTimer) clearTimeout(window._housingPortalFallbackTimer);
+    window._housingPortalFallbackTimer = setTimeout(() => {
+        const c = document.getElementById('availableHousesList');
+        if (c && c.innerHTML.includes("Konutlar taranıyor")) {
+            let myHousesList = [];
+            let myHouses = window.myHouses || {};
+            if (window.myHouseData && !myHouses[window.myHouseData.type]) {
+                myHouses[window.myHouseData.type] = window.myHouseData;
+            }
+            let myName = (typeof myId !== 'undefined' && typeof players !== 'undefined' && players[myId]) ? players[myId].name : 'Ev Sahibi';
+            for (let t in myHouses) {
+                myHousesList.push({
+                    owner: myName,
+                    type: t,
+                    furnitureCount: (myHouses[t].furniture || []).length,
+                    isSelf: true
+                });
+            }
+            renderAvailableHousesUI({
+                houses: myHousesList,
+                hasSelfHouse: myHousesList.length > 0,
+                friendCount: 0
+            });
+        }
+    }, 1000);
+
     if (modal) modal.style.display = 'flex';
 }
 window.openHousingPortalModal = openHousingPortalModal;
 
 function closeHousingPortalModal() {
+    if (window._housingPortalFallbackTimer) clearTimeout(window._housingPortalFallbackTimer);
     const modal = document.getElementById('housingPortalModal');
     if (modal) modal.style.display = 'none';
 }
 window.closeHousingPortalModal = closeHousingPortalModal;
 
 function renderAvailableHousesUI(data) {
+    if (window._housingPortalFallbackTimer) clearTimeout(window._housingPortalFallbackTimer);
     const container = document.getElementById('availableHousesList');
     if (!container) return;
     container.innerHTML = "";
 
-    let houses = data.houses || [];
+    let houses = (data && data.houses) ? data.houses : [];
     let hasSelfHouse = data.hasSelfHouse;
     let friendCount = data.friendCount || 0;
 
@@ -437,8 +649,20 @@ function renderAvailableHousesUI(data) {
 
     houses.forEach(h => {
         let info = HOUSE_INFO[h.type] || { name: 'Ev', emoji: '🏠', color: '#38bdf8' };
+        let typeBadge = (h.type === 'pool') 
+            ? `<span style="font-size: 11px; color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.35); padding: 2px 7px; border-radius: 6px; font-weight: bold;">💎 VIP Havuzlu Villa</span>`
+            : ((h.type === 'garden')
+                ? `<span style="font-size: 11px; color: #4ade80; background: rgba(74, 222, 128, 0.15); border: 1px solid rgba(74, 222, 128, 0.35); padding: 2px 7px; border-radius: 6px; font-weight: bold;">🌿 Verandalı Bahçeli Ev</span>`
+                : `<span style="font-size: 11px; color: #facc15; background: rgba(250, 204, 21, 0.15); border: 1px solid rgba(250, 204, 21, 0.35); padding: 2px 7px; border-radius: 6px; font-weight: bold;">⭐ Prestij Şehir Dairesi</span>`);
+
+        let bgGradient = (h.type === 'pool')
+            ? `linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(8, 47, 73, 0.85))`
+            : ((h.type === 'garden')
+                ? `linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(6, 78, 59, 0.85))`
+                : `linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9))`);
+
         let card = document.createElement('div');
-        card.style.cssText = `display: flex; justify-content: space-between; align-items: center; background: rgba(30, 41, 59, 0.85); border: 2px solid ${h.isSelf ? '#10b981' : 'rgba(255,255,255,0.1)'}; border-radius: 12px; padding: 14px 18px; margin-bottom: 10px;`;
+        card.style.cssText = `display: flex; justify-content: space-between; align-items: center; background: ${bgGradient}; border: 2px solid ${h.isSelf ? '#10b981' : 'rgba(255,255,255,0.12)'}; border-radius: 14px; padding: 14px 18px; margin-bottom: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.35); transition: transform 0.2s;`;
 
         let enterButtonText = h.isSelf 
             ? (h.type === 'pool' ? '🏰 Villama Gir' : (h.type === 'garden' ? '🏡 Bahçeli Evime Gir' : '🏢 Daireme Gir'))
@@ -452,18 +676,21 @@ function renderAvailableHousesUI(data) {
 
         card.innerHTML = `
             <div style="display: flex; align-items: center; gap: 14px;">
-                <span style="font-size: 36px;">${info.emoji}</span>
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: center; font-size: 30px; border: 1.5px solid rgba(255,255,255,0.15); box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);">
+                    ${info.emoji}
+                </div>
                 <div>
                     <div style="font-weight: 800; color: #f8fafc; font-size: 16px; display: flex; align-items: center; gap: 8px;">
                         ${h.isSelf ? `🏠 ${info.name}` : `${h.owner}'in Evi`}
                         ${badgeText}
                     </div>
-                    <div style="font-size: 13px; color: ${info.color}; margin-top: 2px;">
-                        ${h.isSelf ? `Sahibi: ${h.owner}` : info.name} • <span style="color: #cbd5e1;">${h.furnitureCount || 0} Mobilya</span>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                        ${typeBadge}
+                        <span style="font-size: 12px; color: #cbd5e1;">• 🛋️ <b>${h.furnitureCount || 0}</b> Mobilya</span>
                     </div>
                 </div>
             </div>
-            <button onclick="enterHouse('${h.owner}', '${h.type}')" style="padding: 9px 18px; background: ${h.isSelf ? 'linear-gradient(135deg, #10b981, #059669)' : 'linear-gradient(135deg, #0ea5e9, #0284c7)'}; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); white-space:nowrap;">
+            <button onclick="enterHouse('${h.owner}', '${h.type}')" style="padding: 10px 20px; background: ${h.isSelf ? 'linear-gradient(135deg, #10b981, #059669)' : 'linear-gradient(135deg, #0ea5e9, #0284c7)'}; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); white-space:nowrap;">
                 ${enterButtonText}
             </button>
         `;
@@ -687,12 +914,37 @@ function setupFurnitureCanvasInteractions() {
                 }
             }
 
-            // 1.1 Limonata Standı: Tıklayan misafirlere limonata satın alma teklif eder ve ev sahibine kazanç sağlar
+            // 1.1 Limonata Standı: Tıklayan misafirlere limonata satın alma teklif eder (Sadece düzenleme modu KAPALIYKEN)
             if (item.id === 'meyve_arabasi') {
-                if (typeof openLemonadeStandModal === 'function') {
-                    openLemonadeStandModal(house);
-                }
                 if (!window.isHouseEditMode) {
+                    if (typeof openLemonadeStandModal === 'function') {
+                        openLemonadeStandModal(house);
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+            }
+
+            // 1.2 Vegas Slot Makinesi: Tıklayan misafirlere veya ev sahibine slot oyununu açar (%5 komisyon) (Sadece düzenleme modu KAPALIYKEN)
+            if (item.id === 'slot_machine') {
+                if (!window.isHouseEditMode) {
+                    if (typeof openSlotModal === 'function') {
+                        window.currentSlotHouseOwner = house ? house.owner : null;
+                        openSlotModal();
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+            }
+
+            // 1.3 VIP Rulet Masası: Tıklayan misafirlere veya ev sahibine rulet oyununu açar (Sadece düzenleme modu KAPALIYKEN)
+            if (item.id === 'roulette_table') {
+                if (!window.isHouseEditMode) {
+                    if (typeof openRouletteModal === 'function') {
+                        openRouletteModal();
+                    }
                     e.preventDefault();
                     e.stopPropagation();
                     return;
@@ -701,7 +953,7 @@ function setupFurnitureCanvasInteractions() {
 
             // 2. Eşyalar Kilitlidir: Sadece "Evi Düzenle" modundayken taşınabilir!
             if (!isOwner || !window.isHouseEditMode) {
-                if (isOwner && !window.isHouseEditMode && item.id !== 'gramofon') {
+                if (isOwner && !window.isHouseEditMode && item.id !== 'gramofon' && item.id !== 'meyve_arabasi' && item.id !== 'slot_machine' && item.id !== 'roulette_table') {
                     if (typeof showSocialNotificationToast === 'function') {
                         showSocialNotificationToast('🔒', 'Eşyalar Kilitli', "Mobilyaları taşımak için '🛋️ Evi Düzenle' butonuna basın.");
                     }
@@ -1200,19 +1452,37 @@ function renderStaticHouseTo(bctx, type, width, height) {
     } else {
         // --- STANDART ŞEHİR DAİRESİ ---
         let wallGrad = bctx.createLinearGradient(0, 0, 0, 136);
-        wallGrad.addColorStop(0, '#1e293b');
-        wallGrad.addColorStop(0.7, '#0f172a');
-        wallGrad.addColorStop(1, '#020617');
+        wallGrad.addColorStop(0, '#0f172a');
+        wallGrad.addColorStop(0.6, '#1e293b');
+        wallGrad.addColorStop(1, '#0f172a');
         bctx.fillStyle = wallGrad;
         bctx.fillRect(0, 0, width, 136);
 
-        bctx.fillStyle = "rgba(255,255,255,0.18)";
-        bctx.fillRect(0, 0, width, 7);
+        // Üst Tavan Gizli LED Işık Şeridi (Warm Amber LED Cove)
+        bctx.fillStyle = "rgba(254, 240, 138, 0.4)";
+        bctx.fillRect(0, 0, width, 4);
+        let coveGlow = bctx.createLinearGradient(0, 0, 0, 24);
+        coveGlow.addColorStop(0, 'rgba(254, 240, 138, 0.25)');
+        coveGlow.addColorStop(1, 'rgba(254, 240, 138, 0)');
+        bctx.fillStyle = coveGlow;
+        bctx.fillRect(0, 0, width, 24);
 
-        drawCityWindow(bctx, 160, 18, 125, 95);
-        drawCityWindow(bctx, 515, 18, 125, 95);
+        // Orta Duvar Akustik Ahşap Çıta Panel Vurgusu (Modern TV / Koltuk Arkası Dekoratif Duvar)
+        let slatWallX = 310, slatWallW = 180;
+        bctx.fillStyle = "#3a1906";
+        bctx.fillRect(slatWallX, 4, slatWallW, 124);
+        bctx.strokeStyle = "#78350f";
+        bctx.lineWidth = 1;
+        bctx.strokeRect(slatWallX, 4, slatWallW, 124);
+        bctx.fillStyle = "#92400e";
+        for (let sx = slatWallX + 5; sx < slatWallX + slatWallW - 4; sx += 6) {
+            bctx.fillRect(sx, 6, 3, 120);
+        }
 
-        [90, 400, 710].forEach(sX => {
+        drawCityWindow(bctx, 140, 18, 140, 95);
+        drawCityWindow(bctx, 520, 18, 140, 95);
+
+        [80, 400, 720].forEach(sX => {
             let cone = bctx.createRadialGradient(sX, 45, 2, sX, 60, 45);
             cone.addColorStop(0, 'rgba(254, 240, 138, 0.45)');
             cone.addColorStop(1, 'rgba(254, 240, 138, 0)');
@@ -1231,19 +1501,21 @@ function renderStaticHouseTo(bctx, type, width, height) {
             bctx.beginPath(); bctx.arc(sX, 42, 5, 0, Math.PI * 2); bctx.fill();
         });
 
+        // Süpürgelik
         bctx.fillStyle = "#0f172a";
         bctx.fillRect(0, 128, width, 10);
-        bctx.fillStyle = "#f8fafc";
+        bctx.fillStyle = "#facc15";
         bctx.fillRect(0, 128, width, 1.5);
 
+        // Zemin: Sıcak Lüks Meşe Parke (Balıksırtı / Klasik Parke Efekti)
         let floorGrad = bctx.createLinearGradient(0, 138, 0, height);
         floorGrad.addColorStop(0, '#d97706');
-        floorGrad.addColorStop(0.6, '#b45309');
-        floorGrad.addColorStop(1, '#92400e');
+        floorGrad.addColorStop(0.5, '#b45309');
+        floorGrad.addColorStop(1, '#78350f');
         bctx.fillStyle = floorGrad;
         bctx.fillRect(0, 138, width, height - 138);
 
-        bctx.strokeStyle = "rgba(0,0,0,0.22)";
+        bctx.strokeStyle = "rgba(40, 15, 5, 0.28)";
         bctx.lineWidth = 1;
         for (let y = 138; y < height; y += 26) {
             bctx.beginPath(); bctx.moveTo(0, y); bctx.lineTo(width, y); bctx.stroke();
@@ -1346,6 +1618,73 @@ function drawHouseEnvironment() {
                     ctx.font = "bold 16px sans-serif";
                     ctx.fillText(notes[i % notes.length], noteX, noteY);
                     ctx.restore();
+                }
+            }
+        }
+
+        // Etkileşimli Eşya Hover İpuçları (Slot Makinesi ve Limonata Standı)
+        if (!window.isHouseEditMode && typeof canvasMouseX !== 'undefined' && typeof canvasMouseY !== 'undefined') {
+            let slotM = house.furniture.find(f => f.id === 'slot_machine');
+            if (slotM) {
+                let mDist = Math.hypot(canvasMouseX - slotM.x, canvasMouseY - slotM.y);
+                if (mDist < 46) {
+                    let hoverBounce = Math.sin(now / 180) * 3;
+                    ctx.save();
+                    ctx.fillStyle = "rgba(15, 23, 42, 0.94)";
+                    ctx.strokeStyle = "#facc15";
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.roundRect(slotM.x - 85, slotM.y - 48 + hoverBounce, 170, 24, 6);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.fillStyle = "#fde047";
+                    ctx.font = "bold 10px sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.fillText("🎰 Slot Oyna (%5 Komisyon)", slotM.x, slotM.y - 32 + hoverBounce);
+                    ctx.restore();
+                    if (typeof canvas !== 'undefined' && canvas.style) canvas.style.cursor = 'pointer';
+                }
+            }
+            let rouletteM = house.furniture.find(f => f.id === 'roulette_table');
+            if (rouletteM) {
+                let mDist = Math.hypot(canvasMouseX - rouletteM.x, canvasMouseY - rouletteM.y);
+                if (mDist < 52) {
+                    let hoverBounce = Math.sin(now / 180) * 3;
+                    ctx.save();
+                    ctx.fillStyle = "rgba(15, 23, 42, 0.94)";
+                    ctx.strokeStyle = "#facc15";
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.roundRect(rouletteM.x - 80, rouletteM.y - 48 + hoverBounce, 160, 24, 6);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.fillStyle = "#fde047";
+                    ctx.font = "bold 10px sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.fillText("🎡 Rulet Masası (Tıkla)", rouletteM.x, rouletteM.y - 32 + hoverBounce);
+                    ctx.restore();
+                    if (typeof canvas !== 'undefined' && canvas.style) canvas.style.cursor = 'pointer';
+                }
+            }
+            let lemonM = house.furniture.find(f => f.id === 'meyve_arabasi');
+            if (lemonM) {
+                let mDist = Math.hypot(canvasMouseX - lemonM.x, canvasMouseY - lemonM.y);
+                if (mDist < 48) {
+                    let hoverBounce = Math.sin(now / 180) * 3;
+                    ctx.save();
+                    ctx.fillStyle = "rgba(15, 23, 42, 0.94)";
+                    ctx.strokeStyle = "#4ade80";
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.roundRect(lemonM.x - 75, lemonM.y - 52 + hoverBounce, 150, 24, 6);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.fillStyle = "#86efac";
+                    ctx.font = "bold 10px sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.fillText("🍋 Limonata Al (Tıkla)", lemonM.x, lemonM.y - 36 + hoverBounce);
+                    ctx.restore();
+                    if (typeof canvas !== 'undefined' && canvas.style) canvas.style.cursor = 'pointer';
                 }
             }
         }
@@ -1657,7 +1996,19 @@ function openLemonadeStandModal(house) {
     if (!modal) return;
     const ownerSpan = document.getElementById('lemonadeOwnerName');
     if (ownerSpan) ownerSpan.innerText = house.owner || "Ev Sahibi";
+
+    const balanceDiv = document.getElementById('lemonadePlayerBalance');
+    if (balanceDiv) {
+        let userMoney = (window.myMoney !== undefined) ? window.myMoney : ((typeof players !== 'undefined' && typeof myId !== 'undefined' && players[myId]) ? players[myId].money : 0);
+        let isEnough = userMoney >= 15;
+        balanceDiv.innerHTML = `Mevcut Bakiyeniz: <b>${userMoney.toLocaleString('tr-TR')} TL</b> ` +
+            (isEnough 
+                ? `<span style="color:#4ade80;">(Kalan: ${(userMoney - 15).toLocaleString('tr-TR')} TL)</span>`
+                : `<br><span style="color:#f87171; font-weight:bold;">⚠️ Yetersiz Bakiye! (15 TL gerekli)</span>`);
+    }
+
     modal.style.display = 'flex';
+    if (window.playSound) window.playSound('click');
 }
 window.openLemonadeStandModal = openLemonadeStandModal;
 
@@ -1670,7 +2021,7 @@ window.closeLemonadeStandModal = closeLemonadeStandModal;
 function confirmBuyLemonade() {
     let house = getCurrentViewingHouse();
     if (!house) return;
-    if (socket) {
+    if (window.socket) {
         socket.emit('buyLemonadeFromStand', {
             owner: house.owner,
             houseType: house.type

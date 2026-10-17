@@ -96,6 +96,12 @@ function getPetByUsername(username) {
 function handleFatherChoice(socket, choice) {
     if (!playersRef || !playersRef[socket.id]) return;
     const player = playersRef[socket.id];
+    if (!player.pendingFatherChoice) {
+        socket.emit('gameError', "Aktif bir baba seçimi hakkınız bulunmuyor!");
+        return;
+    }
+    player.pendingFatherChoice = false;
+
     const username = player.name;
     const uData = dataManagerRef.persistentData.users[username];
 

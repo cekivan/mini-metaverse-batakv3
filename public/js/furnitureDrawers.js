@@ -723,5 +723,376 @@ window.FURNITURE_DRAWERS = {
             ctx.fillStyle = "#67e8f9";
             for (let s = 0; s < 4; s++) { ctx.fillRect(x - 26 + s * 14, y - 56, 7, 30); }
         }
+    },
+
+    // 15. VEGAS SLOT MAKİNESİ (ÖZGÜN 4 YÖNLÜ İZOMETRİK ÇİZİM)
+    'slot_machine': function(ctx, x, y, rot, now) {
+        now = now || Date.now();
+        if (rot === 0) {
+            // ÖN - AŞAĞI (0° Tam Ön Görünüm: Çarklar, Tabela ve Kol Sağda)
+            // 1. Zemin Gölgesi
+            ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+            ctx.beginPath();
+            ctx.roundRect(x - 26, y + 18, 52, 14, 6);
+            ctx.fill();
+
+            // 2. Ana Kasa Gövdesi (Gece Mavisi / Mor Lake & Altın Kenarlık)
+            ctx.fillStyle = "#1e1b4b";
+            ctx.beginPath();
+            ctx.roundRect(x - 24, y - 28, 48, 56, [10, 10, 4, 4]);
+            ctx.fill();
+            ctx.strokeStyle = "#ca8a04";
+            ctx.lineWidth = 1.8;
+            ctx.stroke();
+
+            // Kasa Ön Vurgusu
+            ctx.fillStyle = "#312e81";
+            ctx.fillRect(x - 21, y - 24, 42, 50);
+
+            // 3. Üst Işıklı Marquee Başlığı ("777 VEGAS")
+            ctx.fillStyle = "#0f172a";
+            ctx.beginPath();
+            ctx.roundRect(x - 20, y - 26, 40, 16, 4);
+            ctx.fill();
+            ctx.strokeStyle = "#facc15";
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            // Yanıp Sönen Mini Neon Lambalar
+            let bulbColors = ["#ef4444", "#facc15", "#38bdf8", "#4ade80"];
+            for (let b = 0; b < 5; b++) {
+                let cIdx = Math.floor((b + now / 250) % bulbColors.length);
+                ctx.fillStyle = bulbColors[cIdx];
+                ctx.beginPath();
+                ctx.arc(x - 16 + b * 8, y - 23, 1.8, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.fillStyle = "#fde047";
+            ctx.font = "bold 8px 'Plus Jakarta Sans', sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("777 VEGAS", x, y - 13);
+
+            // 4. Çark Ekranı (Cam Bölme & 3 Dönen Çark)
+            ctx.fillStyle = "#090d16";
+            ctx.beginPath();
+            ctx.roundRect(x - 19, y - 7, 38, 20, 3);
+            ctx.fill();
+            ctx.strokeStyle = "#eab308";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // 3 Çark Şeridi
+            for (let r = 0; r < 3; r++) {
+                let rx = x - 17 + r * 12;
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(rx, y - 5, 10, 16);
+                ctx.strokeStyle = "rgba(0,0,0,0.2)";
+                ctx.strokeRect(rx, y - 5, 10, 16);
+            }
+
+            // Çark Sembolleri (7, Kiraz, Çan)
+            ctx.fillStyle = "#dc2626";
+            ctx.font = "bold 7px sans-serif";
+            ctx.fillText("7", x - 12, y + 6);
+            ctx.fillText("7", x, y + 6);
+            ctx.fillText("7", x + 12, y + 6);
+
+            // Kırmızı Kazanma Ödeme Çizgisi (Payline)
+            ctx.strokeStyle = "rgba(239, 68, 68, 0.75)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(x - 19, y + 3);
+            ctx.lineTo(x + 19, y + 3);
+            ctx.stroke();
+
+            // 5. Jeton / Tuşlar Paneli
+            ctx.fillStyle = "#1e293b";
+            ctx.fillRect(x - 20, y + 15, 40, 10);
+            ctx.fillStyle = "#22c55e";
+            ctx.fillRect(x - 16, y + 18, 7, 4); // Spin tuşu
+            ctx.fillStyle = "#facc15";
+            ctx.fillRect(x - 6, y + 18, 5, 4);
+            ctx.fillStyle = "#38bdf8";
+            ctx.fillRect(x + 3, y + 18, 5, 4);
+
+            // Jeton Dökülme Tepsisi & Altın Paralar
+            ctx.fillStyle = "#475569";
+            ctx.fillRect(x - 16, y + 26, 32, 4);
+            ctx.fillStyle = "#facc15";
+            ctx.beginPath(); ctx.arc(x - 4, y + 27, 2, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(x + 4, y + 27, 2, 0, Math.PI * 2); ctx.fill();
+
+            // 6. Sağ Mekanik Çekme Kolu (Lever)
+            ctx.strokeStyle = "#ca8a04";
+            ctx.lineWidth = 2.2;
+            ctx.beginPath();
+            ctx.moveTo(x + 24, y + 2);
+            ctx.lineTo(x + 31, y - 8);
+            ctx.stroke();
+            // Kırmızı Yuvarlak Topuz
+            ctx.fillStyle = "#ef4444";
+            ctx.beginPath();
+            ctx.arc(x + 31, y - 8, 3.8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "#fca5a5";
+            ctx.beginPath();
+            ctx.arc(x + 30, y - 9, 1.2, 0, Math.PI * 2);
+            ctx.fill();
+        } else if (rot === 1) {
+            // YAN - SOL (90° Profil: Slot Sağa Bakar)
+            ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+            ctx.beginPath(); ctx.roundRect(x - 18, y + 16, 36, 14, 5); ctx.fill();
+
+            ctx.fillStyle = "#1e1b4b";
+            ctx.beginPath(); ctx.roundRect(x - 16, y - 28, 32, 56, [8, 8, 4, 4]); ctx.fill();
+            ctx.strokeStyle = "#ca8a04"; ctx.lineWidth = 1.8; ctx.stroke();
+
+            // Yan Kavisli Tasarım
+            ctx.fillStyle = "#312e81";
+            ctx.beginPath();
+            ctx.moveTo(x - 13, y - 24);
+            ctx.lineTo(x + 13, y - 18);
+            ctx.lineTo(x + 13, y + 24);
+            ctx.lineTo(x - 13, y + 24);
+            ctx.closePath();
+            ctx.fill();
+
+            // Yan Işık Şeridi
+            ctx.strokeStyle = "#facc15"; ctx.lineWidth = 1.2;
+            ctx.beginPath(); ctx.moveTo(x - 8, y - 16); ctx.lineTo(x + 8, y - 10); ctx.stroke();
+
+            // Ön Çark Çıkıntısı (Sağ Tarafta)
+            ctx.fillStyle = "#fde047";
+            ctx.fillRect(x + 11, y - 2, 4, 12);
+        } else if (rot === 2) {
+            // ARKA (180° Arka Metal Panel & Havalandırma Izgaraları)
+            ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+            ctx.beginPath(); ctx.roundRect(x - 24, y + 16, 48, 14, 6); ctx.fill();
+
+            ctx.fillStyle = "#1e1b4b";
+            ctx.beginPath(); ctx.roundRect(x - 22, y - 28, 44, 56, [8, 8, 4, 4]); ctx.fill();
+            ctx.strokeStyle = "#475569"; ctx.lineWidth = 1.8; ctx.stroke();
+
+            // Arka Metalik Kapak
+            ctx.fillStyle = "#0f172a";
+            ctx.fillRect(x - 18, y - 22, 36, 46);
+
+            // Havalandırma Çizgileri
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+            ctx.lineWidth = 1;
+            for (let ly = y - 16; ly <= y + 6; ly += 5) {
+                ctx.beginPath(); ctx.moveTo(x - 14, ly); ctx.lineTo(x + 14, ly); ctx.stroke();
+            }
+
+            // Seri Numarası Etiketi
+            ctx.fillStyle = "#facc15"; ctx.fillRect(x - 12, y + 14, 24, 6);
+        } else if (rot === 3) {
+            // YAN - SAĞ (270° Profil: Slot Sola Bakar, Kol Sağ Ön Profilde)
+            ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+            ctx.beginPath(); ctx.roundRect(x - 18, y + 16, 36, 14, 5); ctx.fill();
+
+            ctx.fillStyle = "#1e1b4b";
+            ctx.beginPath(); ctx.roundRect(x - 16, y - 28, 32, 56, [8, 8, 4, 4]); ctx.fill();
+            ctx.strokeStyle = "#ca8a04"; ctx.lineWidth = 1.8; ctx.stroke();
+
+            // Yan Tasarım
+            ctx.fillStyle = "#312e81";
+            ctx.beginPath();
+            ctx.moveTo(x + 13, y - 24);
+            ctx.lineTo(x - 13, y - 18);
+            ctx.lineTo(x - 13, y + 24);
+            ctx.lineTo(x + 13, y + 24);
+            ctx.closePath();
+            ctx.fill();
+
+            // Kol Mekanizması
+            ctx.strokeStyle = "#ca8a04"; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(x + 2, y + 4); ctx.lineTo(x + 8, y - 6); ctx.stroke();
+            ctx.fillStyle = "#ef4444";
+            ctx.beginPath(); ctx.arc(x + 8, y - 6, 3.5, 0, Math.PI * 2); ctx.fill();
+        }
+    },
+
+    // 16. VIP AVRUPA RULET MASASI (ÖZGÜN 4 YÖNLÜ İZOMETRİK ÇİZİM)
+    'roulette_table': function(ctx, x, y, rot, now) {
+        now = now || Date.now();
+        let isVert = (rot === 1 || rot === 3);
+
+        if (!isVert) {
+            // YATAY (0° veya 180°: Genişlik 88px, Yükseklik 56px)
+            let isFlipped = (rot === 2);
+            // 1. Zemin Gölgesi
+            ctx.fillStyle = "rgba(0, 0, 0, 0.42)";
+            ctx.beginPath();
+            ctx.roundRect(x - 44, y + 16, 88, 16, 8);
+            ctx.fill();
+
+            // 2. Masa Ayakları (Masif Maun Ağacı & Pirinç Pabuç)
+            ctx.fillStyle = "#271206";
+            [[-34, 10], [34, 10], [-20, 18], [20, 18]].forEach(([lx, ly]) => {
+                ctx.beginPath();
+                ctx.roundRect(x + lx - 3, y + ly, 6, 12, 2);
+                ctx.fill();
+                ctx.fillStyle = "#facc15";
+                ctx.fillRect(x + lx - 3, y + ly + 9, 6, 3);
+                ctx.fillStyle = "#271206";
+            });
+
+            // 3. Masif Ahşap Gövde & Deri Kenar Yastığı (Mahogany & Leather)
+            ctx.fillStyle = "#451a03";
+            ctx.beginPath();
+            ctx.roundRect(x - 42, y - 24, 84, 48, 12);
+            ctx.fill();
+            ctx.strokeStyle = "#ca8a04";
+            ctx.lineWidth = 1.8;
+            ctx.stroke();
+
+            // 4. Zümrüt Yeşili Rulet Çuhası (Emerald Casino Felt)
+            ctx.fillStyle = "#064e3b";
+            ctx.beginPath();
+            ctx.roundRect(x - 38, y - 20, 76, 40, 8);
+            ctx.fill();
+            ctx.strokeStyle = "rgba(250, 204, 21, 0.5)";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // 5. Rulet Çarkı (Sol Taraf veya Çevrilmişse Sağ Taraf)
+            let wheelCenterX = isFlipped ? (x + 22) : (x - 22);
+            let gridStartX = isFlipped ? (x - 34) : (x - 6);
+
+            // Çark Kasesi
+            ctx.fillStyle = "#271206";
+            ctx.beginPath();
+            ctx.arc(wheelCenterX, y, 16, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = "#facc15";
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Çark Segmentleri (Kırmızı/Siyah/Yeşil)
+            let spinAngle = (now / 1200) % (Math.PI * 2);
+            for (let seg = 0; seg < 12; seg++) {
+                let a1 = spinAngle + (seg * Math.PI) / 6;
+                let a2 = a1 + Math.PI / 6;
+                ctx.fillStyle = (seg === 0) ? "#10b981" : (seg % 2 === 0 ? "#dc2626" : "#0f172a");
+                ctx.beginPath();
+                ctx.moveTo(wheelCenterX, y);
+                ctx.arc(wheelCenterX, y, 13, a1, a2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // Çark Göbeği & Altın Taret
+            ctx.fillStyle = "#facc15";
+            ctx.beginPath();
+            ctx.arc(wheelCenterX, y, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = "#ffffff";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // 6. Masa Bahis Izgarası (Mini Grid)
+            let gridW = 40;
+            let gridH = 32;
+            let gy = y - 16;
+            ctx.fillStyle = "rgba(15, 23, 42, 0.4)";
+            ctx.fillRect(gridStartX, gy, gridW, gridH);
+            ctx.strokeStyle = "rgba(250, 204, 21, 0.6)";
+            ctx.lineWidth = 0.8;
+            ctx.strokeRect(gridStartX, gy, gridW, gridH);
+
+            // Mini Rakam Hücreleri
+            for (let r = 0; r < 3; r++) {
+                for (let c = 0; c < 4; c++) {
+                    let cx = gridStartX + 2 + c * 9;
+                    let cy = gy + 2 + r * 9;
+                    ctx.fillStyle = (r + c) % 2 === 0 ? "#dc2626" : "#0f172a";
+                    ctx.fillRect(cx, cy, 8, 8);
+                }
+            }
+
+            // Altın Yazı: "RULET"
+            ctx.fillStyle = "#facc15";
+            ctx.font = "bold 6.5px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("RULET", gridStartX + gridW / 2, gy + gridH + 6);
+        } else {
+            // DİKEY (90° veya 270°: Genişlik 58px, Yükseklik 84px)
+            // 1. Zemin Gölgesi
+            ctx.fillStyle = "rgba(0, 0, 0, 0.42)";
+            ctx.beginPath();
+            ctx.roundRect(x - 26, y + 30, 52, 16, 8);
+            ctx.fill();
+
+            // 2. Masa Ayakları
+            ctx.fillStyle = "#271206";
+            [[-16, 24], [16, 24], [-12, -24], [12, -24]].forEach(([lx, ly]) => {
+                ctx.beginPath();
+                ctx.roundRect(x + lx - 3, y + ly, 6, 12, 2);
+                ctx.fill();
+            });
+
+            // 3. Masif Ahşap Gövde
+            ctx.fillStyle = "#451a03";
+            ctx.beginPath();
+            ctx.roundRect(x - 26, y - 40, 52, 80, 12);
+            ctx.fill();
+            ctx.strokeStyle = "#ca8a04";
+            ctx.lineWidth = 1.8;
+            ctx.stroke();
+
+            // 4. Çuha
+            ctx.fillStyle = "#064e3b";
+            ctx.beginPath();
+            ctx.roundRect(x - 22, y - 36, 44, 72, 8);
+            ctx.fill();
+            ctx.strokeStyle = "rgba(250, 204, 21, 0.5)";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // 5. Rulet Çarkı (Üst Kısım)
+            let wheelCenterY = (rot === 1) ? (y - 18) : (y + 18);
+            let gridStartY = (rot === 1) ? (y + 2) : (y - 34);
+
+            ctx.fillStyle = "#271206";
+            ctx.beginPath();
+            ctx.arc(x, wheelCenterY, 15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = "#facc15";
+            ctx.lineWidth = 1.4;
+            ctx.stroke();
+
+            let spinAngle = (now / 1200) % (Math.PI * 2);
+            for (let seg = 0; seg < 12; seg++) {
+                let a1 = spinAngle + (seg * Math.PI) / 6;
+                let a2 = a1 + Math.PI / 6;
+                ctx.fillStyle = (seg === 0) ? "#10b981" : (seg % 2 === 0 ? "#dc2626" : "#0f172a");
+                ctx.beginPath();
+                ctx.moveTo(x, wheelCenterY);
+                ctx.arc(x, wheelCenterY, 12, a1, a2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            ctx.fillStyle = "#facc15";
+            ctx.beginPath();
+            ctx.arc(x, wheelCenterY, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 6. Izgara
+            ctx.fillStyle = "rgba(15, 23, 42, 0.4)";
+            ctx.fillRect(x - 18, gridStartY, 36, 30);
+            ctx.strokeStyle = "rgba(250, 204, 21, 0.6)";
+            ctx.lineWidth = 0.8;
+            ctx.strokeRect(x - 18, gridStartY, 36, 30);
+
+            for (let r = 0; r < 3; r++) {
+                for (let c = 0; c < 3; c++) {
+                    ctx.fillStyle = (r + c) % 2 === 0 ? "#dc2626" : "#0f172a";
+                    ctx.fillRect(x - 15 + c * 10, gridStartY + 3 + r * 9, 8, 7);
+                }
+            }
+        }
     }
 };

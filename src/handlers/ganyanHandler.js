@@ -1,5 +1,6 @@
 // src/handlers/ganyanHandler.js - Altılı Ganyan Hipodrom Yarış Motoru & Binek At Kiralama Yöneticisi
 const dataManager = require('../dataManager');
+const { checkRateLimit } = require('../utils/securityUtils');
 
 // 5 İkonik Türk Hipodrom Atı ve Oranları
 const HORSES = [
@@ -214,10 +215,14 @@ function finishRace() {
             const newBal = addPlayerMoney(bet.username, winAmount);
             winnersList.push({ username: bet.username, winAmount, horseName: winner.name });
 
-            const targetSocket = ioInstance.sockets.sockets.get(sId);
+            let targetSocket = ioInstance.sockets.sockets.get(sId);
+            if (!targetSocket && serverPlayersRef) {
+                const currentSid = Object.keys(serverPlayersRef).find(id => serverPlayersRef[id]?.name?.toLowerCase() === bet.username?.toLowerCase());
+                if (currentSid) targetSocket = ioInstance.sockets.sockets.get(currentSid);
+            }
             if (targetSocket) {
-                if (serverPlayersRef && serverPlayersRef[sId]) {
-                    serverPlayersRef[sId].money = newBal;
+                if (serverPlayersRef && serverPlayersRef[targetSocket.id]) {
+                    serverPlayersRef[targetSocket.id].money = newBal;
                 }
                 targetSocket.emit('moneyUpdate', newBal);
                 targetSocket.emit('ganyan_bet_won', {
@@ -308,6 +313,8 @@ function registerGanyanHandlers(io, socket, players) {
     });
 
     socket.on('ganyan_place_bet', (data) => {
+        if (!players[socket.id] || !data) return;
+        if (!checkRateLimit(socket, 'ganyanBet', 3, 2000)) return;
         const pObj = players[socket.id];
         const username = pObj ? (pObj.name || pObj.username) : null;
         if (!pObj || !username) {
@@ -377,6 +384,8 @@ function registerGanyanHandlers(io, socket, players) {
     });
 
     socket.on('rent_horse_mount', () => {
+        if (!players[socket.id]) return;
+        if (!checkRateLimit(socket, 'rentHorse', 2, 5000)) return;
         const pObj = players[socket.id];
         const username = pObj ? (pObj.name || pObj.username) : null;
         if (!pObj || !username) {
@@ -442,7 +451,6 @@ function registerGanyanHandlers(io, socket, players) {
             clearTimeout(horseMountTimers[socket.id]);
             delete horseMountTimers[socket.id];
         }
-        delete ganyanState.bets[socket.id];
     });
 }
 

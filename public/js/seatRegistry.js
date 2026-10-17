@@ -6,22 +6,28 @@
  */
 const STATIC_ROOM_SEATS = {
     kafe: [
-        // Bar Tabureleri
-        { x: 55, y: 68, facing: 'up', label: 'Bar Taburesi' },
-        { x: 115, y: 68, facing: 'up', label: 'Bar Taburesi' },
-        { x: 175, y: 68, facing: 'up', label: 'Bar Taburesi' },
-        // Tavla Masası Sandalyeleri (E basınca oturur ve Tavla açılır)
-        { x: 132, y: 288, facing: 'down', label: 'Tavla Sandalyesi', game: 'tavla', tableId: 'tavla' },
-        { x: 132, y: 412, facing: 'up', label: 'Tavla Sandalyesi', game: 'tavla', tableId: 'tavla' },
-        // Gömmeli Batak (3 Kişilik) - Sağ Bölüm (cx: 658, cy: 135, r: 59)
-        { x: 658, y: 76, facing: 'down', label: 'Batak Sandalyesi', game: 'batak', tableId: 'batak' },
-        { x: 709, y: 165, facing: 'left', label: 'Batak Sandalyesi', game: 'batak', tableId: 'batak' },
-        { x: 607, y: 165, facing: 'right', label: 'Batak Sandalyesi', game: 'batak', tableId: 'batak' },
-        // Normal Batak (4 Kişilik) - Sağ Bölüm (cx: 658, cy: 300, r: 59)
-        { x: 658, y: 241, facing: 'down', label: 'Batak Sandalyesi', game: 'batak4', tableId: 'batak4' },
-        { x: 717, y: 300, facing: 'left', label: 'Batak Sandalyesi', game: 'batak4', tableId: 'batak4' },
-        { x: 658, y: 359, facing: 'up', label: 'Batak Sandalyesi', game: 'batak4', tableId: 'batak4' },
-        { x: 599, y: 300, facing: 'right', label: 'Batak Sandalyesi', game: 'batak4', tableId: 'batak4' }
+        // Bar Tabureleri (Sol Üst Çay Ocağı)
+        { x: 50, y: 64, facing: 'up', label: 'Bar Taburesi' },
+        { x: 110, y: 64, facing: 'up', label: 'Bar Taburesi' },
+        { x: 170, y: 64, facing: 'up', label: 'Bar Taburesi' },
+        // Tavla Masası Sandalyeleri (x: 62, y: 300, w: 105, h: 74 - cx: 115, cy: 337)
+        { x: 115, y: 280, facing: 'down', label: 'Tavla Sandalyesi', game: 'tavla', tableId: 'tavla' },
+        { x: 115, y: 393, facing: 'up', label: 'Tavla Sandalyesi', game: 'tavla', tableId: 'tavla' },
+        // XOX Masası Sandalyeleri (x: 239, y: 120, w: 86, h: 74 - cx: 282, cy: 157)
+        { x: 282, y: 102, facing: 'down', label: 'XOX Sandalyesi', game: 'xox', tableId: 'xox' },
+        { x: 282, y: 212, facing: 'up', label: 'XOX Sandalyesi', game: 'xox', tableId: 'xox' },
+        // Amiral Battı Masası Sandalyeleri (x: 476, y: 120, w: 92, h: 74 - cx: 522, cy: 157)
+        { x: 522, y: 102, facing: 'down', label: 'Amiral Battı Sandalyesi', game: 'amiral', tableId: 'amiral' },
+        { x: 522, y: 212, facing: 'up', label: 'Amiral Battı Sandalyesi', game: 'amiral', tableId: 'amiral' },
+        // Gömmeli Batak (3 Kişilik) - Sağ Bölüm (cx: 697, cy: 165)
+        { x: 697, y: 110, facing: 'down', label: 'Batak Sandalyesi', game: 'batak', tableId: 'batak' },
+        { x: 747, y: 165, facing: 'left', label: 'Batak Sandalyesi', game: 'batak', tableId: 'batak' },
+        { x: 647, y: 165, facing: 'right', label: 'Batak Sandalyesi', game: 'batak', tableId: 'batak' },
+        // Normal Batak (4 Kişilik) - Sağ Bölüm (cx: 697, cy: 335)
+        { x: 697, y: 280, facing: 'down', label: 'Batak Sandalyesi', game: 'batak4', tableId: 'batak4' },
+        { x: 752, y: 335, facing: 'left', label: 'Batak Sandalyesi', game: 'batak4', tableId: 'batak4' },
+        { x: 697, y: 390, facing: 'up', label: 'Batak Sandalyesi', game: 'batak4', tableId: 'batak4' },
+        { x: 642, y: 335, facing: 'right', label: 'Batak Sandalyesi', game: 'batak4', tableId: 'batak4' }
     ],
     nargile_cafe: [
         // Sol Üst Nargile Locası (Chesterfield Sedir)
@@ -216,9 +222,13 @@ function openGameForSeat(seat) {
                 }, 150);
             }
         }
-    } else if (gameType === 'batak' || gameType === 'batak4' || gameType === 'tavla' || gameType === 'okey101' || gameType === 'okey101_tekli' || gameType === 'billiard') {
+    } else if (gameType === 'batak' || gameType === 'batak4' || gameType === 'tavla' || gameType === 'okey101' || gameType === 'okey101_tekli' || gameType === 'billiard' || gameType === 'xox' || gameType === 'amiral') {
         if (window.socket) {
             window.socket.emit('requestTableOptions', gameType);
+        } else if (gameType === 'xox' && typeof openXoxModal === 'function') {
+            openXoxModal();
+        } else if (gameType === 'amiral' && typeof openAmiralBattiModal === 'function') {
+            openAmiralBattiModal();
         }
     } else if (gameType === 'cocktail_bar') {
         if (typeof openCocktailBarModal === 'function') {

@@ -120,6 +120,31 @@ body {
     touch-action: none;
     box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
     cursor: default;
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* Modal Pop-In & Fade Animations */
+@keyframes modalPopIn {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -48%) scale(0.96);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes overlayFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* 3. MODALLAR VE PENCERELER */
@@ -145,6 +170,23 @@ body {
     backdrop-filter: blur(16px);
     box-sizing: border-box;
     flex-direction: column;
+}
+
+#gameModal[style*="display: flex"],
+#gameModal[style*="display: block"] {
+    animation: modalPopIn 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+#settingsModal > div,
+#wardrobeModal > div,
+#voidHandVoteModal > div,
+#leaderboardModal > div,
+#dailyQuestsModal > div,
+#reconnectPromptModal > div,
+#xoxModalContent,
+#amiralBattiModalContent {
+    animation: overlayFadeIn 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity;
 }
 
 /* En Üstte Bütünleşik Taşıma & Kontrol Başlığı */
@@ -407,18 +449,15 @@ body {
     height: 79px; 
     background: linear-gradient(135deg, #ffffff 0%, #f1f2f6 100%);
     border-radius: 7px; 
-    display: flex; 
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 5px;
+    position: relative;
     font-weight: 800; 
     cursor: pointer; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.32), 0 1px 2px rgba(0,0,0,0.2); 
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-    position: relative;
     user-select: none;
     border: 1px solid #dcdde1;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .card:hover { 
@@ -429,34 +468,68 @@ body {
 }
 
 .card .top-index {
-    font-size: 11.5px;
-    line-height: 1.05;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 11px;
+    line-height: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 14px;
+}
+
+.card .top-index span:first-child {
+    font-size: 11px;
+    line-height: 1;
+    margin-bottom: 1.5px;
 }
 
 .card .top-index span:last-child {
-    font-size: 12.5px; /* Semboller +%15 */
+    font-size: 12px;
+    line-height: 1;
 }
 
 .card .center-pip {
-    font-size: 23px; /* 20px -> 23px (+%15) */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -53%);
+    font-size: 24px;
     line-height: 1;
-    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
 }
 
 .card .bot-index {
-    font-size: 11.5px;
-    line-height: 1.05;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 11px;
+    line-height: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 14px;
     transform: rotate(180deg);
 }
 
+.card .bot-index span:first-child {
+    font-size: 11px;
+    line-height: 1;
+    margin-bottom: 1.5px;
+}
+
 .card .bot-index span:last-child {
-    font-size: 12.5px; /* Semboller +%15 */
+    font-size: 12px;
+    line-height: 1;
 }
 
 .card.red { color: #dc2626; }
@@ -465,6 +538,80 @@ body {
     opacity: 0.45; 
     pointer-events: none; 
     filter: grayscale(40%);
+}
+
+/* GLOBAL JACKPOT TOAST STYLING */
+.global-jackpot-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 99999;
+    min-width: 290px;
+    max-width: 360px;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.97) 0%, rgba(30, 41, 59, 0.98) 100%);
+    border: 2px solid #facc15;
+    border-radius: 16px;
+    padding: 14px 18px;
+    color: white;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 25px rgba(250, 204, 21, 0.45);
+    backdrop-filter: blur(16px);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    user-select: none;
+    pointer-events: none;
+    animation: jackpotToastIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.global-jackpot-toast.toast-fadeout {
+    animation: jackpotToastOut 0.5s ease forwards;
+}
+
+@keyframes jackpotToastIn {
+    0% { transform: translateY(40px) scale(0.85); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes jackpotToastOut {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(20px) scale(0.9); opacity: 0; }
+}
+
+.jackpot-toast-icon {
+    font-size: 34px;
+    animation: jackpotIconPulse 1s infinite alternate;
+}
+
+@keyframes jackpotIconPulse {
+    0% { transform: scale(1); filter: drop-shadow(0 0 4px #facc15); }
+    100% { transform: scale(1.15) rotate(6deg); filter: drop-shadow(0 0 14px #eab308); }
+}
+
+.jackpot-toast-content {
+    flex: 1;
+}
+
+.jackpot-toast-badge {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #facc15;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.jackpot-toast-title {
+    font-size: 14.5px;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1.25;
+}
+
+.jackpot-toast-amount {
+    font-size: 12px;
+    color: #4ade80;
+    font-weight: 800;
+    margin-top: 3px;
 }
 
 /* 5. BİLLARDO ALANI & 3D TOPLAR */
@@ -568,29 +715,87 @@ body {
     right: 20px;
     width: 290px;
     height: 330px;
-    background: rgba(15, 23, 42, 0.88);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    max-width: calc(100vw - 30px);
+    background: rgba(15, 23, 42, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 14px;
-    z-index: 9999;
+    z-index: 40000;
     display: flex;
     flex-direction: column;
     padding: 10px;
-    box-shadow: 0 16px 32px rgba(0,0,0,0.6);
-    backdrop-filter: blur(12px);
+    box-shadow: 0 16px 36px rgba(0,0,0,0.7), 0 0 20px rgba(13, 148, 136, 0.2);
+    backdrop-filter: blur(14px);
+    transition: height 0.2s ease, box-shadow 0.2s ease;
+}
+
+#sideChatContainer.chat-minimized {
+    height: auto !important;
+    min-height: auto !important;
+    padding-bottom: 8px !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
 }
 
 #chatHeader {
     cursor: move;
     background: linear-gradient(135deg, #0d9488, #0f766e);
     color: white;
-    padding: 7px;
+    padding: 6px 10px;
     border-radius: 8px;
-    text-align: center;
     font-weight: 700;
     font-size: 12px;
-    margin-bottom: 8px;
-    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
     user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#sideChatContainer.chat-minimized #chatHeader {
+    margin-bottom: 0 !important;
+}
+
+#sideChatContainer .chat-header-btn {
+    padding: 2px 7px;
+    background: rgba(255, 255, 255, 0.18);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+#sideChatContainer .chat-header-btn:hover {
+    background: rgba(255, 255, 255, 0.32);
+    transform: scale(1.1);
+}
+
+#sideChatContainer .chat-header-btn.btn-close {
+    background: rgba(239, 68, 68, 0.4);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+}
+
+#sideChatContainer .chat-header-btn.btn-close:hover {
+    background: rgba(239, 68, 68, 0.85);
+    border-color: #ef4444;
+}
+
+#chatBody {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#sideChatContainer.chat-minimized #chatBody {
+    display: none !important;
 }
 
 #chatHistory {
@@ -601,44 +806,95 @@ body {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     margin-bottom: 8px;
     color: #f1f5f9;
     font-size: 13px;
     word-break: break-word;
 }
 
-#chatHistory div {
-    background: rgba(255, 255, 255, 0.08);
-    padding: 5px 8px;
+#chatHistory .chat-msg-row {
+    padding: 4px 7px;
     border-radius: 6px;
-    line-height: 1.3;
+    line-height: 1.35;
+    font-size: 12px;
+    transition: background 0.15s ease;
+}
+
+#chatHistory .chat-msg-all {
+    background: rgba(245, 158, 11, 0.12);
+    border-left: 3px solid #f59e0b;
+}
+
+#chatHistory .chat-msg-room {
+    background: rgba(255, 255, 255, 0.06);
+    border-left: 3px solid #14b8a6;
+}
+
+.chat-tab-btn {
+    flex: 1;
+    padding: 5px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    background: transparent;
+    color: #94a3b8;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.15s ease;
+    position: relative;
+    user-select: none;
+}
+
+.chat-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f1f5f9;
+}
+
+.chat-tab-btn.active {
+    background: rgba(15, 23, 42, 0.85);
+    color: #ffffff;
+    border: 1px solid rgba(45, 212, 191, 0.45);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.chat-tab-dot {
+    width: 6px;
+    height: 6px;
+    background: #ef4444;
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 1s infinite;
 }
 
 #sideChatContainer input {
     flex: 1;
-    padding: 9px 12px;
-    background: rgba(30, 41, 59, 0.8);
+    padding: 8px 12px;
+    background: rgba(30, 41, 59, 0.9);
     color: white;
-    border-radius: 8px;
+    border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     outline: none;
-    font-size: 13px;
+    font-size: 12.5px;
 }
 
-#sideChatContainer button {
-    padding: 9px 14px;
+#sideChatContainer button#sideChatSendBtn {
+    padding: 8px 13px;
     background: linear-gradient(135deg, #10b981, #059669);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 12.5px;
     transition: transform 0.1s;
 }
 
-#sideChatContainer button:hover {
+#sideChatContainer button#sideChatSendBtn:hover {
     transform: scale(1.03);
 }
 
@@ -1091,6 +1347,39 @@ body {
     border-color: #38bdf8;
     background: rgba(56, 189, 248, 0.2);
     box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+.wardrobe-gender-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.wardrobe-gender-btn {
+    padding: 5px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    background: rgba(15, 23, 42, 0.7);
+    color: #94a3b8;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 11.5px;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.wardrobe-gender-btn:hover {
+    color: #f8fafc;
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
+}
+
+.wardrobe-gender-btn.active {
+    background: linear-gradient(135deg, #ec4899, #db2777);
+    color: white;
+    border-color: #f472b6;
+    box-shadow: 0 2px 10px rgba(236, 72, 153, 0.45);
 }
 
 .wardrobe-tabs {
@@ -3083,9 +3372,9 @@ body {
 /* 25. VIP AVRUPA RULETİ (EUROPEAN ROULETTE 0-36)                               */
 /* ============================================================================ */
 .roulette-table-container {
-    width: 950px;
-    max-width: 96vw;
-    max-height: 94vh;
+    width: 1080px;
+    max-width: 98vw;
+    max-height: 96vh;
     background: radial-gradient(ellipse at 50% 30%, #064e3b 0%, #022c22 65%, #011611 100%);
     border: 3px solid #facc15;
     border-radius: 20px;
@@ -3140,9 +3429,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px;
+    padding: 16px 20px;
     gap: 20px;
     flex: 1;
+    overflow-x: hidden;
     overflow-y: auto;
 }
 
@@ -3387,6 +3677,40 @@ body {
 .roulette-spin-btn:hover:not(:disabled) {
     transform: translateY(-2px) scale(1.04);
     box-shadow: 0 6px 22px rgba(16, 185, 129, 0.7);
+}
+
+@media (max-width: 1140px) {
+    .roulette-table-container {
+        width: 98vw;
+    }
+    .roulette-main-area {
+        gap: 12px;
+        padding: 10px 12px;
+    }
+    .roulette-wheel-wrapper canvas {
+        width: 230px !important;
+        height: 230px !important;
+    }
+    .roulette-numbers-board .roulette-cell {
+        width: 39px;
+        height: 34px;
+        font-size: 12px;
+    }
+    .roulette-cell.zero-cell {
+        width: 35px;
+        font-size: 18px;
+    }
+    .roulette-col-bets .roulette-cell {
+        width: 37px;
+        height: 34px;
+        font-size: 10.5px;
+    }
+    .roulette-dozens-row .roulette-cell {
+        font-size: 10.5px;
+    }
+    .roulette-outside-row .roulette-cell {
+        font-size: 10px;
+    }
 }
 
 /* ============================================================================ */
@@ -3873,4 +4197,137 @@ body {
 
 .place-menu-item:active {
     transform: scale(0.98) translateX(2px);
+}
+
+/* ========================================================
+   XOX (TİC-TAC-TOE) & AMİRAL BATTI (BATTLESHİP) OYUN STİLLERİ
+   ======================================================== */
+.xox-mode-btn, .xox-diff-btn {
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    color: #cbd5e1;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+.xox-mode-btn.active, .xox-diff-btn.active {
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    border-color: #38bdf8;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(56, 189, 248, 0.35);
+}
+.xox-board-container {
+    display: grid;
+    grid-template-columns: repeat(3, 76px);
+    grid-template-rows: repeat(3, 76px);
+    gap: 8px;
+    background: rgba(15, 23, 42, 0.7);
+    padding: 10px;
+    border-radius: 14px;
+    border: 1.5px solid rgba(56, 189, 248, 0.25);
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+.xox-cell {
+    background: rgba(30, 41, 59, 0.85);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 38px;
+    font-weight: 900;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s ease;
+}
+.xox-cell:hover:empty {
+    background: rgba(56, 189, 248, 0.15);
+    border-color: rgba(56, 189, 248, 0.5);
+    transform: scale(1.02);
+}
+.xox-cell.x {
+    color: #38bdf8;
+    text-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
+}
+.xox-cell.o {
+    color: #f43f5e;
+    text-shadow: 0 0 12px rgba(244, 63, 94, 0.8);
+}
+.xox-cell.winning-cell {
+    background: rgba(250, 204, 21, 0.25) !important;
+    border-color: #facc15 !important;
+    animation: winPulse 0.8s infinite alternate ease-in-out;
+}
+@keyframes winPulse {
+    from { transform: scale(1); box-shadow: 0 0 8px #facc15; }
+    to { transform: scale(1.06); box-shadow: 0 0 20px #facc15; }
+}
+
+/* AMİRAL BATTI (BATTLESHIP) RADAR VE HÜCRE STİLLERİ */
+.naval-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 3px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-width: 275px;
+    margin: 0 auto;
+    background: rgba(5, 15, 30, 0.9);
+    padding: 6px;
+    border-radius: 8px;
+    border: 1.5px solid rgba(56, 189, 248, 0.25);
+    box-sizing: border-box;
+}
+.naval-cell {
+    background: rgba(15, 30, 55, 0.7);
+    border: 1px solid rgba(56, 189, 248, 0.12);
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+    user-select: none;
+    transition: all 0.12s ease;
+}
+.naval-cell.clickable:hover {
+    background: rgba(239, 68, 68, 0.35);
+    border-color: #ef4444;
+    cursor: crosshair;
+    transform: scale(1.08);
+}
+.naval-cell.has-ship {
+    background: rgba(34, 197, 94, 0.25);
+    border-color: #22c55e;
+}
+.naval-cell.hit {
+    background: rgba(239, 68, 68, 0.45) !important;
+    border-color: #ef4444 !important;
+    animation: hitPulse 0.6s ease;
+}
+.naval-cell.miss {
+    background: rgba(100, 116, 139, 0.25) !important;
+    border-color: rgba(148, 163, 184, 0.3) !important;
+}
+.naval-cell.sunk {
+    background: rgba(153, 27, 27, 0.75) !important;
+    border-color: #f87171 !important;
+}
+@keyframes hitPulse {
+    0% { transform: scale(0.6); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+.naval-shake {
+    animation: navalShakeAnim 0.35s ease;
+}
+@keyframes navalShakeAnim {
+    0%, 100% { transform: translate(0, 0); }
+    20% { transform: translate(-4px, 3px); }
+    40% { transform: translate(4px, -3px); }
+    60% { transform: translate(-3px, 2px); }
+    80% { transform: translate(3px, -1px); }
 }

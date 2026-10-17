@@ -25,8 +25,22 @@ function openSlotModal() {
     if (!modal) return;
     modal.style.display = 'flex';
 
+    // Ev Slotu Kontrolü
+    const titleEl = document.getElementById('slotMachineHeaderTitle');
+    const subTitleEl = document.getElementById('slotMachineSubTitle');
+    if (window.currentSlotHouseOwner) {
+        if (titleEl) titleEl.innerText = `🎰 ${window.currentSlotHouseOwner}'in Vegas Slot Makinesi`;
+        if (subTitleEl) subTitleEl.innerHTML = `🏠 Ev Sahibi Özel Slotu • Her çevirmeden <b style="color:#4ade80;">%5 ev sahibine (+${Math.max(1, Math.round(slotCurrentBet * 0.05))} TL)</b> gider`;
+    } else {
+        if (titleEl) titleEl.innerText = "DEDENİN ŞİMŞEK SLOTU 777";
+        if (subTitleEl) subTitleEl.innerHTML = "JACKPOT 50x • KLASİK VEGAS 3 ÇARK • KİRAZ BONUSA KAZANDIRIR";
+    }
+
     updateSlotUserBalance();
     initSlotReels();
+
+    const customInput = document.getElementById('slotCustomBetInput');
+    if (customInput) customInput.value = slotCurrentBet;
 
     if (window.socket) {
         socket.emit('slot_init');
@@ -39,6 +53,7 @@ function closeSlotModal() {
     if (isSlotSpinning) return;
     isSlotAutoSpin = false;
     updateSlotAutoBtn();
+    window.currentSlotHouseOwner = null;
     const modal = document.getElementById('slotModal');
     if (modal) modal.style.display = 'none';
 }
@@ -70,9 +85,12 @@ function initSlotReels() {
     }
 }
 
-// 3. Bahis Seçimi
-function setSlotBet(val) {
+// 3. Bahis Seçimi (Özel / Özel Max Bahis Destekli)
+function setSlotBet(val, fromCustomInput = false) {
     if (isSlotSpinning) return;
+    val = parseInt(val, 10);
+    if (isNaN(val) || val < 1) return;
+
     slotCurrentBet = val;
     document.querySelectorAll('.slot-bet-btn').forEach(b => {
         let bVal = parseInt(b.getAttribute('data-val'), 10);
@@ -82,15 +100,38 @@ function setSlotBet(val) {
             b.classList.remove('active');
         }
     });
+
+    const customInput = document.getElementById('slotCustomBetInput');
+    if (customInput && !fromCustomInput) {
+        customInput.value = val;
+    }
+
     const betDisplay = document.getElementById('slotCurrentBetDisplay');
-    if (betDisplay) betDisplay.innerText = val + ' TL';
+    if (betDisplay) betDisplay.innerText = val.toLocaleString('tr-TR') + ' TL';
+
+    const subTitleEl = document.getElementById('slotMachineSubTitle');
+    if (window.currentSlotHouseOwner && subTitleEl) {
+        subTitleEl.innerHTML = `🏠 Ev Sahibi Özel Slotu • Her çevirmeden <b style="color:#4ade80;">%5 ev sahibine (+${Math.max(1, Math.round(val * 0.05))} TL)</b> gider`;
+    }
+
     if (window.playSound) window.playSound('click');
 }
 window.setSlotBet = setSlotBet;
 
+function onCustomSlotBetInput(rawVal) {
+    if (isSlotSpinning) return;
+    let val = parseInt(rawVal, 10);
+    if (!isNaN(val) && val > 0) {
+        setSlotBet(val, true);
+    }
+}
+window.onCustomSlotBetInput = onCustomSlotBetInput;
+
 function setSlotMaxBet() {
     if (isSlotSpinning) return;
-    setSlotBet(500);
+    let userMoney = (window.myMoney !== undefined) ? window.myMoney : 1000;
+    let maxBet = Math.max(10, userMoney);
+    setSlotBet(maxBet);
 }
 window.setSlotMaxBet = setSlotMaxBet;
 
@@ -144,7 +185,10 @@ function spinSlot() {
     startReelsSpinAnim();
 
     if (window.socket) {
-        socket.emit('slot_spin', { betAmount: slotCurrentBet });
+        socket.emit('slot_spin', { 
+            betAmount: slotCurrentBet,
+            houseOwner: window.currentSlotHouseOwner || null
+        });
     }
 }
 window.spinSlot = spinSlot;
@@ -167,6 +211,8 @@ function animateSlotLever() {
 function startReelsSpinAnim() {
     isSlotSpinning = true;
     updateSlotControlsState();
+
+    if (window.playSound) window.playSound('spin');
 
     // Önceki zafer efektlerini temizle
     document.querySelectorAll('.slot-payline').forEach(l => l.classList.remove('active-win'));
@@ -249,6 +295,11 @@ if (typeof socket !== 'undefined' && socket) {
         updateSlotControlsState();
         if (window.playSound) window.playSound('error');
     });
+
+    // 🌟 Tüm Odaya Yayınlanan Global Jackpot Dinleyicisi
+    socket.on('global_jackpot_win', (data) => {
+        showGlobalJackpotToast(data.winner, data.winAmount);
+    });
 }
 
 function handleSlotOutcome(data) {
@@ -277,14 +328,22 @@ function handleSlotOutcome(data) {
         }
 
         if (data.isJackpot) {
-            if (window.playSound) window.playSound('quest');
+            if (window.playSound) window.playSound('jackpot');
             triggerSlotJackpotEffects();
         } else {
-            if (window.playSound) window.playSound('quest');
+            if (window.playSound) window.playSound('win');
         }
     } else {
         // Kayıp
         showSlotToast(`Kazanamadınız (-${data.betAmount} TL)`, false);
+    }
+
+    // Ev Sahibine %1 Komisyon Ödendi Bilgisi
+    if (data.commissionPaid && data.commissionPaid > 0) {
+        let ownerLabel = data.houseOwner ? `${data.houseOwner}'e` : "Ev Sahibine";
+        setTimeout(() => {
+            showSlotToast(`🎰 ${ownerLabel} %1 Komisyon Ödendi (+${data.commissionPaid} TL)`);
+        }, 1200);
     }
 
     // Otomatik Çevirme Devamı
@@ -360,3 +419,39 @@ function showSlotToast(msg, isError = false) {
         if (toast && toast.parentNode) toast.parentNode.removeChild(toast);
     }, 2800);
 }
+
+// 7. Global Jackpot Bildirimi (Odadaki Herkes İçin Sağ Altta 5 Saniyelik Toast & Ses)
+function showGlobalJackpotToast(winnerName, winAmount) {
+    // Odadaki herkes o coşkulu sesi kısa bir an duyar
+    if (window.playSound) {
+        window.playSound('jackpot');
+    }
+
+    let existing = document.getElementById('globalJackpotToast');
+    if (existing) existing.remove();
+
+    let toast = document.createElement('div');
+    toast.id = 'globalJackpotToast';
+    toast.className = 'global-jackpot-toast';
+    toast.innerHTML = `
+        <div class="jackpot-toast-icon">⚡🎰</div>
+        <div class="jackpot-toast-content">
+            <div class="jackpot-toast-badge">🌟 GLOBAL JACKPOT 🌟</div>
+            <div class="jackpot-toast-title"><b>[${winnerName}]</b> JACKPOTU VURDU!</div>
+            ${winAmount ? `<div class="jackpot-toast-amount">+${winAmount.toLocaleString('tr-TR')} TL KAZANDI!</div>` : ''}
+        </div>
+    `;
+
+    document.body.appendChild(toast);
+
+    // 5 saniye sonra ekranın sağ altından kaybolur
+    setTimeout(() => {
+        if (toast) {
+            toast.classList.add('toast-fadeout');
+            setTimeout(() => {
+                if (toast && toast.parentNode) toast.parentNode.removeChild(toast);
+            }, 500);
+        }
+    }, 5000);
+}
+window.showGlobalJackpotToast = showGlobalJackpotToast;

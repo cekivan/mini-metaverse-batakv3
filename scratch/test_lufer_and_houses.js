@@ -7,10 +7,10 @@ console.log("🚀 Testing Lüfer Fish (8 TL) & Halved House Prices...");
 
 // 1. Verify config.HOUSE_PRICES
 console.log("📌 Checking config.HOUSE_PRICES...");
-assert.strictEqual(config.HOUSE_PRICES.standart, 1250, "Standart house price should be 1250 TL");
-assert.strictEqual(config.HOUSE_PRICES.garden, 2500, "Garden house price should be 2500 TL");
-assert.strictEqual(config.HOUSE_PRICES.pool, 3750, "Pool house price should be 3750 TL");
-console.log("✅ House prices halved in config.js: Standart: 1250 TL, Garden: 2500 TL, Pool: 3750 TL");
+assert.strictEqual(config.HOUSE_PRICES.standart, 1375, "Standart house price should be 1375 TL (+10%)");
+assert.strictEqual(config.HOUSE_PRICES.garden, 2750, "Garden house price should be 2750 TL (+10%)");
+assert.strictEqual(config.HOUSE_PRICES.pool, 4125, "Pool house price should be 4125 TL (+10%)");
+console.log("✅ House prices increased by 10% in config.js: Standart: 1375 TL, Garden: 2750 TL, Pool: 4125 TL");
 
 // 2. Verify FISH_LOOT_TABLE has Lüfer with value 8
 console.log("📌 Checking FISH_LOOT_TABLE for Lüfer...");

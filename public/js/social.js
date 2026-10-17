@@ -520,10 +520,13 @@ const ALL_PROPS_INFO = {
     'props_balon': { id: 'balon', name: 'Uçan Kırmızı Balon', cost: 120, emoji: '🎈', desc: 'Hafifçe göğe doğru dalgalanır.' },
     'props_gazoz': { id: 'gazoz', name: 'Nostaljik Şişe Gazoz', cost: 140, emoji: '🍾', desc: 'Buz gibi serinletici lezzet.' },
     'props_tespih': { id: 'tespih', name: 'Oltu Taşı Tespih', cost: 160, emoji: '📿', desc: 'Gümüş püsküllü kehribar tespih.' },
+    'props_tespih2': { id: 'tespih2', name: 'Çift Katmanlı Tespih', cost: 180, emoji: '📿', desc: 'İki katmanlı parıltılı tespih, daha hızlı salınım.' },
     'props_olta': { id: 'olta', name: 'Balıkçı Oltası', cost: 200, emoji: '🎣', desc: 'Balık tutarken prestij kazandırır.' },
     'props_baglama': { id: 'baglama', name: 'Oyma Dut Bağlama', cost: 220, emoji: '🪕', desc: 'Anadolu türkülerine eşlik eder.' },
     'props_asagold': { id: 'asagold', name: 'Altın Başlıklı Asa', cost: 260, emoji: '🪄', desc: 'Gösterişli ve asil bir duruş sağlar.' },
-    'props_kupa': { id: 'kupa', name: 'Şampiyonluk Kupası', cost: 290, emoji: '🏆', desc: 'Masaların fatihine yakışır altın kupa.' }
+    'props_kupa': { id: 'kupa', name: 'Şampiyonluk Kupası', cost: 290, emoji: '🏆', desc: 'Masaların fatihine yakışır altın kupa.' },
+    'props_kilic': { id: 'kilic', name: 'Orta Çağ Kılıcı', cost: 250, emoji: '🗡️', desc: 'Güçlü bir yakın dövüş silahı.' },
+    'props_oyuncak_araba': { id: 'oyuncak_araba', name: 'Küçük Oyuncak Araba', cost: 300, emoji: '🚗', desc: 'Eğlenceli bir oyuncak araba.' }
 };
 
 let isItemInventoryOpen = false;

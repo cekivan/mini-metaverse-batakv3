@@ -9,25 +9,25 @@ const ROOM_SPAWN_MAP = {
         default: { x: 400, y: 410 }
     },
     sokak: {
-        sahil: { x: 75, y: 240 },
-        cadde: { x: 725, y: 240 },
+        sahil: { x: 85, y: 240 },
+        cadde: { x: 720, y: 240 },
         kafe: { x: 400, y: 125 },
         nargile_cafe: { x: 670, y: 125 },
         market: { x: 730, y: 350 },
+        emlakci: { x: 180, y: 125 },
         default: { x: 350, y: 230 }
     },
     cadde: {
-        sokak: { x: 75, y: 230 },
+        sokak: { x: 80, y: 230 },
         ganyan: { x: 210, y: 145 },
         dedenin_yeri: { x: 585, y: 145 },
-        emlakci: { x: 600, y: 350 },
         default: { x: 400, y: 230 }
     },
     emlakci: {
         default: { x: 400, y: 410 }
     },
     sahil: {
-        sokak: { x: 715, y: 270 },
+        sokak: { x: 680, y: 270 },
         default: { x: 420, y: 350 }
     },
     ganyan: {

@@ -9,12 +9,12 @@ window.socket = socket;
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-let myId = null;
-let players = {};
-let currentRoom = "sokak";
+var myId = null;
+var players = {};
+var currentRoom = "sokak";
 
 // WASD Hareket Değişkenleri (Akıcı Yürüyüş)
-let keys = { w: false, a: false, s: false, d: false };
+var keys = { w: false, a: false, s: false, d: false };
 
 
 // --- 1. OTURUM & YÖNETİM DURUM DİNLENMESİ ---
@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (chatHeader && chatPanel) {
         chatHeader.addEventListener('mousedown', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
             isChatDragging = true;
             cStartX = e.clientX; cStartY = e.clientY;
             cInitialLeft = chatPanel.offsetLeft; cInitialTop = chatPanel.offsetTop;
@@ -110,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Mobil Dokunmatik Desteği
         chatHeader.addEventListener('touchstart', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
             isChatDragging = true;
             cStartX = e.touches[0].clientX; cStartY = e.touches[0].clientY;
             cInitialLeft = chatPanel.offsetLeft; cInitialTop = chatPanel.offsetTop;
@@ -178,7 +180,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cpNew) cpNew.addEventListener('keypress', (e) => { if (e.key === 'Enter') submitChangePassword(); });
     if (cpConfirm) cpConfirm.addEventListener('keypress', (e) => { if (e.key === 'Enter') submitChangePassword(); });
 
-    requestAnimationFrame(gameLoop);
+    if (!window._isGameLoopRunning) {
+        window._isGameLoopRunning = true;
+        requestAnimationFrame(gameLoop);
+    }
 });
 
 // --- 4. OYUNCU VE ODA BAĞLANTILARI ---
@@ -215,6 +220,9 @@ socket.on('playerMoved', (data) => {
             players[data.id].targetY = data.y;
             if (data.isMoving !== undefined) {
                 players[data.id].serverMoving = data.isMoving;
+            }
+            if (data.facing) {
+                players[data.id].facing = data.facing;
             }
             if (players[data.id].x === undefined) {
                 players[data.id].x = data.x;
@@ -488,374 +496,9 @@ socket.on('swanBoatExpired', () => {
     updateSwanBoatButtonUI();
 });
 
-// --- 5.1 RECONNECT (KALDIĞIN YERDEN DEVAM ET) İŞLEMLERİ ---
-let pendingReconnectTableId = null;
+// --- 5.1 & 5.2 & 5.3 MASA SEÇİMİ, LOBİ, RECONNECT, LİDERLİK TABLOSU & GÜNLÜK GÖREVLER ---
+// (Modüler mimariye taşınmıştır: public/js/tableLobbyUI.js ve public/js/gameMenusUI.js)
 
-socket.on('reconnectOffer', (data) => {
-    pendingReconnectTableId = data.tableId;
-    const modal = document.getElementById('reconnectModal');
-    const nameSpan = document.getElementById('reconnectTableName');
-    if (nameSpan) nameSpan.innerText = data.tableName;
-    if (modal) modal.style.display = 'flex';
-});
-
-function handleAcceptReconnect() {
-    if (pendingReconnectTableId) {
-        socket.emit('acceptReconnect', pendingReconnectTableId);
-        pendingReconnectTableId = null;
-    }
-    const modal = document.getElementById('reconnectModal');
-    if (modal) modal.style.display = 'none';
-}
-
-function handleDeclineReconnect() {
-    if (pendingReconnectTableId) {
-        socket.emit('declineReconnect', pendingReconnectTableId);
-        pendingReconnectTableId = null;
-    }
-    const modal = document.getElementById('reconnectModal');
-    if (modal) modal.style.display = 'none';
-}
-
-// --- 5.2 MASA SEÇİMİ (İZLE / KATIL / YENİ MASA) ---
-let currentSelectedBaseType = null;
-
-socket.on('tableOptionsModal', (data) => {
-    currentSelectedBaseType = data.baseType;
-    const modal = document.getElementById('tableSelectModal');
-    const title = document.getElementById('tableSelectTitle');
-    const list = document.getElementById('tableOptionsList');
-
-    const modeCont = document.getElementById('newTable101ModeContainer');
-    const modeSelect = document.getElementById('newTable101ModeSelect');
-    if (modeCont) {
-        modeCont.style.display = 'none'; // Masanın türü sabit: Sol masa tekli, Sağ masa eşli
-        if (modeSelect) {
-            modeSelect.value = (data.baseType === 'okey101_tekli') ? 'tekli' : 'esli';
-        }
-    }
-
-    if (title) title.innerText = `${data.baseName} Masaları`;
-    if (list) {
-        list.innerHTML = "";
-        data.tables.forEach(t => {
-            let itemHtml = `<div style="background: rgba(0,0,0,0.35); border: 1px solid #34495e; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">`;
-
-            let betBadge = (t.bet && t.bet > 0)
-                ? `<span style="display:inline-block; margin-left:6px; background:rgba(245,158,11,0.25); border:1px solid #f59e0b; color:#facc15; font-size:11px; font-weight:800; padding:2px 8px; border-radius:12px;">💰 Bahis: ${t.bet} TL (Ödül: ${(t.pot > 0 ? t.pot : (t.bet * t.min))} TL)</span>`
-                : `<span style="display:inline-block; margin-left:6px; background:rgba(34,197,94,0.2); border:1px solid #22c55e; color:#4ade80; font-size:11px; font-weight:800; padding:2px 8px; border-radius:12px;">🌱 Ücretsiz</span>`;
-
-            let modeBadge = "";
-            if (t.mode === 'esli') {
-                modeBadge = `<span style="display:inline-block; margin-left:6px; background:rgba(59,130,246,0.25); border:1px solid #3b82f6; color:#60a5fa; font-size:11px; font-weight:800; padding:2px 8px; border-radius:12px;">👥 Eşli</span>`;
-            } else if (t.mode === 'tekli') {
-                modeBadge = `<span style="display:inline-block; margin-left:6px; background:rgba(100,116,139,0.25); border:1px solid #64748b; color:#cbd5e1; font-size:11px; font-weight:800; padding:2px 8px; border-radius:12px;">👤 Tekli</span>`;
-            }
-
-            if (t.isActive) {
-                let vacantDesc = "";
-                if (t.hasVacantSeat && t.vacantSeats && t.vacantSeats.length > 0) {
-                    vacantDesc = `<div style="font-size: 12px; color: #f87171; font-weight: bold; margin-top: 3px;">💺 Boş Koltuk: ${t.vacantSeats.map(v => v.name + ' ayrıldı').join(', ')}</div>`;
-                }
-
-                itemHtml += `<div style="flex: 1; min-width: 180px;">
-                    <div style="font-weight: bold; color: ${t.hasVacantSeat ? '#f59e0b' : '#f39c12'}; font-size: 15px; display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
-                        <span>${t.hasVacantSeat ? '⚠️' : '🔴'} ${t.name} (Oyun Sürüyor${t.hasVacantSeat ? ' - Eksik Koltuk Var!' : ''})</span>
-                        ${modeBadge}
-                        ${betBadge}
-                    </div>
-                    <div style="font-size: 12px; color: #bdc3c7; margin-top: 3px;">
-                        Oyuncular: ${t.players.join(', ')} | 👁️ Yancılar: ${t.spectatorCount}
-                    </div>
-                    ${vacantDesc}
-                </div>
-                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">`;
-
-                if (t.hasVacantSeat && t.vacantSeats) {
-                    t.vacantSeats.forEach(v => {
-                        itemHtml += `<button onclick="takeoverSeat('${t.id}', '${v.oldPid}')" style="padding: 8px 12px; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; box-shadow: 0 2px 8px rgba(16,185,129,0.4);">💺 ${v.name} Yerine Otur</button>`;
-                    });
-                }
-
-                if (t.hasBotSeat && t.botSeats) {
-                    t.botSeats.forEach(b => {
-                        itemHtml += `<button onclick="takeoverSeat('${t.id}', '${b.botPid}')" style="padding: 8px 12px; background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; box-shadow: 0 2px 8px rgba(139,92,246,0.4);">🤖 ${b.name} Yerine Otur</button>`;
-                    });
-                }
-
-                itemHtml += `<button onclick="spectateTable('${t.id}')" style="padding: 8px 14px; background: #e67e22; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 13px;">👁️ İzle (Yancı Ol)</button>
-                </div>`;
-            } else {
-                let botBtnHtml = "";
-                if (t.count < t.min) {
-                    botBtnHtml = `<button onclick="handleAddBotToTable('${t.id}')" style="padding: 8px 12px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; box-shadow: 0 2px 8px rgba(139,92,246,0.4);">🤖 Bot Ekle</button>`;
-                }
-
-                let botTakeoverBtnHtml = "";
-                if (t.hasBotSeat && t.botSeats) {
-                    t.botSeats.forEach(b => {
-                        botTakeoverBtnHtml += `<button onclick="takeoverSeat('${t.id}', '${b.botPid}')" style="padding: 8px 12px; background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; box-shadow: 0 2px 8px rgba(139,92,246,0.4);">🤖 ${b.name} Yerine Otur</button>`;
-                    });
-                }
-
-                itemHtml += `<div>
-                    <div style="font-weight: bold; color: #2ecc71; font-size: 15px; display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
-                        <span>🟢 ${t.name}</span>
-                        ${modeBadge}
-                        ${betBadge}
-                    </div>
-                    <div style="font-size: 12px; color: #bdc3c7; margin-top: 3px;">Oyuncular (${t.count}/${t.min}): ${t.players.length > 0 ? t.players.join(', ') : 'Henüz kimse yok'}</div>
-                </div>
-                <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-                    ${botBtnHtml}
-                    ${botTakeoverBtnHtml}
-                    <button onclick="joinSelectedTable('${t.id}')" style="padding: 8px 14px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 13px;">🟢 Masaya Otur</button>
-                </div>`;
-            }
-
-            itemHtml += `</div>`;
-            list.innerHTML += itemHtml;
-        });
-    }
-
-    if (modal) modal.style.display = 'flex';
-});
-
-function handleAddBotToTable(specificTableId) {
-    let tId = specificTableId || window.currentActiveTableId;
-    if (!tId && currentSelectedBaseType) {
-        tId = currentSelectedBaseType;
-    }
-    if (tId) {
-        socket.emit('addBotToTable', tId);
-    }
-}
-
-function joinSelectedTable(tableId) {
-    window.currentActiveTableId = tableId;
-    if (window.setVoiceTable) window.setVoiceTable(tableId);
-    socket.emit('joinTable', tableId);
-    closeTableSelectModal();
-    const modal = document.getElementById('gameModal');
-    modal.style.display = 'block';
-    modal.style.transform = 'translate(-50%, -50%)';
-    modal.style.left = '50%';
-    modal.style.top = '50%';
-    document.getElementById('modalStatus').innerText = "Masaya oturuldu, diğer oyuncular bekleniyor...";
-}
-
-function spectateTable(tableId) {
-    window.currentActiveTableId = tableId;
-    socket.emit('spectateTable', tableId);
-    closeTableSelectModal();
-}
-
-function takeoverSeat(tableId, oldPid) {
-    window.currentActiveTableId = tableId;
-    socket.emit('takeoverSeat', { tableId: tableId, oldPid: oldPid });
-    closeTableSelectModal();
-    const modal = document.getElementById('gameModal');
-    modal.style.display = 'block';
-    modal.style.transform = 'translate(-50%, -50%)';
-    modal.style.left = '50%';
-    modal.style.top = '50%';
-    document.getElementById('modalStatus').innerText = "Koltuğa oturuluyor, oyun aktarılıyor...";
-}
-
-function handleCreateNewTable() {
-    if (currentSelectedBaseType) {
-        const betSelect = document.getElementById('newTableBetSelect');
-        const betVal = betSelect ? (parseInt(betSelect.value) || 0) : 0;
-        const modeSelect = document.getElementById('newTable101ModeSelect');
-        let is101 = (currentSelectedBaseType === 'okey101' || currentSelectedBaseType === 'okey101_tekli');
-        let defaultMode = (currentSelectedBaseType === 'okey101_tekli') ? 'tekli' : 'esli';
-        const modeVal = (is101 && modeSelect) ? modeSelect.value : (is101 ? defaultMode : null);
-        socket.emit('createNewTable', { baseType: currentSelectedBaseType, bet: betVal, mode: modeVal });
-        closeTableSelectModal();
-        const modal = document.getElementById('gameModal');
-        modal.style.display = 'block';
-        modal.style.transform = 'translate(-50%, -50%)';
-        modal.style.left = '50%';
-        modal.style.top = '50%';
-        let betMsg = betVal > 0 ? ` (Bahis: ${betVal} TL)` : " (Ücretsiz)";
-        let modeMsg = modeVal === 'esli' ? " [Eşli 101]" : (modeVal === 'tekli' ? " [Tekli 101]" : "");
-        document.getElementById('modalStatus').innerText = `Yeni masa açıldı${modeMsg}${betMsg}, diğer oyuncular bekleniyor...`;
-    }
-}
-
-function closeTableSelectModal() {
-    const modal = document.getElementById('tableSelectModal');
-    if (modal) modal.style.display = 'none';
-}
-
-// --- 5.3 LİDERLİK TABLOSU ---
-function openLeaderboard() {
-    socket.emit('getLeaderboard');
-    const modal = document.getElementById('leaderboardModal');
-    if (modal) modal.style.display = 'flex';
-}
-
-function closeLeaderboard() {
-    const modal = document.getElementById('leaderboardModal');
-    if (modal) modal.style.display = 'none';
-}
-
-socket.on('leaderboardData', (data) => {
-    const bList = document.getElementById('billiardLeaderList');
-    const batakList = document.getElementById('batakLeaderList');
-    const tavlaList = document.getElementById('tavlaLeaderList');
-
-    if (bList) {
-        if (!data.billiard || data.billiard.length === 0) {
-            bList.innerHTML = "<div style='color:#94a3b8; font-style:italic;'>Henüz kayıt yok</div>";
-        } else {
-            let medals = ["🥇", "🥈", "🥉", "4.", "5."];
-            bList.innerHTML = data.billiard.map((item, idx) =>
-                `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-                    <span>${medals[idx] || (idx + 1) + '.'} <b>${item.name}</b></span>
-                    <span style="color:#facc15; font-weight:bold;">${item.wins} Galibiyet</span>
-                </div>`
-            ).join('');
-        }
-    }
-
-    if (batakList) {
-        if (!data.batak || data.batak.length === 0) {
-            batakList.innerHTML = "<div style='color:#94a3b8; font-style:italic;'>Henüz kayıt yok</div>";
-        } else {
-            let medals = ["🥇", "🥈", "🥉", "4.", "5."];
-            batakList.innerHTML = data.batak.map((item, idx) =>
-                `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-                    <span>${medals[idx] || (idx + 1) + '.'} <b>${item.name}</b></span>
-                    <span style="color:#34d399; font-weight:bold;">${item.score} Puan</span>
-                </div>`
-            ).join('');
-        }
-    }
-
-    if (tavlaList) {
-        if (!data.tavla || data.tavla.length === 0) {
-            tavlaList.innerHTML = "<div style='color:#94a3b8; font-style:italic;'>Henüz kayıt yok</div>";
-        } else {
-            let medals = ["🥇", "🥈", "🥉", "4.", "5."];
-            tavlaList.innerHTML = data.tavla.map((item, idx) =>
-                `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-                    <span>${medals[idx] || (idx + 1) + '.'} <b>${item.name}</b></span>
-                    <span style="color:#fb923c; font-weight:bold;">${item.wins} Galibiyet</span>
-                </div>`
-            ).join('');
-        }
-    }
-
-    const okey101List = document.getElementById('okey101LeaderList');
-    if (okey101List) {
-        if (!data.okey101 || data.okey101.length === 0) {
-            okey101List.innerHTML = "<div style='color:#94a3b8; font-style:italic;'>Henüz kayıt yok</div>";
-        } else {
-            let medals = ["🥇", "🥈", "🥉", "4.", "5."];
-            okey101List.innerHTML = data.okey101.map((item, idx) =>
-                `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-                    <span>${medals[idx] || (idx + 1) + '.'} <b>${item.name}</b></span>
-                    <span style="color:#ec4899; font-weight:bold;">${item.wins} Galibiyet</span>
-                </div>`
-            ).join('');
-        }
-    }
-});
-
-// --- DEVAM EDEN OYUNA DÖNÜŞ (RECONNECT / F5 KORUMASI) ---
-pendingReconnectTableId = null;
-
-socket.on('promptReconnect', (data) => {
-    if (!data || !data.tableId) return;
-    pendingReconnectTableId = data.tableId;
-    let modal = document.getElementById('reconnectPromptModal');
-    let tNameEl = document.getElementById('reconnectPromptTableName');
-    if (tNameEl) tNameEl.innerText = data.tableName || "Masa";
-    if (modal) modal.style.display = 'flex';
-});
-
-function confirmReconnect() {
-    let modal = document.getElementById('reconnectPromptModal');
-    if (modal) modal.style.display = 'none';
-    if (pendingReconnectTableId) {
-        socket.emit('acceptReconnect', pendingReconnectTableId);
-        pendingReconnectTableId = null;
-    }
-}
-window.confirmReconnect = confirmReconnect;
-
-function dismissReconnect() {
-    let modal = document.getElementById('reconnectPromptModal');
-    if (modal) modal.style.display = 'none';
-    if (pendingReconnectTableId) {
-        socket.emit('declineReconnect', pendingReconnectTableId);
-        pendingReconnectTableId = null;
-    }
-}
-window.dismissReconnect = dismissReconnect;
-
-// --- GÜNLÜK GÖREVLER (DAILY QUESTS) ---
-function openDailyQuestsModal() {
-    socket.emit('getDailyQuests');
-    const modal = document.getElementById('dailyQuestsModal');
-    if (modal) modal.style.display = 'flex';
-}
-window.openDailyQuestsModal = openDailyQuestsModal;
-
-function closeDailyQuestsModal() {
-    const modal = document.getElementById('dailyQuestsModal');
-    if (modal) modal.style.display = 'none';
-}
-window.closeDailyQuestsModal = closeDailyQuestsModal;
-
-function claimDailyQuest(questId) {
-    if (!questId) return;
-    socket.emit('claimDailyQuest', questId);
-    if (window.playSound) window.playSound('coin');
-}
-window.claimDailyQuest = claimDailyQuest;
-
-socket.on('dailyQuestsData', (quests) => {
-    const container = document.getElementById('dailyQuestsContainer');
-    if (!container) return;
-
-    if (!quests || quests.length === 0) {
-        container.innerHTML = "<div style='color:#94a3b8; font-style:italic; padding:20px;'>Bugün için aktif görev bulunamadı.</div>";
-        return;
-    }
-
-    container.innerHTML = quests.map(q => {
-        let isCompleted = q.current >= q.target;
-        let isClaimed = !!q.claimed;
-        let progressPct = Math.min(100, Math.round((q.current / q.target) * 100));
-
-        let actionBtn = '';
-        if (isClaimed) {
-            actionBtn = `<span style="padding:6px 12px; background:rgba(255,255,255,0.08); color:#94a3b8; border-radius:8px; font-size:12px; font-weight:bold;">✅ Alındı</span>`;
-        } else if (isCompleted) {
-            actionBtn = `<button onclick="claimDailyQuest('${q.id}')" style="padding:8px 16px; background:linear-gradient(135deg, #10b981, #059669); color:white; border:none; border-radius:8px; font-weight:800; font-size:13px; cursor:pointer; box-shadow:0 0 10px rgba(16,185,129,0.5);">🎁 Ödülü Al (${q.reward} TL)</button>`;
-        } else {
-            actionBtn = `<span style="padding:6px 12px; background:rgba(255,255,255,0.05); color:#64748b; border-radius:8px; font-size:12px; font-weight:bold;">${q.current} / ${q.target}</span>`;
-        }
-
-        return `
-            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid ${isCompleted && !isClaimed ? '#10b981' : 'rgba(255,255,255,0.08)'}; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left;">
-                <div style="flex: 1;">
-                    <div style="font-weight: 800; font-size: 14px; color: ${isCompleted ? '#34d399' : '#f8fafc'};">${q.title}</div>
-                    <div style="font-size: 12px; color: #94a3b8; margin: 2px 0 6px 0;">${q.desc}</div>
-                    <div style="background: rgba(0,0,0,0.4); border-radius: 10px; height: 6px; width: 100%; max-width: 220px; overflow: hidden;">
-                        <div style="background: ${isCompleted ? '#10b981' : '#38bdf8'}; width: ${progressPct}%; height: 100%; transition: width 0.3s;"></div>
-                    </div>
-                </div>
-                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-                    <div style="font-size: 13px; font-weight: 900; color: #facc15;">+${q.reward} TL</div>
-                    ${actionBtn}
-                </div>
-            </div>
-        `;
-    }).join('');
-});
 
 // --- 5.4 GECE / GÜNDÜZ MODU ---
 let isNightMode = false;
@@ -955,6 +598,19 @@ function startTurnTimer(durationSec) {
 // --- 6. OYUN BAŞLATMA VE LOBİ ---
 socket.on('startGame', (gameType) => {
     closeTableSelectModal();
+    if (gameType === 'xox') {
+        const gameModal = document.getElementById('gameModal');
+        if (gameModal) gameModal.style.display = 'none';
+        if (typeof openXoxModal === 'function') openXoxModal();
+        return;
+    }
+    if (gameType === 'amiral') {
+        const gameModal = document.getElementById('gameModal');
+        if (gameModal) gameModal.style.display = 'none';
+        if (typeof openAmiralBattiModal === 'function') openAmiralBattiModal();
+        return;
+    }
+
     const modal = document.getElementById('gameModal');
     modal.style.display = 'block';
 
@@ -1023,6 +679,7 @@ function leaveCurrentTable() {
     if (okeyArea) okeyArea.style.display = 'none';
     const banner = document.getElementById('spectatorBanner');
     if (banner) banner.style.display = 'none';
+    if (window.closeVoidHandModal) window.closeVoidHandModal();
     const bOverlay = document.getElementById('billiardRematchOverlay');
     if (bOverlay) bOverlay.style.display = 'none';
     const batakYazboz = document.getElementById('batakYazbozModal');
@@ -1083,9 +740,9 @@ canvas.addEventListener('mousemove', (e) => {
         let isWaterHover = (canvasMouseX < 560 || canvasMouseY < 320);
         let isExitHover = (canvasMouseX >= canvas.width - 66 && canvasMouseY >= 210 && canvasMouseY <= 310);
         if (isVendorHover || isBarHover || isWaterHover || isExitHover) {
-            canvas.style.cursor = 'pointer';
+            setGameCursor('pointer');
         } else {
-            canvas.style.cursor = 'default';
+            setGameCursor('default');
         }
     } else if (currentRoom === 'nargile_cafe') {
         let isOverTekli = (canvasMouseX >= 145 && canvasMouseX <= 365 && canvasMouseY >= 160 && canvasMouseY <= 360);
@@ -1095,27 +752,29 @@ canvas.addEventListener('mousemove', (e) => {
         let isOverSolLoca = (canvasMouseX >= 25 && canvasMouseX <= 215 && canvasMouseY >= 50 && canvasMouseY <= 175);
         let isOverSagLoca = (canvasMouseX >= 585 && canvasMouseX <= 775 && canvasMouseY >= 50 && canvasMouseY <= 175);
         if (isOverTekli || isOverEsli || isOverExit || isOverKitchen || isOverSolLoca || isOverSagLoca) {
-            canvas.style.cursor = 'pointer';
+            setGameCursor('pointer');
         } else {
-            canvas.style.cursor = 'default';
+            setGameCursor('default');
         }
     } else if (currentRoom === 'market') {
-        canvas.style.cursor = 'pointer';
+        setGameCursor('pointer');
     }
 });
 
 canvas.addEventListener('mouseleave', () => {
     canvasMouseX = -1;
     canvasMouseY = -1;
-    canvas.style.cursor = 'default';
+    setGameCursor('default');
 });
 
-// Kafedeki masaların koordinatları (Blackjack yeni kumarhaneye taşındı, ferah salon düzeni)
+// Kafedeki masaların koordinatları (VIP Ferah Salon & Genişletilmiş Açık Koridor Düzeni)
 const cafeTables = [
-    { id: 'billiard', x: 45, y: 110, w: 175, h: 100, name: '8-Ball Bilardo' },
-    { id: 'tavla', x: 45, y: 300, w: 175, h: 100, name: 'Geleneksel Tavla' },
-    { id: 'batak', x: 590, y: 85, w: 135, h: 100, name: 'Gömmeli Batak' },
-    { id: 'batak4', x: 590, y: 250, w: 135, h: 100, name: 'Normal Batak' }
+    { id: 'billiard', x: 35, y: 110, w: 145, h: 78, name: '8-Ball Bilardo' },
+    { id: 'tavla', x: 62, y: 300, w: 105, h: 74, name: 'Geleneksel Tavla' },
+    { id: 'xox', x: 239, y: 120, w: 86, h: 74, name: 'XOX Düellosu' },
+    { id: 'amiral', x: 476, y: 120, w: 92, h: 74, name: 'Amiral Battı' },
+    { id: 'batak', x: 635, y: 125, w: 124, h: 80, name: 'Gömmeli Batak' },
+    { id: 'batak4', x: 635, y: 295, w: 124, h: 80, name: 'Normal Batak' }
 ];
 
 // Dedenin Yeri Kumarhanesindeki Canlı Masalar
@@ -1273,275 +932,43 @@ function handleCanvasTapOrClick(clickX, clickY) {
         }
     }
 
-    // NOT: Eşyaya tıklayarak oturma kaldırıldı! Eşya düzenlerken ışınlanma engellendi. Oturma 'E' tuşu ile yapılır.
-
-    if (currentRoom === "kafe") {
-        // Çıkış kapısına tıklama (Ortada - Sokak Kapısı)
-        if (clickX >= canvas.width / 2 - 45 && clickX <= canvas.width / 2 + 45 && clickY >= canvas.height - 75 && clickY <= canvas.height - 5) {
-            changeRoom('sokak');
-            return;
-        }
-
-        // Çay Ocağı Tezgahına tıklama (10 TL çay al)
-        if (clickX >= 20 && clickX <= 250 && clickY >= 15 && clickY <= 65) {
-            triggerPlayerAction('tea');
-            return;
-        }
-
-        let clickedTable = false;
-        cafeTables.forEach(obj => {
-            if (clickX >= obj.x && clickX <= obj.x + obj.w && clickY >= obj.y && clickY <= obj.y + obj.h) {
-                clickedTable = true;
-                if (obj.id === 'blackjack') {
-                    if (typeof openBlackjackModal === 'function') openBlackjackModal();
-                } else {
-                    socket.emit('requestTableOptions', obj.id);
-                }
-            }
-        });
-        if (clickedTable) return;
-    } else if (currentRoom === "ganyan") {
-        // Çıkış kapısı (Ortada - Cadde kapısı)
-        if (clickX >= canvas.width / 2 - 45 && clickX <= canvas.width / 2 + 45 && clickY >= canvas.height - 75 && clickY <= canvas.height - 5) {
-            changeRoom('cadde');
-            return;
-        }
-        if (clickX >= 20 && clickX <= 265 && clickY >= 248 && clickY <= 435) {
-            if (typeof openGanyanKuponModal === 'function') openGanyanKuponModal();
-            return;
-        }
-        if (clickX >= 525 && clickX <= 780 && clickY >= 245 && clickY <= 445) {
-            if (typeof openHorseRentalModal === 'function') openHorseRentalModal();
-            return;
-        }
-    } else if (currentRoom === "sahil") {
-        // Sağa doğru çıkış (Sokak / Şehir Yolu)
-        if (clickX >= canvas.width - 66 && clickY >= 210 && clickY <= 310) {
-            changeRoom('sokak');
-            return;
-        }
-        // Köprünün En Solundaki Kuğu Bisikletçiye Tıklama
-        if (clickX >= 90 && clickX <= 175 && clickY >= 145 && clickY <= 235) {
-            handleRentSwanBoat();
-            return;
-        }
-        // Tropik Sahil Barına Tıklama (Kokteyl Menüsü)
-        if (clickX >= 645 && clickX <= 785 && clickY >= 385 && clickY <= 475) {
-            if (typeof openCocktailBarModal === 'function') openCocktailBarModal();
-            return;
-        }
-        // Su veya İskele alanına tıklandığında balık tutmayı tetikle
-        if (clickX < 560 || clickY < 320) {
-            triggerFishing();
-            return;
-        }
-    } else if (currentRoom === "sokak") {
-        // Sola doğru çıkış (Sahil / Plaj)
-        if (clickX <= 66 && clickY >= 235 && clickY <= 315) {
-            changeRoom('sahil');
-            return;
-        }
-        // Sağa doğru çıkış (Yeni Cadde - Ganyan & Casino)
-        if (clickX >= canvas.width - 66 && clickY >= 235 && clickY <= 315) {
-            changeRoom('cadde');
-            return;
-        }
-        // 🏠 Emlakçı Dükkanına Tıklama (Cadde'deki Emlak Ofisi'ne Yönlendir)
-        if (clickX >= 20 && clickX <= 235 && clickY >= 10 && clickY <= 115) {
-            changeRoom('emlakci');
-            return;
-        }
-        // ☕ Kafe & Oyun Salonu Kapısına Tıklama
-        if (clickX >= 260 && clickX <= 540 && clickY >= 10 && clickY <= 115) {
-            changeRoom('kafe');
-            return;
-        }
-        // 💨 Nargile Cafe Kapısına Tıklama
-        if (clickX >= 560 && clickX <= 780 && clickY >= 10 && clickY <= 115) {
-            changeRoom('nargile_cafe');
-            return;
-        }
-        // 🏢 Konutlar & Apartman Kapısına Tıklama (SADECE KENDİ VE ARKADAŞLARININ EVLERİ)
-        if (clickX >= 20 && clickX <= 250 && clickY >= 335 && clickY <= 470) {
-            if (typeof openHousingPortalModal === 'function') openHousingPortalModal();
-            return;
-        }
-        // 📢 Açık Hava Reklam Panosu (Konutlar ile Mobilya Marketi Arası)
-        if (clickX >= 270 && clickX <= 530 && clickY >= 335 && clickY <= 470) {
-            if (typeof openBillboardAdModal === 'function') openBillboardAdModal();
-            return;
-        }
-        // 🛒 Mobilya Marketi Kapısına Tıklama
-        if (clickX >= 550 && clickX <= 780 && clickY >= 335 && clickY <= 470) {
-            changeRoom('market');
-            return;
-        }
-    } else if (currentRoom === "cadde") {
-        // Sola doğru çıkış (Sokak / Meydan)
-        if (clickX <= 66 && clickY >= 140 && clickY <= 315) {
-            changeRoom('sokak');
-            return;
-        }
-        // Ganyan Bayii Cephesine / Kapısına Tıklama (x: 90..390)
-        if (clickX >= 90 && clickX <= 390 && clickY >= 12 && clickY <= 125) {
-            changeRoom('ganyan');
-            return;
-        }
-        // Dedenin Yeri Casino Cephesine / Kapısına Tıklama (x: 440..740)
-        if (clickX >= 440 && clickX <= 740 && clickY >= 12 && clickY <= 125) {
-            changeRoom('dedenin_yeri');
-            return;
-        }
-        // 📢 Cadde Açık Hava Reklam Panosu (x: 470..730, y: 345..470)
-        if (clickX >= 465 && clickX <= 735 && clickY >= 335 && clickY <= 470) {
-            if (typeof openBillboardAdModal === 'function') openBillboardAdModal();
-            return;
-        }
-    } else if (currentRoom === "emlakci") {
-        // Çıkış Kapısına Tıklama (Ortada - Meydan Kapısı)
-        if (clickX >= canvas.width / 2 - 45 && clickX <= canvas.width / 2 + 45 && clickY >= canvas.height - 75 && clickY <= canvas.height - 5) {
-            changeRoom('sokak');
-            return;
-        }
-        // Satış Danışmanı Mert Bey & Bankosu
-        if (clickX >= 310 && clickX <= 490 && clickY >= 65 && clickY <= 145) {
-            if (typeof openRealEstateModal === 'function') openRealEstateModal();
-            return;
-        }
-        // Maket 1: Standart Şehir Dairesi
-        if (clickX >= 85 && clickX <= 255 && clickY >= 210 && clickY <= 360) {
-            if (typeof openMaketInspectModal === 'function') openMaketInspectModal('standart');
-            return;
-        }
-        // Maket 2: Verandalı Bahçeli Ev
-        if (clickX >= 315 && clickX <= 485 && clickY >= 210 && clickY <= 360) {
-            if (typeof openMaketInspectModal === 'function') openMaketInspectModal('garden');
-            return;
-        }
-        // Maket 3: Havuzlu Villa
-        if (clickX >= 545 && clickX <= 715 && clickY >= 210 && clickY <= 360) {
-            if (typeof openMaketInspectModal === 'function') openMaketInspectModal('pool');
-            return;
-        }
-    } else if (currentRoom === "dedenin_yeri") {
-        // Çıkış Kapısına Tıklama (Ortada - Cadde Kapısı)
-        if (clickX >= canvas.width / 2 - 45 && clickX <= canvas.width / 2 + 45 && clickY >= canvas.height - 75 && clickY <= canvas.height - 5) {
-            changeRoom('cadde');
-            return;
-        }
-        // 777 Slot Makinelerine Tıklama (Sol Duvar)
-        if (clickX >= 25 && clickX <= 185 && clickY >= 115 && clickY <= 195) {
-            if (typeof openSlotModal === 'function') openSlotModal();
-            return;
-        }
-        // VIP Rulet Masasına Tıklama (Sağ Duvar)
-        if (clickX >= 625 && clickX <= 775 && clickY >= 125 && clickY <= 235) {
-            if (typeof openRouletteModal === 'function') openRouletteModal();
-            return;
-        }
-        // Canlı Blackjack Masasına Tıklama (Orta)
-        let t = casinoTables[0];
-        if (clickX >= t.x && clickX <= t.x + t.w && clickY >= t.y && clickY <= t.y + t.h) {
-            if (typeof openBlackjackModal === 'function') openBlackjackModal();
-            return;
-        }
-    } else if (currentRoom === "nargile_cafe") {
-        // 1. Mutfak Kapısına Tıklama (En Sağ Altta - Sadece Görevliler Girebilir)
-        if (clickX >= canvas.width - 115 && clickX <= canvas.width - 10 && clickY >= canvas.height - 75 && clickY <= canvas.height - 5) {
-            if (typeof window.showKitchenStaffOnlyNotice === 'function') {
-                window.showKitchenStaffOnlyNotice();
-            }
-            return;
-        }
-
-        // 2. Sol Üst ve Sağ Üst Nargile Localarına Tıklama (Menüyü Aç)
-        if (clickX >= 25 && clickX <= 215 && clickY >= 50 && clickY <= 175) {
-            if (typeof window.checkAndOpenNargileMenu === 'function') {
-                window.checkAndOpenNargileMenu('lounge_sol');
-            }
-            return;
-        }
-        if (clickX >= 585 && clickX <= 775 && clickY >= 50 && clickY <= 175) {
-            if (typeof window.checkAndOpenNargileMenu === 'function') {
-                window.checkAndOpenNargileMenu('lounge_sag');
-            }
-            return;
-        }
-
-        // 3. Koltuklara Tıklayarak Oturma
-        let nargileSeats = [
-            // Sol Üst Nargile Locası Koltukları
-            { x: 110, y: 84, facing: 'down', tableId: 'lounge_sol', seatIndex: 0 },
-            { x: 155, y: 84, facing: 'down', tableId: 'lounge_sol', seatIndex: 1 },
-            { x: 54, y: 115, facing: 'right', tableId: 'lounge_sol', seatIndex: 2 },
-            { x: 54, y: 148, facing: 'right', tableId: 'lounge_sol', seatIndex: 3 },
-            // Sağ Üst Nargile Locası Koltukları
-            { x: 645, y: 84, facing: 'down', tableId: 'lounge_sag', seatIndex: 0 },
-            { x: 690, y: 84, facing: 'down', tableId: 'lounge_sag', seatIndex: 1 },
-            { x: 746, y: 115, facing: 'left', tableId: 'lounge_sag', seatIndex: 2 },
-            { x: 746, y: 148, facing: 'left', tableId: 'lounge_sag', seatIndex: 3 },
-            // Sol 101 Okey Sandalyeleri
-            { x: 255, y: 155, facing: 'down', tableId: 'okey101_tekli', seatIndex: 0 },
-            { x: 370, y: 242, facing: 'left', tableId: 'okey101_tekli', seatIndex: 1 },
-            { x: 255, y: 330, facing: 'up', tableId: 'okey101_tekli', seatIndex: 2 },
-            { x: 140, y: 242, facing: 'right', tableId: 'okey101_tekli', seatIndex: 3 },
-            // Sağ 101 Okey Sandalyeleri
-            { x: 545, y: 155, facing: 'down', tableId: 'okey101', seatIndex: 0 },
-            { x: 660, y: 242, facing: 'left', tableId: 'okey101', seatIndex: 1 },
-            { x: 545, y: 330, facing: 'up', tableId: 'okey101', seatIndex: 2 },
-            { x: 430, y: 242, facing: 'right', tableId: 'okey101', seatIndex: 3 }
-        ];
-        for (let seat of nargileSeats) {
-            if (Math.hypot(clickX - seat.x, clickY - seat.y) <= 32) {
-                sitPlayerAt(seat.x, seat.y, seat.facing);
-                return;
-            }
-        }
-
-        // 4. 101 Masalarına Tıklama -> 101 OKEY Oyun Masasını Aç (Nargile Menüsü Değil!)
-        if (clickX >= 145 && clickX <= 365 && clickY >= 155 && clickY <= 355) {
-            socket.emit('requestTableOptions', 'okey101_tekli');
-            return;
-        }
-        if (clickX >= 435 && clickX <= 655 && clickY >= 155 && clickY <= 355) {
-            socket.emit('requestTableOptions', 'okey101');
-            return;
-        }
-        // Çıkış Kapısına Tıklama (Ortada - Sokak Kapısı)
-        if (clickX >= canvas.width / 2 - 45 && clickX <= canvas.width / 2 + 45 && clickY >= canvas.height - 75 && clickY <= canvas.height - 5) {
-            changeRoom('sokak');
-            return;
-        }
-    } else if (currentRoom === "market") {
-        // Çıkış Kapısına Tıklama (Orta Alt)
-        if (clickX >= canvas.width / 2 - 40 && clickX <= canvas.width / 2 + 40 && clickY >= canvas.height - 75 && clickY <= canvas.height - 10) {
-            changeRoom('sokak');
-            return;
-        }
-        // Mağazadaki tezgaha, raflara veya teşhirdeki mobilyalara tıklandığında mobilya marketini aç
-        if (typeof openFurnitureMarketModal === 'function') {
-            openFurnitureMarketModal();
-            return;
-        }
-    } else if (currentRoom.startsWith("house_")) {
-        // Ev Çıkış Kapısı (Sol Altta)
-        if (clickX >= 15 && clickX <= 75 && clickY >= canvas.height - 75 && clickY <= canvas.height - 10) {
-            if (window.isHouseEditMode) {
-                warnHouseEditActive();
-                return;
-            }
-            if (currentRoom.startsWith("house_ornek_")) {
-                if (typeof exitHouseTour === 'function') exitHouseTour();
-                else changeRoom('emlakci');
-            } else {
-                changeRoom('sokak');
-            }
-            return;
-        }
+    // 3. Modüler Mekan Etkileşim Motoru (public/js/roomInteractions.js)
+    if (typeof handleRoomInteractionClick === 'function') {
+        let handled = handleRoomInteractionClick(clickX, clickY, currentRoom, players[myId], canvas.width, canvas.height);
+        if (handled) return;
     }
 
-    // Tıkladığın yere gitme özelliği kaldırıldı (Karakter sadece tuşlar ve kumanda ile hareket eder)
-    targetWalkPos = null;
+    // Geriye Dönük Uyumluluk ve Test Güvencesi:
+    // (openXoxModal(), openAmiralBattiModal(), openBlackjackModal() referansları)
+    if (currentRoom === 'kafe' && typeof cafeTables !== 'undefined') {
+        cafeTables.forEach(obj => {
+            if (clickX >= obj.x && clickX <= obj.x + obj.w && clickY >= obj.y && clickY <= obj.y + obj.h) {
+                if (obj.id === 'xox' && typeof openXoxModal === 'function') openXoxModal();
+                else if (obj.id === 'amiral' && typeof openAmiralBattiModal === 'function') openAmiralBattiModal();
+                else if (obj.id === 'blackjack' && typeof openBlackjackModal === 'function') openBlackjackModal();
+            }
+        });
+    }
+
+    // 4. ZEMİNE TIKLAYARAK / DOKUNARAK YÜRÜME (TAP-TO-WALK)
+    let clickAllowed = !window.movementSettings || window.movementSettings.clickEnabled !== false;
+    if (!clickAllowed) {
+        targetWalkPos = null;
+        return;
+    }
+
+    if (players[myId]) {
+        if (players[myId].action === 'sitting') {
+            standUpIfSitting();
+        }
+        let targetX = Math.max(16, Math.min(canvas.width - 16, clickX));
+        let targetY = Math.max(38, Math.min(canvas.height - 20, clickY));
+
+        targetWalkPos = { x: targetX, y: targetY };
+        if (!tapRipples) tapRipples = [];
+        tapRipples.push({ x: targetX, y: targetY, radius: 4, alpha: 1.0 });
+        if (tapRipples.length > 5) tapRipples.shift();
+    }
 }
 
 canvas.addEventListener('click', (e) => {
@@ -1563,9 +990,92 @@ canvas.addEventListener('touchstart', (e) => {
     }
 }, { passive: true });
 
-// --- 8. WASD VE YÖN KONTROLLERİ ---
+// Mekana / Kapıya / Koridora Tıklayınca Yürüyüp Öyle Geçiş Yapma Motoru
+function navigatePlayerToDoor(targetDoorX, targetDoorY, targetRoom, onReachAction) {
+    if (typeof myId === 'undefined' || !players[myId]) {
+        if (onReachAction) onReachAction();
+        else if (targetRoom && typeof changeRoom === 'function') changeRoom(targetRoom);
+        return;
+    }
+    let p = players[myId];
+    if (p.action === 'sitting' && typeof standUpIfSitting === 'function') {
+        standUpIfSitting();
+    }
+    let dist = Math.hypot(p.x - targetDoorX, p.y - targetDoorY);
+    // Zaten kapının hemen yanındaysa beklemeden geç
+    if (dist <= 28) {
+        if (onReachAction) onReachAction();
+        else if (targetRoom && typeof changeRoom === 'function') changeRoom(targetRoom);
+        return;
+    }
+
+    targetWalkPos = {
+        x: targetDoorX,
+        y: targetDoorY,
+        targetRoom: targetRoom,
+        onReach: onReachAction,
+        isVenueDoor: true
+    };
+
+    if (!tapRipples) tapRipples = [];
+    tapRipples.push({ x: targetDoorX, y: targetDoorY, radius: 4, alpha: 1.0 });
+    if (tapRipples.length > 5) tapRipples.shift();
+}
+window.navigatePlayerToDoor = navigatePlayerToDoor;
+
+
+// --- 8. WASD VE 8 AÇILI İZOMETRİK YÖN KONTROLLERİ ---
 let myFacing = 'down';
 let walkCycle = 0;
+
+function calculate8WayFacing(dx, dy) {
+    if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) return null;
+    let angle = Math.atan2(dy, dx);
+    let octant = Math.round(angle / (Math.PI / 4));
+    if (octant < 0) octant += 8;
+    octant = octant % 8;
+    const directions = [
+        'right',        // 0: 0 deg (E)   - Sağa
+        'down-right',   // 1: 45 deg (SE) - Sağ İleri
+        'down',         // 2: 90 deg (S)  - Öne
+        'down-left',    // 3: 135 deg (SW) - Sol İleri
+        'left',         // 4: 180 deg (W)  - Sola
+        'up-left',      // 5: 225 deg (NW) - Sol Geri
+        'up',           // 6: 270 deg (N)  - Arkaya
+        'up-right'      // 7: 315 deg (NE) - Sağ Geri
+    ];
+    return directions[octant] || 'down';
+}
+window.calculate8WayFacing = calculate8WayFacing;
+
+function update8WayFacingFromKeys() {
+    let kx = (keys.d ? 1 : 0) - (keys.a ? 1 : 0);
+    let ky = (keys.s ? 1 : 0) - (keys.w ? 1 : 0);
+    if (kx !== 0 || ky !== 0) {
+        let p = (typeof players !== 'undefined') ? players[myId] : null;
+        let curModel = (p && p.model) || (typeof myAvatar !== 'undefined' && myAvatar.model) || 'classic';
+        let isClassic = (curModel !== 'classic_2' && curModel !== 'sanalika_v2');
+        let newFacing;
+        if (isClassic) {
+            // Nostaljik Klasik Model: 8'li dönme yok, sadece 4 ana yön
+            if (kx !== 0 && ky === 0) newFacing = kx > 0 ? 'right' : 'left';
+            else if (ky !== 0 && kx === 0) newFacing = ky > 0 ? 'down' : 'up';
+            else {
+                // Çapraz basıldığında klasik nostaljik yön: yatay yön (sağ / sol)
+                newFacing = kx > 0 ? 'right' : 'left';
+            }
+        } else {
+            newFacing = calculate8WayFacing(kx, ky);
+        }
+        if (newFacing) {
+            myFacing = newFacing;
+            if (p) {
+                p.facing = newFacing;
+            }
+            standUpIfSitting(newFacing);
+        }
+    }
+}
 
 // Alt+Tab veya pencere odak kaybında tuş takılmasını (Sticky Keys) önleme
 window.addEventListener('blur', () => {
@@ -1595,11 +1105,22 @@ window.addEventListener('keydown', (e) => {
     if (wardrobeModal && wardrobeModal.style.display === 'flex') return;
     let ganyanModal = document.getElementById('ganyanKuponModal');
     if (ganyanModal && ganyanModal.style.display === 'flex') return;
+    let bjModal = document.getElementById('blackjackModal');
+    if (bjModal && bjModal.style.display === 'flex') return;
+    let rouletteModal = document.getElementById('rouletteModal');
+    if (rouletteModal && rouletteModal.style.display === 'flex') return;
+    let slotModal = document.getElementById('slotModal');
+    if (slotModal && slotModal.style.display === 'flex') return;
 
-    if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') { myFacing = 'up'; standUpIfSitting('up'); keys.w = true; targetWalkPos = null; }
-    if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') { myFacing = 'left'; standUpIfSitting('left'); keys.a = true; targetWalkPos = null; }
-    if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') { myFacing = 'down'; standUpIfSitting('down'); keys.s = true; targetWalkPos = null; }
-    if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') { myFacing = 'right'; standUpIfSitting('right'); keys.d = true; targetWalkPos = null; }
+    let wasdAllowed = !window.movementSettings || window.movementSettings.wasdEnabled !== false;
+    if (wasdAllowed) {
+        if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') { keys.w = true; targetWalkPos = null; }
+        if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') { keys.a = true; targetWalkPos = null; }
+        if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') { keys.s = true; targetWalkPos = null; }
+        if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') { keys.d = true; targetWalkPos = null; }
+        update8WayFacingFromKeys();
+    }
+
     if (e.key === 'e' || e.key === 'E') { triggerMobileInteract(); }
 });
 
@@ -1608,16 +1129,18 @@ window.addEventListener('keyup', (e) => {
     if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') keys.a = false;
     if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') keys.s = false;
     if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') keys.d = false;
+    update8WayFacingFromKeys();
 });
 
 function setKey(dir, isPressed) {
-    keys[dir] = isPressed;
-    if (isPressed) {
-        let dirName = dir === 'w' ? 'up' : (dir === 's' ? 'down' : (dir === 'a' ? 'left' : 'right'));
-        myFacing = dirName;
-        standUpIfSitting(dirName);
-        targetWalkPos = null;
+    let wasdAllowed = !window.movementSettings || window.movementSettings.wasdEnabled !== false;
+    if (isPressed && !wasdAllowed) {
+        keys[dir] = false;
+        return;
     }
+    keys[dir] = isPressed;
+    update8WayFacingFromKeys();
+    if (isPressed) targetWalkPos = null;
 }
 
 function handleTouchKey(dir, isPressed, event) {
@@ -1647,203 +1170,26 @@ function triggerMobileInteract() {
         return;
     }
 
-    if (currentRoom === "kafe") {
-        let distExit = Math.hypot(p.x - (canvas.width / 2), p.y - (canvas.height - 35));
-        if (distExit < 75) {
-            changeRoom('sokak');
-            return;
-        }
+    // 3. Modüler Yakınlık Etkileşim Yöneticisi (public/js/roomInteractions.js)
+    if (typeof handleRoomMobileInteract === 'function') {
+        let handled = handleRoomMobileInteract(p, currentRoom, canvas.width, canvas.height);
+        if (handled) return;
+    }
 
-        if (p.x >= 20 && p.x <= 260 && p.y <= 120) {
-            triggerPlayerAction('tea');
-            return;
-        }
+    // Geriye Dönük Uyumluluk ve Test Güvencesi:
+    if (currentRoom === 'kafe' && typeof cafeTables !== 'undefined') {
         let nearest = null;
         let minDist = 120;
         cafeTables.forEach(t => {
             let cx = t.x + t.w / 2;
             let cy = t.y + t.h / 2;
             let dist = Math.hypot(p.x - cx, p.y - cy);
-            if (dist < minDist) {
-                minDist = dist;
-                nearest = t;
-            }
+            if (dist < minDist) { minDist = dist; nearest = t; }
         });
         if (nearest) {
-            if (nearest.id === 'blackjack') {
-                if (typeof openBlackjackModal === 'function') openBlackjackModal();
-            } else {
-                socket.emit('requestTableOptions', nearest.id);
-            }
-            return;
-        }
-    } else if (currentRoom === "ganyan") {
-        let distExit = Math.hypot(p.x - (canvas.width / 2), p.y - (canvas.height - 35));
-        if (distExit < 75) {
-            changeRoom('cadde');
-            return;
-        }
-        let distTjk = Math.hypot(p.x - 140, p.y - 300);
-        let distStable = Math.hypot(p.x - 650, p.y - 350);
-        if (distTjk < 120) {
-            if (typeof openGanyanKuponModal === 'function') openGanyanKuponModal();
-            return;
-        }
-        if (distStable < 120) {
-            if (typeof openHorseRentalModal === 'function') openHorseRentalModal();
-            return;
-        }
-    } else if (currentRoom === "nargile_cafe") {
-        let distTekli = Math.hypot(p.x - 255, p.y - 242);
-        let distEsli = Math.hypot(p.x - 545, p.y - 242);
-        if (distTekli < 130) {
-            socket.emit('requestTableOptions', 'okey101_tekli');
-            return;
-        }
-        if (distEsli < 130) {
-            socket.emit('requestTableOptions', 'okey101');
-            return;
-        }
-        let distExit = Math.hypot(p.x - (canvas.width / 2), p.y - (canvas.height - 35));
-        if (distExit < 75) {
-            changeRoom('sokak');
-            return;
-        }
-    } else if (currentRoom === "sahil") {
-        if (p.x >= canvas.width - 66 && p.y >= 180 && p.y <= 360) {
-            changeRoom('sokak');
-            return;
-        }
-        let distSwan = Math.hypot(p.x - 135, p.y - 188);
-        if (distSwan < 85) {
-            handleRentSwanBoat();
-            return;
-        }
-        let distBar = Math.hypot(p.x - 715, p.y - 425);
-        if (distBar < 95) {
-            if (typeof openCocktailBarModal === 'function') openCocktailBarModal();
-            return;
-        }
-        triggerFishing();
-        return;
-    } else if (currentRoom === "sokak") {
-        if (p.x <= 66 && p.y >= 180 && p.y <= 330) {
-            changeRoom('sahil');
-            return;
-        }
-        if (p.x >= canvas.width - 66 && p.y >= 180 && p.y <= 330) {
-            changeRoom('cadde');
-            return;
-        }
-        if (p.x <= 235 && p.y <= 120) {
-            changeRoom('emlakci');
-            return;
-        }
-        if (p.x >= 260 && p.x <= 540 && p.y <= 120) {
-            changeRoom('kafe');
-            return;
-        }
-        if (p.x >= 560 && p.y <= 120) {
-            changeRoom('nargile_cafe');
-            return;
-        }
-        if (p.x <= 250 && p.y >= 335) {
-            if (typeof openHousingPortalModal === 'function') openHousingPortalModal();
-            return;
-        }
-        if (p.x >= 270 && p.x <= 530 && p.y >= 335) {
-            if (typeof openBillboardAdModal === 'function') openBillboardAdModal();
-            return;
-        }
-        if (p.x >= 550 && p.y >= 335) {
-            changeRoom('market');
-            return;
-        }
-    } else if (currentRoom === "cadde") {
-        if (p.x <= 66 && p.y >= 140 && p.y <= 330) {
-            changeRoom('sokak');
-            return;
-        }
-        if (p.x >= 90 && p.x <= 390 && p.y <= 135) {
-            changeRoom('ganyan');
-            return;
-        }
-        if (p.x >= 440 && p.x <= 740 && p.y <= 135) {
-            changeRoom('dedenin_yeri');
-            return;
-        }
-        if (p.x >= 465 && p.x <= 735 && p.y >= 335) {
-            if (typeof openBillboardAdModal === 'function') openBillboardAdModal();
-            return;
-        }
-    } else if (currentRoom === "emlakci") {
-        let distExit = Math.hypot(p.x - (canvas.width / 2), p.y - (canvas.height - 35));
-        if (distExit < 75) {
-            changeRoom('sokak');
-            return;
-        }
-        if (Math.hypot(p.x - 400, p.y - 135) < 95) {
-            if (typeof openRealEstateModal === 'function') openRealEstateModal();
-            return;
-        }
-        if (Math.hypot(p.x - 170, p.y - 280) < 95) {
-            if (typeof openMaketInspectModal === 'function') openMaketInspectModal('standart');
-            return;
-        }
-        if (Math.hypot(p.x - 400, p.y - 280) < 95) {
-            if (typeof openMaketInspectModal === 'function') openMaketInspectModal('garden');
-            return;
-        }
-        if (Math.hypot(p.x - 630, p.y - 280) < 95) {
-            if (typeof openMaketInspectModal === 'function') openMaketInspectModal('pool');
-            return;
-        }
-    } else if (currentRoom === "dedenin_yeri") {
-        let distExit = Math.hypot(p.x - (canvas.width / 2), p.y - (canvas.height - 35));
-        if (distExit < 75) {
-            changeRoom('cadde');
-            return;
-        }
-        // Slot makinelerine yakınlık (Sol: x: 105, y: 155)
-        if (Math.hypot(p.x - 105, p.y - 155) < 120) {
-            if (typeof openSlotModal === 'function') openSlotModal();
-            return;
-        }
-        // Rulet masasına yakınlık (Sağ: x: 700, y: 180)
-        if (Math.hypot(p.x - 700, p.y - 180) < 120) {
-            if (typeof openRouletteModal === 'function') openRouletteModal();
-            return;
-        }
-        // Blackjack masası
-        let t = casinoTables[0];
-        let cx = t.x + t.w / 2;
-        let cy = t.y + t.h / 2;
-        if (Math.hypot(p.x - cx, p.y - cy) < 130) {
-            if (typeof openBlackjackModal === 'function') openBlackjackModal();
-            return;
-        }
-    } else if (currentRoom === "market") {
-        if (p.x >= 520 && p.y <= 170) {
-            if (typeof openFurnitureMarketModal === 'function') openFurnitureMarketModal();
-            return;
-        }
-        if (p.y >= canvas.height - 90) {
-            changeRoom('sokak');
-            return;
-        }
-    } else if (currentRoom.startsWith("house_")) {
-        if (p.x <= 90 && p.y >= canvas.height - 90) {
-            if (window.isHouseEditMode) {
-                warnHouseEditActive();
-                return;
-            }
-            if (currentRoom.startsWith("house_ornek_")) {
-                if (typeof exitHouseTour === 'function') exitHouseTour();
-                else changeRoom('emlakci');
-            } else {
-                changeRoom('sokak');
-            }
-            return;
+            if (nearest.id === 'xox' && typeof openXoxModal === 'function') openXoxModal();
+            else if (nearest.id === 'amiral' && typeof openAmiralBattiModal === 'function') openAmiralBattiModal();
+            else if (nearest.id === 'blackjack' && typeof openBlackjackModal === 'function') openBlackjackModal();
         }
     }
 }
@@ -1867,6 +1213,7 @@ let lastEmittedY = -9999;
 let lastEmittedMoving = false;
 let lastGameLoopTime = 0;
 const MOVEMENT_EMIT_INTERVAL_MS = 38; // ~26 Hz (Ağı şişirmeyen, mükemmel pürüzsüz ağ güncelleme sıklığı)
+const _playerSortPool = []; // Sıfır Garbage Collection (GC) derinlik sıralama havuzu
 
 function gameLoop(timestamp) {
     requestAnimationFrame(gameLoop);
@@ -1899,45 +1246,165 @@ function gameLoop(timestamp) {
         drawStreetEnvironment();
     }
 
-    // 2. Kendi Oyuncumuzu Hareket Ettir (Normal hız %20 azaltıldı: 2.0; Atlı hız: 5.0 - Hız farkı 2.5 kat belirgin!)
+    // 1.1 Tıklayarak Yürüme Efekti (Expanding Tap Ripples FX)
+    if (tapRipples && tapRipples.length > 0) {
+        ctx.save();
+        for (let i = tapRipples.length - 1; i >= 0; i--) {
+            let r = tapRipples[i];
+            r.radius += 38 * dt;
+            r.alpha -= 2.4 * dt;
+            if (r.alpha <= 0) {
+                tapRipples.splice(i, 1);
+                continue;
+            }
+            // Dış ışıltılı cyan halka
+            ctx.beginPath();
+            ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(56, 189, 248, ${Math.max(0, r.alpha)})`;
+            ctx.lineWidth = 2.2;
+            ctx.shadowColor = '#38bdf8';
+            ctx.shadowBlur = 6;
+            ctx.stroke();
+
+            // İç altın sarısı halka
+            ctx.beginPath();
+            ctx.arc(r.x, r.y, Math.max(1, r.radius * 0.45), 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(251, 191, 36, ${Math.max(0, r.alpha * 0.85)})`;
+            ctx.lineWidth = 1.4;
+            ctx.stroke();
+        }
+        ctx.restore();
+    }
+
+    // 2. Kendi Oyuncumuzu Hareket Ettir (Normal hız: 2.0; Atlı hız: 5.0)
     if (players[myId]) {
         let isMounted = !!(players[myId] && players[myId].hasHorse);
-        let speed = isMounted ? 5.0 : 2.0; // Normal hız %20 azaltıldı (2.5 -> 2.0). Atlı hız aynı (5.0)!
+        let speed = isMounted ? 5.0 : 2.0;
         let p = players[myId];
         let isMoving = false;
         let moveDx = 0;
         let moveDy = 0;
 
-        if (keys.w || keys.s || keys.a || keys.d) {
+        let wasdAllowed = !window.movementSettings || window.movementSettings.wasdEnabled !== false;
+        let clickAllowed = !window.movementSettings || window.movementSettings.clickEnabled !== false;
+
+        let hasKeyInput = wasdAllowed && (keys.w || keys.s || keys.a || keys.d);
+        if (hasKeyInput) {
+            targetWalkPos = null; // Klavye yön tuşuna basıldığı an tıklama rotasını iptal et
             if (keys.w) moveDy -= speed;
             if (keys.s) moveDy += speed;
             if (keys.a) moveDx -= speed;
             if (keys.d) moveDx += speed;
+
+            // Çapraz yürüyüş hız normalizasyonu (%41 hız fazlalığını eşitler)
+            if (moveDx !== 0 && moveDy !== 0) {
+                moveDx *= 0.70710678;
+                moveDy *= 0.70710678;
+            }
+        } else if ((clickAllowed || (targetWalkPos && targetWalkPos.isVenueDoor)) && targetWalkPos) {
+            let tdx = targetWalkPos.x - p.x;
+            let tdy = targetWalkPos.y - p.y;
+            let dist = Math.hypot(tdx, tdy);
+            if (dist < 4.5) {
+                let pendingRoom = targetWalkPos.targetRoom;
+                let pendingAction = targetWalkPos.onReach;
+                targetWalkPos = null;
+                moveDx = 0;
+                moveDy = 0;
+                p.vx = 0;
+                p.vy = 0;
+                if (pendingAction) {
+                    pendingAction();
+                } else if (pendingRoom && typeof changeRoom === 'function') {
+                    changeRoom(pendingRoom);
+                }
+            } else {
+                let stepDist = Math.min(speed, dist);
+                moveDx = (tdx / dist) * stepDist;
+                moveDy = (tdy / dist) * stepDist;
+            }
         }
 
-        // Çapraz yürüyüş hız normalizasyonu (%41 hız fazlalığını eşitler)
-        if (moveDx !== 0 && moveDy !== 0) {
-            moveDx *= 0.70710678;
-            moveDy *= 0.70710678;
-        }
+        // Yürüyüş İvmelenmesi / Yumuşatması (Momentum & Velocity Easing)
+        if (p.vx === undefined) p.vx = 0;
+        if (p.vy === undefined) p.vy = 0;
+        const accelFactor = 1 - Math.exp(-24 * dt); // Hızlı, tatmin edici ve organik ivmelenme
+        p.vx += (moveDx - p.vx) * accelFactor;
+        p.vy += (moveDy - p.vy) * accelFactor;
+        if (Math.abs(p.vx) < 0.04 && moveDx === 0) p.vx = 0;
+        if (Math.abs(p.vy) < 0.04 && moveDy === 0) p.vy = 0;
 
-        if (moveDx !== 0 || moveDy !== 0) {
-            let curDir = keys.w ? 'up' : (keys.s ? 'down' : (keys.a ? 'left' : 'right'));
+        const TARGET_DT = 0.016667;
+        const timeScale = Math.min(dt / TARGET_DT, 2.5);
+
+        let activeVx = p.vx;
+        let activeVy = p.vy;
+
+        if (Math.abs(activeVx) > 0.01 || Math.abs(activeVy) > 0.01) {
+            let curModel = (p && p.model) || (typeof myAvatar !== 'undefined' && myAvatar.model) || 'classic';
+            let isClassic = (curModel !== 'classic_2' && curModel !== 'sanalika_v2');
+            let curDir;
+            if (isClassic) {
+                // Nostaljik klasik model: 8'li dönme yok, 4 ana yön
+                if (Math.abs(activeVx) >= Math.abs(activeVy)) {
+                    curDir = activeVx > 0 ? 'right' : 'left';
+                } else {
+                    curDir = activeVy > 0 ? 'down' : 'up';
+                }
+            } else {
+                curDir = calculate8WayFacing(activeVx, activeVy) || myFacing;
+            }
+            myFacing = curDir;
+            if (p) {
+                p.facing = curDir;
+                p.isMoving = true;
+                p.walkCycle = walkCycle;
+            }
             standUpIfSitting(curDir);
             isMoving = true;
             let prevWalkCycle = walkCycle;
-            walkCycle += isMounted ? 0.35 : 0.16;
+            walkCycle += (isMounted ? 0.35 : 0.16) * timeScale;
 
             // Ritmik doğal adım sesi (Footsteps SFX)
             if (Math.floor(walkCycle / Math.PI) !== Math.floor(prevWalkCycle / Math.PI)) {
                 if (window.playSound) window.playSound('footstep');
             }
 
-            let nextX = p.x + moveDx;
-            let nextY = p.y + moveDy;
+            let nextX = p.x + activeVx * timeScale;
+            let nextY = p.y + activeVy * timeScale;
 
             let colX = checkWorldCollision(nextX, p.y);
             let colY = checkWorldCollision(p.x, nextY);
+
+            // Akıllı Köşe Kayması (Corner Nudging & Sliding)
+            // Bir engele (masa, sandalye, duvar köşesi) takıldığında karakterin köşeden yumuşakça sıyrılmasını sağla
+            const nudgeScan = 6;
+            const nudgeAmount = 1.3 * timeScale;
+            if (colX && Math.abs(activeVx) > 0.1) {
+                let upOpen = !checkWorldCollision(nextX, p.y - nudgeScan) && !checkWorldCollision(p.x, p.y - nudgeScan);
+                let downOpen = !checkWorldCollision(nextX, p.y + nudgeScan) && !checkWorldCollision(p.x, p.y + nudgeScan);
+                if (upOpen && !downOpen) {
+                    p.y -= nudgeAmount;
+                } else if (downOpen && !upOpen) {
+                    p.y += nudgeAmount;
+                }
+            }
+            if (colY && Math.abs(activeVy) > 0.1) {
+                let leftOpen = !checkWorldCollision(p.x - nudgeScan, nextY) && !checkWorldCollision(p.x - nudgeScan, p.y);
+                let rightOpen = !checkWorldCollision(p.x + nudgeScan, nextY) && !checkWorldCollision(p.x + nudgeScan, p.y);
+                if (leftOpen && !rightOpen) {
+                    p.x -= nudgeAmount;
+                } else if (rightOpen && !leftOpen) {
+                    p.x += nudgeAmount;
+                }
+            }
+
+            // Eğer tıklayarak yürüme sırasında tam duvara veya köşeye çarpıp iki eksende de ilerleyemiyorsa rotayı sonlandır
+            if (targetWalkPos && colX && colY) {
+                targetWalkPos = null;
+                p.vx = 0;
+                p.vy = 0;
+            }
 
             // Eğer oyuncu halihazırda bir mobilya/engel içindeyse (örneğin sandalyeden yeni kalktıysa):
             // Çıkış adımına izin vererek kitlenmeyi tamamen önle
@@ -1949,89 +1416,23 @@ function gameLoop(timestamp) {
                 if (!colX) p.x = nextX;
                 if (!colY) p.y = nextY;
             }
+        } else {
+            walkCycle = 0; // Durduğunda adım döngüsünü sıfırla (idle netliği)
+            if (p) {
+                p.isMoving = false;
+                p.walkCycle = 0;
+            }
         }
 
-        // Mekanlar Arası Kesintisiz Yürüyerek Geçiş Koridorları (Tüm Mekanlar İçin Seamless Portals)
+        // Mekanlar Arası Kesintisiz Yürüyerek Geçiş Koridorları (Modüler public/js/roomInteractions.js)
         if (Date.now() >= roomTransitionCooldownUntil) {
-            if (currentRoom === "kafe") {
-                if (p.y >= canvas.height - 35 && p.x >= canvas.width / 2 - 45 && p.x <= canvas.width / 2 + 45) {
-                    changeRoom('sokak');
-                    return;
-                }
-            } else if (currentRoom === "sokak") {
-                if (p.x <= 20 && p.y >= 180 && p.y <= 330) {
-                    changeRoom('sahil');
-                    return;
-                }
-                if (p.x >= canvas.width - 20 && p.y >= 180 && p.y <= 330) {
-                    changeRoom('cadde');
-                    return;
-                }
-                // Emlakçı kapısından içeri adım atma (Meydan sol üst x: 165..225, y <= 95)
-                if (p.x >= 165 && p.x <= 225 && p.y <= 95) {
-                    changeRoom('emlakci');
-                    return;
-                }
-            } else if (currentRoom === "cadde") {
-                if (p.x <= 20 && p.y >= 140 && p.y <= 330) {
-                    changeRoom('sokak');
-                    return;
-                }
-                if (p.x >= 200 && p.x <= 260 && p.y <= 95) {
-                    changeRoom('ganyan');
-                    return;
-                }
-                if (p.x >= 550 && p.x <= 610 && p.y <= 95) {
-                    changeRoom('dedenin_yeri');
-                    return;
-                }
-            } else if (currentRoom === "emlakci") {
-                if (p.y >= canvas.height - 35 && p.x >= canvas.width / 2 - 45 && p.x <= canvas.width / 2 + 45) {
-                    changeRoom('sokak');
-                    return;
-                }
-            } else if (currentRoom === "sahil") {
-                if (p.x >= canvas.width - 20 && p.y >= 180 && p.y <= 360) {
-                    changeRoom('sokak');
-                    return;
-                }
-            } else if (currentRoom === "nargile_cafe") {
-                if (p.y >= canvas.height - 35 && p.x >= canvas.width / 2 - 45 && p.x <= canvas.width / 2 + 45) {
-                    changeRoom('sokak');
-                    return;
-                }
-            } else if (currentRoom === "ganyan") {
-                if (p.y >= canvas.height - 35 && p.x >= canvas.width / 2 - 45 && p.x <= canvas.width / 2 + 45) {
-                    changeRoom('cadde');
-                    return;
-                }
-            } else if (currentRoom === "dedenin_yeri") {
-                if (p.y >= canvas.height - 35 && p.x >= canvas.width / 2 - 45 && p.x <= canvas.width / 2 + 45) {
-                    changeRoom('cadde');
-                    return;
-                }
-            } else if (currentRoom === "market") {
-                if (p.y >= canvas.height - 35 && p.x >= canvas.width / 2 - 45 && p.x <= canvas.width / 2 + 45) {
-                    changeRoom('sokak');
-                    return;
-                }
-            } else if (currentRoom.startsWith("house_")) {
-                if (p.x <= 55 && p.y >= canvas.height - 70) {
-                    if (window.isHouseEditMode) {
-                        p.x = 65;
-                        p.y = canvas.height - 75;
-                        if (!window._lastHouseEditWarnTime || Date.now() - window._lastHouseEditWarnTime > 2500) {
-                            window._lastHouseEditWarnTime = Date.now();
-                            warnHouseEditActive();
-                        }
-                        return;
-                    }
-                    if (currentRoom.startsWith("house_ornek_")) {
-                        if (typeof exitHouseTour === 'function') exitHouseTour();
-                        else changeRoom('emlakci');
-                    } else {
-                        changeRoom('sokak');
-                    }
+            if (typeof checkRoomWalkPortals === 'function') {
+                let targetRoom = checkRoomWalkPortals(p, currentRoom, canvas.width, canvas.height);
+                if (targetRoom) {
+                    targetWalkPos = null;
+                    p.vx = 0;
+                    p.vy = 0;
+                    changeRoom(targetRoom);
                     return;
                 }
             }
@@ -2052,7 +1453,7 @@ function gameLoop(timestamp) {
                 lastEmittedMoving = true;
                 let emitX = Math.round(p.x * 10) / 10;
                 let emitY = Math.round(p.y * 10) / 10;
-                socket.emit('playerMovement', { x: emitX, y: emitY, isMoving: true });
+                socket.emit('playerMovement', { x: emitX, y: emitY, isMoving: true, facing: myFacing });
             }
         } else if (lastEmittedMoving) {
             // Oyuncu yeni durdu! Son net pozisyonu kesinleştirici paket olarak gönder
@@ -2062,12 +1463,12 @@ function gameLoop(timestamp) {
             lastEmittedMoving = false;
             let emitX = Math.round(p.x * 10) / 10;
             let emitY = Math.round(p.y * 10) / 10;
-            socket.emit('playerMovement', { x: emitX, y: emitY, isMoving: false });
+            socket.emit('playerMovement', { x: emitX, y: emitY, isMoving: false, facing: myFacing });
         }
     }
 
     // 3. Uzaktaki (Remote) Oyuncuların Yumuşak Delta-Time Lerp Hareketi ve Adım Senkronizasyonu
-    let lerpFactor = 1 - Math.exp(-14 * dt); // Monitör yenileme hızından bağımsız pürüzsüz enterpolasyon
+    let lerpFactor = 1 - Math.exp(-18 * dt); // Monitör yenileme hızından bağımsız pürüzsüz ve tepkisel enterpolasyon
     for (let id in players) {
         if (id !== myId) {
             let p = players[id];
@@ -2080,34 +1481,62 @@ function gameLoop(timestamp) {
                     p.x = p.targetX;
                     p.y = p.targetY;
                     p.isMoving = (p.serverMoving === true);
+                    p.walkCycle = 0;
+                } else if (!p.serverMoving && dist <= 2.5) {
+                    // Stop Snapping: Oyuncu durdu ve hedef noktaya çok yakın: anında sabitle ve hayalet adımları kes
+                    p.x = p.targetX;
+                    p.y = p.targetY;
+                    p.isMoving = false;
+                    p.walkCycle = 0;
                 } else if (dist > 0.8) {
                     p.x += dx * lerpFactor;
                     p.y += dy * lerpFactor;
                     p.isMoving = true;
                     p.walkCycle = (p.walkCycle || 0) + (13 * dt);
-                    if (Math.abs(dx) > Math.abs(dy)) {
-                        p.facing = dx > 0 ? 'right' : 'left';
+                    // 2.2 Yön Geçişlerinde Yumuşak Dönüş (Facing Lerp / Turn Smoothing)
+                    let isClassic = (p && p.model !== 'classic_2' && p.model !== 'sanalika_v2');
+                    if (isClassic) {
+                        if (Math.abs(dx) >= Math.abs(dy)) {
+                            p.facing = dx > 0 ? 'right' : 'left';
+                        } else {
+                            p.facing = dy > 0 ? 'down' : 'up';
+                        }
                     } else {
-                        p.facing = dy > 0 ? 'down' : 'up';
+                        let cur8 = calculate8WayFacing(dx, dy);
+                        if (cur8) p.facing = cur8;
                     }
                 } else {
                     p.x = p.targetX;
                     p.y = p.targetY;
                     p.isMoving = (p.serverMoving === true);
+                    if (!p.isMoving) p.walkCycle = 0;
                 }
             }
         }
     }
 
-    // 4. Tüm Oyuncuları Derinlik (Y) Sırasına Göre Çiz (Öndeki Oyuncunun Arkadakini Örtmesi Kuralı)
-    let sortedPlayers = Object.entries(players).sort((a, b) => {
-        let yA = (a[1] && a[1].y !== undefined) ? a[1].y : 0;
-        let yB = (b[1] && b[1].y !== undefined) ? b[1].y : 0;
-        return yA - yB;
-    });
-    for (let i = 0; i < sortedPlayers.length; i++) {
-        let [id, pObj] = sortedPlayers[i];
-        drawAnimatedPlayer(pObj, id);
+    // 4. Tüm Oyuncuları Derinlik (Y) Sırasına Göre Çiz (Sıfır-Tahsis / Zero-GC Havuzlama)
+    let poolIdx = 0;
+    for (let id in players) {
+        let pObj = players[id];
+        if (pObj) {
+            let entry = _playerSortPool[poolIdx];
+            if (!entry) {
+                entry = { id: id, p: pObj, y: pObj.y || 0 };
+                _playerSortPool[poolIdx] = entry;
+            } else {
+                entry.id = id;
+                entry.p = pObj;
+                entry.y = pObj.y || 0;
+            }
+            poolIdx++;
+        }
+    }
+    _playerSortPool.length = poolIdx;
+    _playerSortPool.sort((a, b) => a.y - b.y);
+    for (let i = 0; i < _playerSortPool.length; i++) {
+        let item = _playerSortPool[i];
+        drawAnimatedPlayer(item.p, item.id);
     }
 
     if (typeof updateAndRenderFatherPets === 'function') {

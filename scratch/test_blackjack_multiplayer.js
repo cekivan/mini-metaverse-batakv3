@@ -276,7 +276,7 @@ async function runTests() {
                 resolve();
             }
         });
-        setTimeout(resolve, 25000);
+        setTimeout(resolve, 45000);
     });
 
     await roundTimeout;

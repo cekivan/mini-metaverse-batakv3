@@ -1,5 +1,6 @@
 // src/handlers/slotHandler.js - ⚡ Dedenin Şimşek Slotu 777 ⚡ Sunucu Mantığı
 const dataManager = require('../dataManager');
+const { checkRateLimit } = require('../utils/securityUtils');
 
 const SYMBOL_WEIGHTS = [
     { id: 'cherry', icon: '🍒', name: 'Kiraz', weight: 32 },
@@ -100,9 +101,14 @@ function registerSlotHandlers(io, socket, players) {
             return;
         }
 
+        if (!checkRateLimit(socket, 'slot_spin', 1, 1000)) {
+            socket.emit('slot_error', 'Lütfen çarkın durmasını bekleyin.');
+            return;
+        }
+
         let betAmount = parseInt(data.betAmount, 10);
-        if (isNaN(betAmount) || !ALLOWED_BETS.includes(betAmount)) {
-            socket.emit('slot_error', 'Geçersiz bahis miktarı.');
+        if (isNaN(betAmount) || betAmount < 1 || betAmount > 10000000) {
+            socket.emit('slot_error', 'Geçersiz bahis miktarı. Lütfen geçerli bir miktar girin.');
             return;
         }
 
@@ -114,7 +120,7 @@ function registerSlotHandlers(io, socket, players) {
         }
 
         if (userData.money < betAmount) {
-            socket.emit('slot_error', `Yetersiz bakiye! Bahis: ${betAmount} TL, Bakiyeniz: ${userData.money} TL.`);
+            socket.emit('slot_error', `Yetersiz bakiye! Bahis: ${betAmount.toLocaleString('tr-TR')} TL, Bakiyeniz: ${userData.money.toLocaleString('tr-TR')} TL.`);
             return;
         }
 
@@ -130,6 +136,34 @@ function registerSlotHandlers(io, socket, players) {
             userData.money += evalResult.winAmount;
         }
 
+        // Ev Sahibi %5 Komisyon Mantığı (Yalnızca oyuncu evindeki slot makinesinde ve başkası oynuyorsa)
+        let curRoom = (players[socket.id] && players[socket.id].room) ? players[socket.id].room : 'dedenin_yeri';
+        let parsed = dataManager.parseHouseRoom(curRoom);
+        let houseOwnerKey = (parsed && parsed.owner) ? parsed.owner : null;
+
+        let commission = 0;
+        if (houseOwnerKey && houseOwnerKey.toLowerCase() !== username.toLowerCase()) {
+            // Her çevirilen bahisten ev sahibine %5 kar
+            commission = Math.max(1, Math.round(betAmount * 0.05));
+            let ownerKeyClean = dataManager.findUserKey(houseOwnerKey) || houseOwnerKey;
+            let ownerData = dataManager.persistentData.users[ownerKeyClean];
+            if (ownerData) {
+                ownerData.money = (ownerData.money || 0) + commission;
+                // Ev sahibi online ise anlık bakiye güncelle ve bildirim gönder
+                let ownerSocketId = Object.keys(players).find(sid => players[sid].name && players[sid].name.toLowerCase() === ownerKeyClean.toLowerCase());
+                if (ownerSocketId) {
+                    players[ownerSocketId].money = ownerData.money;
+                    io.to(ownerSocketId).emit('moneyUpdate', ownerData.money);
+                    io.to(ownerSocketId).emit('systemMessage', `🎰 Evindeki Slot Makinesinden +${commission.toLocaleString('tr-TR')} TL (%5 komisyon) kazandın! (Oynayan: ${username})`);
+                    io.to(ownerSocketId).emit('toastNotification', {
+                        icon: '🎰',
+                        title: 'Slot Geliri!',
+                        desc: `Evindeki Slot Makinesinden +${commission.toLocaleString('tr-TR')} TL (%5 komisyon) kazandın! (${username})`
+                    });
+                }
+            }
+        }
+
         players[socket.id].money = userData.money;
         dataManager.savePersistentData();
 
@@ -143,13 +177,37 @@ function registerSlotHandlers(io, socket, players) {
             netWin: evalResult.netWin,
             isJackpot: evalResult.isJackpot,
             winType: evalResult.winType,
-            newBalance: userData.money
+            newBalance: userData.money,
+            commissionPaid: commission,
+            houseOwner: houseOwnerKey
         });
 
-        // Jackpot kazanıldıysa mekandaki herkese neon tebrik duyurusu gönder
-        if (evalResult.isJackpot && players[socket.id].room === 'dedenin_yeri') {
-            io.to('dedenin_yeri').emit('systemMessage', `⚡🎰 BÜYÜK JACKPOT! ${username} 777 Slotunda tam ${evalResult.winAmount} TL KAZANDI! 🎰⚡`);
+        // Jackpot kazanıldıysa mekandaki herkese (room) yayınla (broadcast)
+        if (evalResult.isJackpot) {
+            let currentRoom = (players[socket.id] && players[socket.id].room) ? players[socket.id].room : 'dedenin_yeri';
+            let locText = houseOwnerKey ? `${houseOwnerKey}'in Evindeki Slot Makinesinde` : "777 Slotunda";
+            io.to(currentRoom).emit('systemMessage', `⚡🎰 BÜYÜK JACKPOT! ${username} ${locText} tam ${evalResult.winAmount} TL KAZANDI! 🎰⚡`);
+            io.to(currentRoom).emit('global_jackpot_win', {
+                winner: username,
+                winAmount: evalResult.winAmount,
+                multiplier: evalResult.multiplier,
+                room: currentRoom
+            });
         }
+    });
+
+    // Geliştirici & Test Amaçlı Global Jackpot Test Tetikleyicisi
+    socket.on('dev_test_slot_jackpot', (data) => {
+        let username = (players[socket.id] && players[socket.id].name) || 'TestOyuncu';
+        let currentRoom = (players[socket.id] && players[socket.id].room) || 'dedenin_yeri';
+        let winAmount = (data && data.winAmount) || 50000;
+        io.to(currentRoom).emit('systemMessage', `⚡🎰 BÜYÜK JACKPOT! ${username} 777 Slotunda tam ${winAmount} TL KAZANDI! 🎰⚡`);
+        io.to(currentRoom).emit('global_jackpot_win', {
+            winner: username,
+            winAmount: winAmount,
+            multiplier: 50,
+            room: currentRoom
+        });
     });
 }
 

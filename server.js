@@ -15,6 +15,7 @@ const { registerAuthHandlers } = require('./src/handlers/authHandler');
 const { registerSocialHandlers } = require('./src/handlers/socialHandler');
 const { registerHousingHandlers } = require('./src/handlers/housingHandler');
 const { registerEconomyHandlers, playerSwanTimers } = require('./src/handlers/economyHandler');
+const { registerAdminHandlers } = require('./src/handlers/adminHandler');
 const { registerGameActionHandlers } = require('./src/handlers/gameActionHandler');
 const { registerVoiceHandlers, cleanupSocketVoice } = require('./src/handlers/voiceHandler');
 const { registerBlackjackHandlers, removePlayerFromBlackjack } = require('./src/handlers/blackjackHandler');
@@ -75,6 +76,7 @@ io.on('connection', (socket) => {
     registerSocialHandlers(io, socket, players, helpers);
     registerHousingHandlers(io, socket, players);
     registerEconomyHandlers(io, socket, players, helpers);
+    registerAdminHandlers(io, socket, players, helpers);
     registerGameActionHandlers(io, socket, players);
     registerVoiceHandlers(io, socket, players);
     registerBlackjackHandlers(io, socket, players);
@@ -90,7 +92,7 @@ io.on('connection', (socket) => {
 
     // 2. Oyuncu Hareketi (Akıcı Ağ Filtrelemesi)
     socket.on('playerMovement', (movementData) => {
-        if (players[socket.id] && movementData) {
+        if (players[socket.id] && movementData && typeof movementData.x === 'number' && typeof movementData.y === 'number' && !isNaN(movementData.x) && !isNaN(movementData.y)) {
             let prevX = players[socket.id].x;
             let prevY = players[socket.id].y;
             let hasMoved = (prevX === undefined || prevY === undefined || Math.abs(prevX - movementData.x) > 0.05 || Math.abs(prevY - movementData.y) > 0.05);
@@ -115,14 +117,19 @@ io.on('connection', (socket) => {
             if (movementData.isMoving !== undefined) {
                 players[socket.id].isMoving = movementData.isMoving;
             }
+            let facingChanged = (movementData.facing && movementData.facing !== players[socket.id].facing);
+            if (movementData.facing) {
+                players[socket.id].facing = movementData.facing;
+            }
 
-            if (hasMoved || stateChanged) {
+            if (hasMoved || stateChanged || facingChanged) {
                 players[socket.id]._lastBroadcastMoving = movementData.isMoving;
                 socket.to(players[socket.id].room).emit('playerMoved', { 
                     id: socket.id, 
                     x: movementData.x, 
                     y: movementData.y,
-                    isMoving: movementData.isMoving
+                    isMoving: movementData.isMoving,
+                    facing: movementData.facing || players[socket.id].facing || 'down'
                 });
                 fatherPetManager.updateOwnerPosition(socket.id, movementData.x, movementData.y);
             }
@@ -155,45 +162,11 @@ io.on('connection', (socket) => {
         socket.join(newRoom);
         players[socket.id].room = newRoom;
 
-        if (newRoom === "kafe") { 
-            players[socket.id].x = 400; players[socket.id].y = 410; 
-        }
-        else if (newRoom === "sokak") { 
-            if (oldRoom === "sahil") { players[socket.id].x = 85; players[socket.id].y = 240; }
-            else if (oldRoom === "cadde") { players[socket.id].x = 720; players[socket.id].y = 240; }
-            else if (oldRoom === "kafe") { players[socket.id].x = 400; players[socket.id].y = 125; }
-            else if (oldRoom === "nargile_cafe") { players[socket.id].x = 670; players[socket.id].y = 125; }
-            else if (oldRoom === "market") { players[socket.id].x = 730; players[socket.id].y = 350; }
-            else if (oldRoom === "emlakci") { players[socket.id].x = 180; players[socket.id].y = 125; }
-            else { players[socket.id].x = 350; players[socket.id].y = 230; }
-        }
-        else if (newRoom === "cadde") {
-            if (oldRoom === "sokak") { players[socket.id].x = 80; players[socket.id].y = 230; }
-            else if (oldRoom === "ganyan") { players[socket.id].x = 210; players[socket.id].y = 145; }
-            else if (oldRoom === "dedenin_yeri") { players[socket.id].x = 585; players[socket.id].y = 145; }
-            else { players[socket.id].x = 400; players[socket.id].y = 230; }
-        }
-        else if (newRoom === "emlakci") { 
-            players[socket.id].x = 400; players[socket.id].y = 410; 
-        }
-        else if (newRoom === "sahil") { 
-            if (oldRoom === "sokak") { players[socket.id].x = 680; players[socket.id].y = 270; }
-            else { players[socket.id].x = 420; players[socket.id].y = 350; }
-        }
-        else if (newRoom === "ganyan") { 
-            players[socket.id].x = 400; players[socket.id].y = 410; 
-        }
-        else if (newRoom === "dedenin_yeri") { 
-            players[socket.id].x = 400; players[socket.id].y = 410; 
-        }
-        else if (newRoom === "nargile_cafe") { 
-            players[socket.id].x = 400; players[socket.id].y = 390; 
-        }
-        else if (newRoom === "market") { 
-            players[socket.id].x = 400; players[socket.id].y = 420; 
-        }
-        else if (newRoom.startsWith("house_")) {
-            players[socket.id].x = 400; players[socket.id].y = 400;
+        const spawnPos = getRoomSpawn(newRoom, oldRoom);
+        players[socket.id].x = spawnPos.x;
+        players[socket.id].y = spawnPos.y;
+
+        if (newRoom.startsWith("house_")) {
             let parsed = dataManager.parseHouseRoom(newRoom);
             if (parsed) {
                 let isDemo = (parsed.owner === 'ornek' || parsed.owner === 'demo');
@@ -294,6 +267,10 @@ io.on('connection', (socket) => {
                         gameCoordinator.sendTavlaUpdate(g, io);
                     } else if (gid.startsWith('okey101')) {
                         gameCoordinator.sendOkey101Update(g, io, players);
+                    } else if (gid.startsWith('xox')) {
+                        gameCoordinator.sendXoxUpdate(g, io);
+                    } else if (gid.startsWith('amiral')) {
+                        gameCoordinator.sendAmiralUpdate(g, io);
                     }
 
                     let connectedHumans = g.players.filter(pid => !pid.startsWith('bot_') && (!g.disconnectedPlayers || !g.disconnectedPlayers[pid]));
@@ -318,6 +295,14 @@ io.on('connection', (socket) => {
                                     if (gameCoordinator.billiardBotTimers[gid]) {
                                         clearTimeout(gameCoordinator.billiardBotTimers[gid]);
                                         delete gameCoordinator.billiardBotTimers[gid];
+                                    }
+                                    if (gameCoordinator.xoxBotTimers && gameCoordinator.xoxBotTimers[gid]) {
+                                        clearTimeout(gameCoordinator.xoxBotTimers[gid]);
+                                        delete gameCoordinator.xoxBotTimers[gid];
+                                    }
+                                    if (gameCoordinator.amiralBotTimers && gameCoordinator.amiralBotTimers[gid]) {
+                                        clearTimeout(gameCoordinator.amiralBotTimers[gid]);
+                                        delete gameCoordinator.amiralBotTimers[gid];
                                     }
                                     delete activeGames[gid];
                                     let table = tableManager.getTable(gid);

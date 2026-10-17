@@ -1,5 +1,6 @@
 // src/handlers/rouletteHandler.js - VIP Avrupa Ruleti Sunucu Mantığı
 const dataManager = require('../dataManager');
+const { checkRateLimit } = require('../utils/securityUtils');
 
 const RED_NUMBERS = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
 const BLACK_NUMBERS = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
@@ -12,6 +13,11 @@ const WHEEL_ORDER = [
 
 // Casino Rulet Geçmişi (Son 15 Sayı)
 const rouletteHistory = [];
+
+const VALID_ROULETTE_KEYS = new Set([
+    'red', 'black', 'even', 'odd', 'low', 'high', '1st12', '2nd12', '3rd12', 'col1', 'col2', 'col3',
+    ...Array.from({ length: 37 }, (_, i) => String(i))
+]);
 
 function getNumberColor(num) {
     if (num === 0) return 'green';
@@ -102,6 +108,17 @@ function registerRouletteHandlers(io, socket, players) {
             return;
         }
 
+        if (!checkRateLimit(socket, 'roulette_spin', 1, 1500)) {
+            socket.emit('roulette_error', 'Lütfen çarkın durmasını bekleyin.');
+            return;
+        }
+
+        let betKeys = Object.keys(data.bets);
+        if (betKeys.length === 0 || betKeys.length > 40) {
+            socket.emit('roulette_error', 'Geçersiz bahis sayısı (maksimum 40 farklı bahis).');
+            return;
+        }
+
         let username = players[socket.id].name;
         let userData = dataManager.persistentData.users[username];
         if (!userData) {
@@ -114,10 +131,12 @@ function registerRouletteHandlers(io, socket, players) {
         let sanitizedBets = {};
 
         for (let [betKey, amount] of Object.entries(data.bets)) {
+            let keyStr = String(betKey);
+            if (!VALID_ROULETTE_KEYS.has(keyStr)) continue;
             let parsedAmount = parseInt(amount, 10);
             if (isNaN(parsedAmount) || parsedAmount <= 0) continue;
             totalBet += parsedAmount;
-            sanitizedBets[betKey] = parsedAmount;
+            sanitizedBets[keyStr] = parsedAmount;
         }
 
         if (totalBet <= 0) {

@@ -2,6 +2,8 @@
 
 let bjCurrentTable = null;
 let bjCurrentBet = 50;
+let bjPreviousState = null;
+let bjPayoutSoundPlayed = false;
 
 // 1. Masayı Açma ve Ayrılma
 function openBlackjackModal() {
@@ -20,7 +22,7 @@ function openBlackjackModal() {
     }
 
     updateBlackjackUserMoney();
-    if (window.playSound) window.playSound('click');
+    if (window.playSound) window.playSound('bet_start');
 }
 window.openBlackjackModal = openBlackjackModal;
 
@@ -48,16 +50,43 @@ function updateBlackjackUserMoney() {
 }
 
 // 2. Soket Dinleyicileri
-if (typeof socket !== 'undefined' && socket) {
-    socket.on('blackjack_init', (tableState) => {
-        bjCurrentTable = tableState;
-        renderBlackjackTable(tableState);
-    });
+function onBlackjackStateReceived(tableState) {
+    if (!tableState) return;
 
-    socket.on('blackjack_state_update', (tableState) => {
-        bjCurrentTable = tableState;
-        renderBlackjackTable(tableState);
-    });
+    // Ses Kontrolleri (Bahis başlangıcı, Kazanma / Kaybetme)
+    const isModalOpen = document.getElementById('blackjackModal')?.style.display === 'flex';
+    if (isModalOpen) {
+        if (tableState.state === 'BETTING' && bjPreviousState !== 'BETTING') {
+            if (window.playSound) window.playSound('bet_start');
+            bjPayoutSoundPlayed = false;
+        }
+
+        if (tableState.state === 'PAYOUT' && !bjPayoutSoundPlayed) {
+            const mySid = window.socket ? window.socket.id : '';
+            const mySeat = tableState.seats.find(s => s.socketId === mySid);
+            if (mySeat && (mySeat.result || mySeat.status === 'BUSTED')) {
+                bjPayoutSoundPlayed = true;
+                if (mySeat.result === 'WIN' || mySeat.result === 'BLACKJACK') {
+                    if (window.playSound) window.playSound('win');
+                } else if (mySeat.result === 'LOSS' || mySeat.status === 'BUSTED') {
+                    if (window.playSound) window.playSound('lose');
+                }
+            }
+        }
+
+        if (tableState.state === 'RESET') {
+            bjPayoutSoundPlayed = false;
+        }
+    }
+
+    bjPreviousState = tableState.state;
+    bjCurrentTable = tableState;
+    renderBlackjackTable(tableState);
+}
+
+if (typeof socket !== 'undefined' && socket) {
+    socket.on('blackjack_init', onBlackjackStateReceived);
+    socket.on('blackjack_state_update', onBlackjackStateReceived);
 
     socket.on('blackjack_error', (msg) => {
         showBlackjackToast(msg, true);
@@ -248,6 +277,7 @@ function syncCardsContainer(containerEl, cards) {
             // Yeni kart dağıtıldı (animasyonla ekle)
             let newEl = renderCardElement(card, true);
             containerEl.appendChild(newEl);
+            if (window.playSound) window.playSound('card_deal');
         }
     });
 
@@ -503,7 +533,7 @@ function bjAddChip(amount) {
     if (placeBetBtn && (!bjCurrentTable || !bjCurrentTable.seats.find(s => s.socketId === socket.id)?.hasPlacedBet)) {
         placeBetBtn.innerText = `🪙 Bahis Yap (${bjCurrentBet} TL)`;
     }
-    if (window.playSound) window.playSound('coin');
+    if (window.playSound) window.playSound('chip');
 }
 window.bjAddChip = bjAddChip;
 
@@ -514,6 +544,7 @@ function bjClearBet() {
 
     const placeBetBtn = document.getElementById('bjPlaceBetBtn');
     if (placeBetBtn) placeBetBtn.innerText = `🪙 Bahis Yap (10 TL)`;
+    if (window.playSound) window.playSound('chip');
 }
 window.bjClearBet = bjClearBet;
 
@@ -523,14 +554,14 @@ function bjSubmitBet() {
     let amount = parseInt(inp ? inp.value : bjCurrentBet, 10) || 10;
 
     socket.emit('blackjack_place_bet', { amount: amount });
-    if (window.playSound) window.playSound('coin');
+    if (window.playSound) window.playSound('chip');
 }
 window.bjSubmitBet = bjSubmitBet;
 
 function bjHit() {
     if (!window.socket) return;
     socket.emit('blackjack_hit');
-    if (window.playSound) window.playSound('deal');
+    if (window.playSound) window.playSound('card_deal');
 }
 window.bjHit = bjHit;
 

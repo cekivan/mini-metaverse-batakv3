@@ -1,10 +1,12 @@
 // public/js/mobileControls.js - Mobil Dokunmatik Ekran & Sanal D-Pad Kontrolleri
 
 function checkMobileDeviceHUD() {
-    let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-        (window.innerWidth <= 860) ||
-        ('ontouchstart' in window) ||
-        (navigator.maxTouchPoints > 0);
+    let ua = (typeof navigator !== 'undefined' && navigator.userAgent) ? navigator.userAgent : '';
+    let maxTouch = (typeof navigator !== 'undefined' && navigator.maxTouchPoints) ? navigator.maxTouchPoints : 0;
+    let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) ||
+        (typeof window !== 'undefined' && window.innerWidth <= 860) ||
+        (typeof window !== 'undefined' && 'ontouchstart' in window) ||
+        (maxTouch > 0);
     let dpad = document.getElementById('mobileControlsOverlay');
     let actionBtn = document.getElementById('mobileActionBtn');
     if (dpad) dpad.style.display = isMobile ? 'block' : 'none';
@@ -84,10 +86,15 @@ function updateDpadFromTouch(clientX, clientY) {
         keys.w = (dy < -14);
     }
 
-    if (Math.abs(dx) > Math.abs(dy)) {
-        if (typeof myFacing !== 'undefined') myFacing = dx > 0 ? 'right' : 'left';
+    if (typeof calculate8WayFacing === 'function') {
+        let f = calculate8WayFacing(dx, dy);
+        if (f && typeof myFacing !== 'undefined') myFacing = f;
     } else {
-        if (typeof myFacing !== 'undefined') myFacing = dy > 0 ? 'down' : 'up';
+        if (Math.abs(dx) > Math.abs(dy)) {
+            if (typeof myFacing !== 'undefined') myFacing = dx > 0 ? 'right' : 'left';
+        } else {
+            if (typeof myFacing !== 'undefined') myFacing = dy > 0 ? 'down' : 'up';
+        }
     }
 }
 

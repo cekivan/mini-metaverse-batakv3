@@ -223,7 +223,7 @@ function drawOutdoorBillboard(bctx, x, y, w, h, isHover = false) {
         bctx.fillStyle = "#94a3b8";
         bctx.font = "9px sans-serif";
         let qCount = currentBillboardAd.queueLength || 0;
-        bctx.fillText(qCount > 0 ? `⏳ Sırada ${qCount} reklam var • Tıkla Reklam Ver` : `💡 Sıradaki sen ol! • Tıkla Reklam Ver (1000 TL)`, scrX + scrW / 2, scrY + scrH - 6);
+        bctx.fillText(qCount > 0 ? `⏳ Sırada ${qCount} reklam var • Tıkla Reklam Ver` : `💡 Sıradaki sen ol! • Tıkla Reklam Ver (1100 TL)`, scrX + scrW / 2, scrY + scrH - 6);
 
     } else {
         // Reklam Yok: Kocaman "REKLAM PANOSU - Reklam verebilirsiniz" yazısı!
@@ -252,7 +252,7 @@ function drawOutdoorBillboard(bctx, x, y, w, h, isHover = false) {
         // Çağrı Butonu / Açıklama
         bctx.fillStyle = isHover ? "#38bdf8" : "#34d399";
         bctx.font = "bold 10px sans-serif";
-        bctx.fillText("💰 1 Dakika • 1000 TL (Tıkla ve Yaz)", scrX + scrW / 2, scrY + 56);
+        bctx.fillText("💰 1 Dakika • 1100 TL (Tıkla ve Yaz)", scrX + scrW / 2, scrY + 56);
 
         bctx.fillStyle = "#cbd5e1";
         bctx.font = "9px sans-serif";

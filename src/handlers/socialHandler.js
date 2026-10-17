@@ -1,15 +1,32 @@
-// src/handlers/socialHandler.js - Sohbet, Arkadaşlık, Çay ve Para/Eşya Transfer Yöneticisi
 const dataManager = require('../dataManager');
+const { checkRateLimit } = require('../utils/securityUtils');
 
 function registerSocialHandlers(io, socket, players, helpers) {
-    const { givePlayerTeaWithTimer } = helpers;
+    const { givePlayerTeaWithTimer, playerTeaTimers } = helpers;
 
     // 1. SOHBET MESAJI (50 KARAKTER LİMİTİ & SPAM KORUMASI: 1 SN'DE 3 MESAJ -> 3 SN BEKLEME)
     socket.chatTimestamps = [];
     socket.chatCooldownUntil = 0;
 
-    socket.on('chatMessage', (msg) => {
-        if (!players[socket.id] || !msg) return;
+    socket.on('chatMessage', (data) => {
+        if (!players[socket.id] || !data) return;
+
+        let rawMsg = typeof data === 'string' ? data : (data.msg || '');
+        let targetChannel = (typeof data === 'object' && data.channel) ? data.channel : 'room';
+
+        rawMsg = (rawMsg || '').trim();
+        if (!rawMsg) return;
+
+        // Slash command kısayolları: /all, /g, /genel => Evrensel Genel Chat; /oda, /o, /room => Oda Sohbeti
+        if (rawMsg.startsWith('/all ') || rawMsg.startsWith('/g ') || rawMsg.startsWith('/genel ')) {
+            targetChannel = 'all';
+            rawMsg = rawMsg.replace(/^\/(all|g|genel)\s+/, '').trim();
+        } else if (rawMsg.startsWith('/oda ') || rawMsg.startsWith('/o ') || rawMsg.startsWith('/room ')) {
+            targetChannel = 'room';
+            rawMsg = rawMsg.replace(/^\/(oda|o|room)\s+/, '').trim();
+        }
+
+        if (!rawMsg) return;
 
         let senderName = players[socket.id].name;
         let uData = dataManager.persistentData.users[senderName];
@@ -49,10 +66,11 @@ function registerSocialHandlers(io, socket, players, helpers) {
         }
         socket.chatTimestamps.push(now);
 
-        let cleanMsg = dataManager.sanitizeString(msg, 50); // Maksimum 50 karakter
+        let cleanMsg = dataManager.sanitizeString(rawMsg, 50); // Maksimum 50 karakter
 
-        // Geliştirici / Test Kısayolu: /testbaba
-        if (cleanMsg === '/testbaba' || cleanMsg === '/baba') {
+        // Geliştirici / Test Kısayolu: /testbaba (Yalnızca Admin)
+        if ((cleanMsg === '/testbaba' || cleanMsg === '/baba') && players[socket.id]?.isAdmin) {
+            players[socket.id].pendingFatherChoice = true;
             socket.emit('fatherCaughtPrompt', {
                 title: "Denizden Baban Çıktı!",
                 proverb: "Denizden babam çıksa yerim...",
@@ -63,8 +81,28 @@ function registerSocialHandlers(io, socket, players, helpers) {
             return;
         }
 
+        let senderRoom = players[socket.id].room;
         players[socket.id].msg = cleanMsg;
-        io.to(players[socket.id].room).emit('chatUpdate', { id: socket.id, msg: cleanMsg });
+
+        if (targetChannel === 'all' || targetChannel === 'global') {
+            // TÜM EVRENE (ALL CHAT / GLOBAL) YAYINLA
+            io.emit('chatUpdate', {
+                id: socket.id,
+                name: senderName,
+                room: senderRoom,
+                msg: cleanMsg,
+                channel: 'all'
+            });
+        } else {
+            // YALNIZCA ODAYA (ROOM CHAT) YAYINLA
+            io.to(senderRoom).emit('chatUpdate', {
+                id: socket.id,
+                name: senderName,
+                room: senderRoom,
+                msg: cleanMsg,
+                channel: 'room'
+            });
+        }
 
         setTimeout(() => {
             if (players[socket.id] && players[socket.id].msg === cleanMsg) {
@@ -76,6 +114,7 @@ function registerSocialHandlers(io, socket, players, helpers) {
     // 1.1 HIZLI EMOJİ BALONCUĞU TEPKİSİ
     socket.on('playerEmoji', (emoji) => {
         if (!players[socket.id] || !emoji) return;
+        if (!checkRateLimit(socket, 'playerEmoji', 5, 2000)) return;
         const validEmojis = ['😂', '😡', '❤️', '👋', '🎉', '😎', '☕', '🔥'];
         if (!validEmojis.includes(emoji)) return;
         io.to(players[socket.id].room).emit('playerEmojiUpdate', {
@@ -87,6 +126,7 @@ function registerSocialHandlers(io, socket, players, helpers) {
     // 2. SOSYAL EYLEMLER (EL SALLAMA, DANS, ALKIŞ, ÇAY İÇME, OTURMA)
     socket.on('playerAction', (actionData) => {
         if (!players[socket.id]) return;
+        if (!checkRateLimit(socket, 'playerAction', 8, 2000)) return;
 
         if (!actionData || !actionData.action || actionData.action === 'stand') {
             players[socket.id].action = null;
@@ -136,6 +176,7 @@ function registerSocialHandlers(io, socket, players, helpers) {
     // 3. ÇAY ISMARLAMA
     socket.on('buyTeaForPlayer', (data) => {
         if (!players[socket.id] || !data || !data.targetId) return;
+        if (!checkRateLimit(socket, 'buyTea', 3, 2000)) return;
         let sender = players[socket.id];
         let target = players[data.targetId];
         if (!target) return;
@@ -161,6 +202,7 @@ function registerSocialHandlers(io, socket, players, helpers) {
     // 4. PARA TRANSFERİ
     socket.on('sendMoney', (data) => {
         if (!players[socket.id] || !data || !data.targetUsername) return;
+        if (!checkRateLimit(socket, 'sendMoney', 3, 2000)) return;
         let sender = players[socket.id];
         let senderData = dataManager.persistentData.users[sender.name];
         let targetUser = dataManager.sanitizeString(data.targetUsername, 30);
@@ -212,25 +254,38 @@ function registerSocialHandlers(io, socket, players, helpers) {
         let itemKey = data.itemKey;
         let propId = itemKey.replace('props_', '');
 
-        if (itemKey === 'props_none') {
+        if (itemKey === 'props_none' || propId === 'none') {
             userData.avatar.heldItem = 'none';
             players[socket.id].heldItem = 'none';
+            if (players[socket.id].hasTea) players[socket.id].hasTea = false;
+            if (playerTeaTimers && playerTeaTimers[socket.id]) {
+                clearTimeout(playerTeaTimers[socket.id]);
+                delete playerTeaTimers[socket.id];
+            }
+            userData.teaExpiresAt = null;
             socket.emit('systemMessage', "✋ Elindeki eşyayı bıraktın.");
         } else {
-            if (!userData.propInventory || !userData.propInventory[itemKey] || userData.propInventory[itemKey] <= 0) {
-                socket.emit('gameError', "Bu eşyaya çantanızda sahip değilsiniz!");
-                return;
-            }
-            if (propId === 'cay') {
-                givePlayerTeaWithTimer(socket.id, username, 300000);
-                socket.emit('systemMessage', "☕ Çayını eline aldın! (5 dakika süreli)");
-                return;
-            }
+            // Eğer oyuncu zaten bu eşyayı elinde tutuyorsa, doğrudan elden bırakılır
             if (userData.avatar.heldItem === propId) {
                 userData.avatar.heldItem = 'none';
                 players[socket.id].heldItem = 'none';
+                if (players[socket.id].hasTea) players[socket.id].hasTea = false;
+                if (playerTeaTimers && playerTeaTimers[socket.id]) {
+                    clearTimeout(playerTeaTimers[socket.id]);
+                    delete playerTeaTimers[socket.id];
+                }
+                userData.teaExpiresAt = null;
                 socket.emit('systemMessage', `✋ ${propId} eşyasını çantana kaldırdın.`);
             } else {
+                if (!userData.propInventory || !userData.propInventory[itemKey] || userData.propInventory[itemKey] <= 0) {
+                    socket.emit('gameError', "Bu eşyaya çantanızda sahip değilsiniz!");
+                    return;
+                }
+                if (propId === 'cay') {
+                    givePlayerTeaWithTimer(socket.id, username, 300000);
+                    socket.emit('systemMessage', "☕ Çayını eline aldın! (5 dakika süreli)");
+                    return;
+                }
                 userData.avatar.heldItem = propId;
                 players[socket.id].heldItem = propId;
                 socket.emit('systemMessage', `🖐️ ${propId} eşyasını eline aldın.`);
@@ -238,7 +293,7 @@ function registerSocialHandlers(io, socket, players, helpers) {
         }
         dataManager.savePersistentData();
         socket.emit('wardrobeUpdate', { avatar: userData.avatar, inventory: userData.inventory });
-        socket.emit('propInventoryUpdate', userData.propInventory);
+        socket.emit('propInventoryUpdate', userData.propInventory || {});
         io.to(players[socket.id].room).emit('playerAvatarChange', {
             id: socket.id,
             avatar: userData.avatar,
@@ -249,6 +304,7 @@ function registerSocialHandlers(io, socket, players, helpers) {
     // 6. EŞYA HEDİYE ETME (GIFT PROP)
     socket.on('giftPropItem', (data) => {
         if (!players[socket.id] || !data || !data.targetUsername || !data.itemKey) return;
+        if (!checkRateLimit(socket, 'giftProp', 3, 2000)) return;
         let sender = players[socket.id];
         let senderData = dataManager.persistentData.users[sender.name];
         let targetUser = dataManager.sanitizeString(data.targetUsername, 30);
@@ -306,6 +362,7 @@ function registerSocialHandlers(io, socket, players, helpers) {
     // 7. ARKADAŞLIK İSTEĞİ GÖNDERME
     socket.on('sendFriendRequest', (data) => {
         if (!players[socket.id] || !data || !data.targetUsername) return;
+        if (!checkRateLimit(socket, 'friendReq', 4, 3000)) return;
         let sender = players[socket.id];
         let senderKey = dataManager.findUserKey(sender.name) || sender.name;
         let senderData = dataManager.persistentData.users[senderKey];

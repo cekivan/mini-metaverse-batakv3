@@ -1,28 +1,39 @@
 const config = require('../config');
 const dataManager = require('../dataManager');
 const fatherPetManager = require('../fatherPetManager');
+const { checkRateLimit } = require('../utils/securityUtils');
 
 // Kuğu Bisikleti 5 Dakikalık Kiralama Zamanlayıcıları Havuzu
 const playerSwanTimers = {};
 
 function registerEconomyHandlers(io, socket, players, helpers) {
-    const { playerFishingTimers, givePlayerTeaWithTimer, getAdminOnlineUsers, getAdminSanctionsList, getPlayersInRoom } = helpers;
+    const { playerFishingTimers, playerTeaTimers, givePlayerTeaWithTimer, getAdminOnlineUsers, getAdminSanctionsList, getPlayersInRoom } = helpers;
 
     // 1. GARDIROR VE KIYAFET SATIN ALMA
     socket.on('buyWardrobeItem', (data) => {
         if (!players[socket.id] || !data) return;
+        if (!checkRateLimit(socket, 'buyWardrobe', 5, 2000)) return;
         let username = players[socket.id].name;
         let userData = dataManager.persistentData.users[username];
         if (!userData) return;
 
         let cat = data.category;
-        let normCat = cat.endsWith('s') ? cat : (cat + 's');
-        let singleCat = cat.endsWith('s') ? cat.slice(0, -1) : cat;
+        let normCat = (cat === 'watch' || cat === 'watches') ? 'watches' : (cat.endsWith('s') ? cat : (cat + 's'));
+        let singleCat = (cat === 'watches' || cat === 'watch') ? 'watch' : (cat.endsWith('s') ? cat.slice(0, -1) : cat);
         let itemId = data.id;
 
         let itemKey = `${normCat}_${itemId}`;
-        let itemCost = config.WARDROBE_ITEM_PRICES[itemKey] !== undefined ? config.WARDROBE_ITEM_PRICES[itemKey] : 5;
-        let isFree = (itemCost === 0 || itemId === 'none' || itemId === '#facc15' || itemId === '#3b82f6');
+        let altKey = itemId.startsWith(normCat + '_') ? itemId : null;
+        let itemCost = 5;
+        if (config.WARDROBE_ITEM_PRICES[itemKey] !== undefined) {
+            itemCost = config.WARDROBE_ITEM_PRICES[itemKey];
+        } else if (altKey && config.WARDROBE_ITEM_PRICES[altKey] !== undefined) {
+            itemCost = config.WARDROBE_ITEM_PRICES[altKey];
+            itemKey = altKey;
+        } else if (config.WARDROBE_ITEM_PRICES[itemId] !== undefined) {
+            itemCost = config.WARDROBE_ITEM_PRICES[itemId];
+        }
+        let isFree = (itemCost === 0 || itemId === 'none' || itemId === 'watch_none' || itemId === '#facc15' || itemId === '#3b82f6' || itemId === 'tshirt_divalar' || itemId === 'pants_camo_cargo' || itemId === 'pants_classic_jeans' || itemId === 'outfit_camo_set' || itemId === 'hair_sanalika_dreadlocks');
 
         if (normCat === 'props' && itemId !== 'none') {
             if (userData.money < itemCost) {
@@ -78,37 +89,102 @@ function registerEconomyHandlers(io, socket, players, helpers) {
         } else if (singleCat === 'skin') {
             userData.avatar.skinColor = itemId;
             players[socket.id].skinColor = itemId;
-        } else if (singleCat === 'shirt') {
+        } else if (singleCat === 'outfit') {
+            userData.avatar.outfit = itemId;
             userData.avatar.shirtColor = itemId;
             userData.avatar.color = itemId;
+            players[socket.id].outfit = itemId;
             players[socket.id].color = itemId;
+        } else if (singleCat === 'tshirt' || singleCat === 'shirt') {
+            userData.avatar.shirt = itemId;
+            userData.avatar.shirtColor = itemId;
+            userData.avatar.color = itemId;
+            userData.avatar.outfit = null;
+            players[socket.id].shirt = itemId;
+            players[socket.id].color = itemId;
+            players[socket.id].outfit = null;
+        } else if (singleCat === 'pant') {
+            userData.avatar.pants = itemId;
+            userData.avatar.outfit = null;
+            players[socket.id].pants = itemId;
+            players[socket.id].outfit = null;
         } else if (singleCat === 'shoe') {
             userData.avatar.shoes = itemId;
             players[socket.id].shoes = itemId;
+        } else if (singleCat === 'watch') {
+            userData.avatar.watch = itemId;
+            players[socket.id].watch = itemId;
+        } else if (singleCat === 'prop' || normCat === 'props') {
+            userData.avatar.heldItem = itemId;
+            players[socket.id].heldItem = itemId;
+            if (itemId === 'none') {
+                if (players[socket.id].hasTea) players[socket.id].hasTea = false;
+                if (playerTeaTimers && playerTeaTimers[socket.id]) {
+                    clearTimeout(playerTeaTimers[socket.id]);
+                    delete playerTeaTimers[socket.id];
+                }
+                userData.teaExpiresAt = null;
+                socket.emit('systemMessage', "✋ Elindeki eşyayı bıraktın.");
+            }
         }
 
         dataManager.savePersistentData();
 
         socket.emit('moneyUpdate', userData.money);
         socket.emit('wardrobeUpdate', { avatar: userData.avatar, inventory: userData.inventory });
+        if (normCat === 'props') {
+            socket.emit('propInventoryUpdate', userData.propInventory || {});
+        }
 
         let updatedAvatar = userData.avatar;
         io.to(players[socket.id].room).emit('playerAvatarChange', {
             id: socket.id,
             avatar: updatedAvatar,
+            model: updatedAvatar.model || 'classic',
             hat: updatedAvatar.hat,
             face: updatedAvatar.face,
             skinColor: updatedAvatar.skinColor,
             color: updatedAvatar.color,
+            shirt: updatedAvatar.shirt,
+            pants: updatedAvatar.pants,
+            outfit: updatedAvatar.outfit,
             heldItem: updatedAvatar.heldItem,
             shoes: updatedAvatar.shoes,
+            watch: updatedAvatar.watch,
             gender: updatedAvatar.gender
+        });
+    });
+
+    // 1.1 AVATAR VÜCUT MODELİ SEÇİMİ (KLASİK, KLASİK 2 vs 2.5D İZOMETRİK)
+    socket.on('setAvatarModel', (data) => {
+        if (!players[socket.id] || !data || !data.model) return;
+        let username = players[socket.id].name;
+        let userData = dataManager.persistentData.users[username];
+        if (!userData) return;
+
+        let model = (data.model === 'sanalika_v2' || data.model === 'classic_2') ? data.model : 'classic';
+        if (!userData.avatar) userData.avatar = {};
+        userData.avatar.model = model;
+        players[socket.id].model = model;
+
+        dataManager.savePersistentData();
+
+        socket.emit('wardrobeUpdate', { avatar: userData.avatar, inventory: userData.inventory });
+        io.to(players[socket.id].room).emit('playerAvatarChange', {
+            id: socket.id,
+            avatar: userData.avatar,
+            model: model,
+            shirt: userData.avatar.shirt,
+            pants: userData.avatar.pants,
+            outfit: userData.avatar.outfit,
+            watch: userData.avatar.watch
         });
     });
 
     // 2. KUĞU DENİZ BİSİKLETİ KİRALAMA (5 DAKİKA SÜRE)
     socket.on('rentSwanBoat', () => {
         if (!players[socket.id]) return;
+        if (!checkRateLimit(socket, 'rentSwanBoat', 2, 5000)) return;
         let username = players[socket.id].name;
         let userData = dataManager.persistentData.users[username];
         if (!userData) return;
@@ -164,48 +240,57 @@ function registerEconomyHandlers(io, socket, players, helpers) {
     // 2.1 TROPİK SAHİL KOKTEYL BARI SATIN ALMA
     socket.on('buyCocktail', (data) => {
         if (!players[socket.id] || !data) return;
+        if (!checkRateLimit(socket, 'buyCocktail', 5, 2000)) return;
         let username = players[socket.id].name;
-        let userData = dataManager.persistentData.users[username];
+        let uKey = (dataManager.findUserKey ? dataManager.findUserKey(username) : null) || username;
+        let userData = dataManager.persistentData.users[uKey];
         if (!userData) return;
 
         const COCKTAILS = {
-            'coconut': { name: 'Hindistan Cevizi Kokteyli', price: 25, icon: '🥥', chatText: 'Buz gibi Tropik Hindistan Cevizi Kokteyli yudumluyorum! 🌴' },
-            'pineapple': { name: 'Ananaslı Frappé', price: 30, icon: '🍍', chatText: 'Taze Buzlu Ananaslı Frappé harika! 🍍' },
+            'coconut': { name: 'Tropik Hindistan Cevizi Kokteyli', price: 25, icon: '🥥', chatText: 'Buz gibi Tropik Hindistan Cevizi Kokteyli yudumluyorum! 🌴' },
+            'pineapple': { name: 'Buzlu Ananaslı Frappé', price: 30, icon: '🍍', chatText: 'Taze Buzlu Ananaslı Frappé harika! 🍍' },
             'mojito': { name: 'Çilekli Sahil Mojito', price: 35, icon: '🍓', chatText: 'Çilekli Sahil Mojito ile serinliyorum! 🍓' },
-            'sunset': { name: 'Sunset Horizon', price: 45, icon: '🍹', chatText: 'Lüks Sunset Horizon kokteyli yudumluyorum! 🌅' },
+            'sunset': { name: 'Sunset Horizon (Güneş Batımı)', price: 45, icon: '🍹', chatText: 'Lüks Sunset Horizon kokteyli yudumluyorum! 🌅' },
             'lemonade': { name: 'Buzlu Nane & Limonata', price: 20, icon: '🍋', chatText: 'Buz gibi nane limonatamı yudumluyorum! 🍋' }
         };
 
         let item = COCKTAILS[data.id];
         if (!item) return;
 
-        if (userData.money < item.price) {
-            socket.emit('gameError', `Yetersiz bakiye! Bu içecek ${item.price} TL. Bakiyeniz: ${userData.money} TL.`);
+        if ((userData.money || 0) < item.price) {
+            socket.emit('gameError', `Yetersiz bakiye! Bu içecek ${item.price} TL. Bakiyeniz: ${userData.money || 0} TL.`);
             return;
         }
 
-        userData.money -= item.price;
+        userData.money = Math.max(0, (userData.money || 0) - item.price);
         players[socket.id].money = userData.money;
+
+        // Oyuncunun eline içeceği ver
+        userData.avatar = userData.avatar || {};
+        userData.avatar.heldItem = 'cocktail_' + data.id;
+        players[socket.id].heldItem = 'cocktail_' + data.id;
+
         dataManager.savePersistentData();
 
         socket.emit('moneyUpdate', userData.money);
         socket.emit('cocktailPurchasedSuccess', item);
         socket.emit('systemMessage', `${item.icon} [${item.name}] satın aldınız ve afiyetle içtiniz! (-${item.price} TL)`);
 
-        // Karakterin odada chat mesajı ve balonu çıkarmasını sağla
         let room = players[socket.id].room;
+        io.to(room).emit('playerAvatarChange', { id: socket.id, avatar: userData.avatar, heldItem: players[socket.id].heldItem });
+
+        // Karakterin odada chat mesajı ve balonu çıkarmasını sağla
         let chatMsg = `${item.icon} ${item.chatText}`;
-        io.to(room).emit('chatMessage', {
+        io.to(room).emit('chatUpdate', {
             id: socket.id,
-            name: username,
-            message: chatMsg,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            msg: chatMsg
         });
     });
 
     // 3. SAHİL BALIK TUTMA
     socket.on('startFishing', () => {
         if (!players[socket.id] || players[socket.id].room !== 'sahil') return;
+        if (!checkRateLimit(socket, 'startFishing', 3, 4000)) return;
         if (players[socket.id].isFishing) {
             socket.emit('gameError', "Zaten oltan denizde! Balığın vurmasını bekle...");
             return;
@@ -244,6 +329,7 @@ function registerEconomyHandlers(io, socket, players, helpers) {
             if (chosen.id === 'baban') {
                 dataManager.recordQuestProgress(uName, 'go_fishing', 1);
                 io.to('sahil').emit('playerFishingState', { id: socket.id, isFishing: false });
+                players[socket.id].pendingFatherChoice = true;
                 socket.emit('fatherCaughtPrompt', {
                     title: "Denizden Baban Çıktı!",
                     proverb: "Denizden babam çıksa yerim...",
@@ -284,23 +370,6 @@ function registerEconomyHandlers(io, socket, players, helpers) {
         fatherPetManager.handleFatherChoice(socket, choice);
     });
 
-    // Test ve Geliştirici Kısayolu: Anında Denizden Baban Çıktı Eventi Tetikler
-    socket.on('devTriggerFatherCatch', () => {
-        if (!players[socket.id]) return;
-        socket.emit('fatherCaughtPrompt', {
-            title: "Denizden Baban Çıktı!",
-            proverb: "Denizden babam çıksa yerim...",
-            description: "Oltana takılan şey bir balık değil... Baban! Ne yapmak istersin?",
-            eatReward: 300,
-            playerGender: players[socket.id].gender || 'male'
-        });
-    });
-
-    socket.on('devTriggerPocketMoney', () => {
-        if (!players[socket.id]) return;
-        fatherPetManager.giveFatherPocketMoney(socket.id);
-    });
-
     socket.on('cancelFishing', () => {
         if (players[socket.id] && players[socket.id].isFishing) {
             players[socket.id].isFishing = false;
@@ -312,311 +381,7 @@ function registerEconomyHandlers(io, socket, players, helpers) {
         }
     });
 
-    // 4. ADMİN PANELİ İŞLEMLERİ
-    socket.on('adminGetUsers', () => {
-        if (!players[socket.id] || !players[socket.id].isAdmin) {
-            socket.emit('gameError', "Bu işlem için admin yetkisi gerekiyor!");
-            return;
-        }
-        socket.emit('adminUsersList', getAdminOnlineUsers());
-    });
-
-    socket.on('adminModifyMoney', (data) => {
-        if (!players[socket.id] || !players[socket.id].isAdmin) {
-            socket.emit('gameError', "Bu işlem için admin yetkisi gerekiyor!");
-            return;
-        }
-        if (!data || !data.targetUsername) return;
-        let targetUser = data.targetUsername;
-        let amount = dataManager.sanitizeAmount(data.amount, 0, 100000000);
-        if (amount === null) {
-            socket.emit('gameError', "Geçersiz para miktarı!");
-            return;
-        }
-
-        if (!dataManager.persistentData.users[targetUser]) {
-            socket.emit('gameError', "Kullanıcı bulunamadı!");
-            return;
-        }
-
-        if (data.mode === 'set') {
-            dataManager.persistentData.users[targetUser].money = amount;
-        } else {
-            dataManager.persistentData.users[targetUser].money = (dataManager.persistentData.users[targetUser].money || 0) + amount;
-        }
-
-        dataManager.savePersistentData();
-
-        let updatedMoney = dataManager.persistentData.users[targetUser].money;
-
-        for (let sid in players) {
-            if (players[sid].name.toLowerCase() === targetUser.toLowerCase()) {
-                players[sid].money = updatedMoney;
-                io.to(sid).emit('moneyUpdate', updatedMoney);
-                let noteMsg = (data.mode === 'set')
-                    ? `👑 Admin hesabınızın bakiyesini ${amount} TL olarak güncelledi!`
-                    : `👑 Admin hesabınıza ${amount} TL ekledi! (Yeni Bakiye: ${updatedMoney} TL)`;
-                io.to(sid).emit('systemMessage', noteMsg);
-            }
-        }
-
-        socket.emit('systemMessage', `✅ ${targetUser} kullanıcısının yeni bakiyesi: ${updatedMoney} TL`);
-        socket.emit('adminUsersList', getAdminOnlineUsers());
-    });
-
-    // 4.2 ADMİN GLOBAL DUYURU YAYINI (TÜM OYUNA POP-UP)
-    socket.on('adminBroadcastAnnouncement', (data) => {
-        if (!players[socket.id] || !players[socket.id].isAdmin) {
-            socket.emit('gameError', "Bu işlem için admin yetkisi gerekiyor!");
-            return;
-        }
-        let title = (data?.title || "📢 SİSTEM VE YÖNETİCİ DUYURUSU").trim();
-        let message = (data?.message || "").trim();
-        if (!message) {
-            socket.emit('gameError', "Duyuru metni boş olamaz!");
-            return;
-        }
-
-        let now = new Date();
-        let timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-
-        let announcementData = {
-            id: 'ann_' + Date.now(),
-            title: title,
-            message: message,
-            sender: players[socket.id].name || "Admin Yasin",
-            time: timeStr
-        };
-
-        io.emit('globalAnnouncementPopup', announcementData);
-        socket.emit('systemMessage', "✅ Duyuru tüm sunucudaki oyuncuların ekranına pop-up olarak yayınlandı!");
-    });
-
-    // 4.3 ADMİN OYUNCU YANINA IŞINLANMA (TELEPORT)
-    socket.on('adminTeleportTo', (data) => {
-        if (!players[socket.id] || !players[socket.id].isAdmin) {
-            socket.emit('gameError', "Bu işlem için admin yetkisi gerekiyor!");
-            return;
-        }
-        if (!data || !data.targetUsername) return;
-        let targetSid = Object.keys(players).find(sid => players[sid]?.name?.toLowerCase() === data.targetUsername.toLowerCase());
-        if (!targetSid || !players[targetSid]) {
-            socket.emit('gameError', "Oyuncu çevrimdışı veya bulunamadı!");
-            return;
-        }
-
-        let targetP = players[targetSid];
-        let adminP = players[socket.id];
-        let oldRoom = adminP.room;
-        let newRoom = targetP.room;
-        let newX = Math.max(30, Math.min(770, targetP.x + 30));
-        let newY = targetP.y;
-
-        adminP.room = newRoom;
-        adminP.x = newX;
-        adminP.y = newY;
-
-        if (oldRoom !== newRoom) {
-            socket.leave(oldRoom);
-            socket.join(newRoom);
-            socket.to(oldRoom).emit('playerDisconnected', socket.id);
-            socket.emit('roomChanged', newRoom);
-            fatherPetManager.handleRoomChange(socket.id, oldRoom, newRoom);
-            socket.emit('currentPlayers', getPlayersInRoom(newRoom));
-            socket.emit('activeFatherPets', fatherPetManager.getPetsInRoom(newRoom));
-            socket.to(newRoom).emit('newPlayer', { id: socket.id, player: adminP });
-        } else {
-            io.to(newRoom).emit('playerMoved', { id: socket.id, x: newX, y: newY });
-        }
-        socket.emit('adminTeleported', { room: newRoom, x: newX, y: newY, target: targetP.name });
-        socket.emit('systemMessage', `🚀 ${targetP.name} adlı oyuncunun yanına ışınlandınız! (${newRoom})`);
-    });
-
-    // 4.4 ADMİN OYUNCUYU YANINA ÇEKME (SUMMON)
-    socket.on('adminSummon', (data) => {
-        if (!players[socket.id] || !players[socket.id].isAdmin) {
-            socket.emit('gameError', "Bu işlem için admin yetkisi gerekiyor!");
-            return;
-        }
-        if (!data || !data.targetUsername) return;
-        let targetSid = Object.keys(players).find(sid => players[sid]?.name?.toLowerCase() === data.targetUsername.toLowerCase());
-        if (!targetSid || !players[targetSid]) {
-            socket.emit('gameError', "Oyuncu çevrimdışı veya bulunamadı!");
-            return;
-        }
-
-        let adminP = players[socket.id];
-        let targetP = players[targetSid];
-        let targetSocket = io.sockets.sockets.get(targetSid);
-        let oldRoom = targetP.room;
-        let adminRoom = adminP.room;
-        let summonX = Math.max(30, Math.min(770, adminP.x + 30));
-        let summonY = adminP.y;
-
-        targetP.room = adminRoom;
-        targetP.x = summonX;
-        targetP.y = summonY;
-
-        if (targetSocket) {
-            if (oldRoom !== adminRoom) {
-                targetSocket.leave(oldRoom);
-                targetSocket.join(adminRoom);
-                targetSocket.to(oldRoom).emit('playerDisconnected', targetSid);
-                targetSocket.emit('roomChanged', adminRoom);
-                fatherPetManager.handleRoomChange(targetSid, oldRoom, adminRoom);
-                targetSocket.emit('currentPlayers', getPlayersInRoom(adminRoom));
-                targetSocket.emit('activeFatherPets', fatherPetManager.getPetsInRoom(adminRoom));
-                targetSocket.to(adminRoom).emit('newPlayer', { id: targetSid, player: targetP });
-            } else {
-                io.to(adminRoom).emit('playerMoved', { id: targetSid, x: summonX, y: summonY });
-            }
-            targetSocket.emit('adminSummoned', { room: adminRoom, x: summonX, y: summonY, adminName: adminP.name });
-            targetSocket.emit('systemMessage', `🧲 Admin ${adminP.name} sizi yanına ışınladı!`);
-        }
-        socket.emit('systemMessage', `🧲 ${targetP.name} adlı oyuncu yanınıza çekildi!`);
-    });
-
-    // 4.5 ADMİN SÜRELİ SUSTURMA (MUTE)
-    socket.on('adminMuteUser', (data) => {
-        if (!players[socket.id] || !players[socket.id].isAdmin) {
-            socket.emit('gameError', "Bu işlem için admin yetkisi gerekiyor!");
-            return;
-        }
-        if (!data || !data.targetUsername) return;
-        let minutes = parseInt(data.minutes) || 5;
-        let reason = data.reason || "Yönetici kararı";
-        let targetKey = dataManager.findUserKey(data.targetUsername);
-        if (!targetKey || !dataManager.persistentData.users[targetKey]) {
-            socket.emit('gameError', "Kullanıcı bulunamadı!");
-            return;
-        }
-        let uData = dataManager.persistentData.users[targetKey];
-        uData.muteExpiresAt = Date.now() + (minutes * 60 * 1000);
-        uData.muteReason = reason;
-        uData.mutedBy = players[socket.id].name;
-        dataManager.savePersistentData();
-
-        for (let sid in players) {
-            if (players[sid]?.name?.toLowerCase() === targetKey.toLowerCase()) {
-                players[sid].isMuted = true;
-                io.to(sid).emit('playerMutedNotice', {
-                    minutes: minutes,
-                    expiresAt: uData.muteExpiresAt,
-                    reason: reason
-                });
-                io.to(sid).emit('systemMessage', `🔇 Admin tarafından ${minutes} dakika süreyle susturuldunuz! (Sebep: ${reason})`);
-            }
-        }
-        socket.emit('systemMessage', `🔇 ${targetKey} ${minutes} dakika süreyle susturuldu.`);
-        socket.emit('adminUsersList', getAdminOnlineUsers());
-        if (typeof getAdminSanctionsList === 'function') {
-            socket.emit('adminSanctionsList', getAdminSanctionsList());
-        }
-    });
-
-    // 4.6 ADMİN SUSTURMAYI KALDIR (UNMUTE)
-    socket.on('adminUnmuteUser', (data) => {
-        if (!players[socket.id] || !players[socket.id].isAdmin) {
-            socket.emit('gameError', "Bu işlem için admin yetkisi gerekiyor!");
-            return;
-        }
-        if (!data || !data.targetUsername) return;
-        let targetKey = dataManager.findUserKey(data.targetUsername);
-        if (!targetKey || !dataManager.persistentData.users[targetKey]) return;
-        let uData = dataManager.persistentData.users[targetKey];
-        uData.muteExpiresAt = null;
-        uData.muteReason = null;
-        uData.mutedBy = null;
-        dataManager.savePersistentData();
-
-        for (let sid in players) {
-            if (players[sid]?.name?.toLowerCase() === targetKey.toLowerCase()) {
-                players[sid].isMuted = false;
-                io.to(sid).emit('systemMessage', `🔊 Susturmanız kaldırıldı, artık sohbet edebilirsiniz.`);
-            }
-        }
-        socket.emit('systemMessage', `🔊 ${targetKey} kullanıcısının susturması kaldırıldı.`);
-        socket.emit('adminUsersList', getAdminOnlineUsers());
-        if (typeof getAdminSanctionsList === 'function') {
-            socket.emit('adminSanctionsList', getAdminSanctionsList());
-        }
-    });
-
-    // 4.7 ADMİN SÜRELİ BAN (OYUNDAN UZAKLAŞTIRMA)
-    socket.on('adminBanUser', (data) => {
-        if (!players[socket.id] || !players[socket.id].isAdmin) {
-            socket.emit('gameError', "Bu işlem için admin yetkisi gerekiyor!");
-            return;
-        }
-        if (!data || !data.targetUsername) return;
-        let minutes = parseInt(data.minutes) || 15;
-        let reason = data.reason || "Yönetici kararı";
-        let targetKey = dataManager.findUserKey(data.targetUsername);
-        if (!targetKey || !dataManager.persistentData.users[targetKey]) {
-            socket.emit('gameError', "Kullanıcı bulunamadı!");
-            return;
-        }
-        if (dataManager.isUserAdmin(targetKey)) {
-            socket.emit('gameError', "Adminler banlanamaz!");
-            return;
-        }
-        let uData = dataManager.persistentData.users[targetKey];
-        uData.banExpiresAt = Date.now() + (minutes * 60 * 1000);
-        uData.banReason = reason;
-        uData.bannedBy = players[socket.id].name;
-        dataManager.savePersistentData();
-
-        for (let sid in players) {
-            if (players[sid]?.name?.toLowerCase() === targetKey.toLowerCase()) {
-                let targetSock = io.sockets.sockets.get(sid);
-                if (targetSock) {
-                    targetSock.emit('kickedOrBanned', {
-                        type: 'ban',
-                        minutes: minutes,
-                        expiresAt: uData.banExpiresAt,
-                        reason: reason
-                    });
-                    setTimeout(() => { targetSock.disconnect(true); }, 500);
-                }
-            }
-        }
-        socket.emit('systemMessage', `⛔ ${targetKey} ${minutes} dakika süreyle oyundan uzaklaştırıldı (banlandı).`);
-        socket.emit('adminUsersList', getAdminOnlineUsers());
-        if (typeof getAdminSanctionsList === 'function') {
-            socket.emit('adminSanctionsList', getAdminSanctionsList());
-        }
-    });
-
-    // 4.8 ADMİN BANI KALDIR (UNBAN)
-    socket.on('adminUnbanUser', (data) => {
-        if (!players[socket.id] || !players[socket.id].isAdmin) {
-            socket.emit('gameError', "Bu işlem için admin yetkisi gerekiyor!");
-            return;
-        }
-        if (!data || !data.targetUsername) return;
-        let targetKey = dataManager.findUserKey(data.targetUsername);
-        if (!targetKey || !dataManager.persistentData.users[targetKey]) return;
-        let uData = dataManager.persistentData.users[targetKey];
-        uData.banExpiresAt = null;
-        uData.banReason = null;
-        uData.bannedBy = null;
-        dataManager.savePersistentData();
-        socket.emit('systemMessage', `✅ ${targetKey} kullanıcısının banı kaldırıldı.`);
-        socket.emit('adminUsersList', getAdminOnlineUsers());
-        if (typeof getAdminSanctionsList === 'function') {
-            socket.emit('adminSanctionsList', getAdminSanctionsList());
-        }
-    });
-
-    // 4.9 ADMİN BANLI VE SUSTURULAN LİSTESİ
-    socket.on('adminGetSanctionsList', () => {
-        if (!players[socket.id] || !players[socket.id].isAdmin) return;
-        if (typeof getAdminSanctionsList === 'function') {
-            socket.emit('adminSanctionsList', getAdminSanctionsList());
-        }
-    });
-
-    // 5. LİDERLİK TABLOSU
+    // 4. LİDERLİK TABLOSU
     socket.on('getLeaderboard', () => {
         const isHuman = (name) => name && !name.startsWith('🤖') && !name.startsWith('bot_') && !name.includes('🤖') && !name.toLowerCase().includes('dayı') && !name.toLowerCase().includes('ismail') && !name.toLowerCase().includes('emmi');
 
@@ -658,6 +423,7 @@ function registerEconomyHandlers(io, socket, players, helpers) {
 
     socket.on('claimDailyQuest', (questId) => {
         if (!players[socket.id] || !questId) return;
+        if (!checkRateLimit(socket, 'claimDailyQuest', 5, 3000)) return;
         let username = players[socket.id].name;
         let res = dataManager.claimQuestReward(username, questId);
         if (res.success) {

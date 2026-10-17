@@ -20,7 +20,7 @@ function ensureCocktailBarModal() {
         background: rgba(15, 23, 42, 0.75);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
-        z-index: 36000;
+        z-index: 45000;
         align-items: center;
         justify-content: center;
         padding: 16px;
@@ -101,7 +101,13 @@ window.orderCocktail = orderCocktail;
 // Satın alma bildirimi dinleyicisi
 if (typeof socket !== 'undefined' && socket) {
     socket.on('cocktailPurchasedSuccess', (item) => {
-        if (window.playSound) window.playSound('coins');
+        if (window.playSound) {
+            window.playSound('coin');
+            window.playSound('tea_sip');
+        }
+        if (typeof showSocialNotificationToast === 'function') {
+            showSocialNotificationToast(item.icon, 'Afiyet Olsun!', `${item.name} satın aldınız! (-${item.price} TL)`);
+        }
         closeCocktailBarModal();
     });
 }

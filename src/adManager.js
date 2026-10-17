@@ -8,7 +8,7 @@ class AdManager {
         this.adTimer = null;
         this.io = null;
         this.players = null;
-        this.AD_PRICE = 1000;
+        this.AD_PRICE = 1100;
         this.AD_DURATION_SEC = 60;
     }
 
@@ -120,7 +120,7 @@ class AdManager {
             dataManager.savePersistentData();
         }
 
-        socket.emit('updateMoney', player.money);
+        socket.emit('moneyUpdate', player.money);
 
         // Reklam kuyruğuna ekle (FIFO)
         let adEntry = {

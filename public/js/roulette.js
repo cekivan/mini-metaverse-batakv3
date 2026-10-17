@@ -31,7 +31,7 @@ function openRouletteModal() {
     if (window.socket) {
         socket.emit('roulette_join');
     }
-    if (window.playSound) window.playSound('click');
+    if (window.playSound) window.playSound('bet_start');
 }
 window.openRouletteModal = openRouletteModal;
 
@@ -60,7 +60,7 @@ function selectRouletteChip(val) {
             c.classList.remove('selected');
         }
     });
-    if (window.playSound) window.playSound('click');
+    if (window.playSound) window.playSound('chip');
 }
 window.selectRouletteChip = selectRouletteChip;
 
@@ -78,7 +78,7 @@ function placeRouletteBet(betKey) {
 
     rouletteBets[betKey] = (rouletteBets[betKey] || 0) + rouletteSelectedChip;
     updateRouletteBetUI();
-    if (window.playSound) window.playSound('click');
+    if (window.playSound) window.playSound('chip');
 }
 window.placeRouletteBet = placeRouletteBet;
 
@@ -86,7 +86,7 @@ function clearRouletteBets() {
     if (isRouletteSpinning) return;
     rouletteBets = {};
     updateRouletteBetUI();
-    if (window.playSound) window.playSound('click');
+    if (window.playSound) window.playSound('chip');
 }
 window.clearRouletteBets = clearRouletteBets;
 
@@ -106,7 +106,7 @@ function doubleRouletteBets() {
         rouletteBets[k] *= 2;
     }
     updateRouletteBetUI();
-    if (window.playSound) window.playSound('click');
+    if (window.playSound) window.playSound('chip');
 }
 window.doubleRouletteBets = doubleRouletteBets;
 
@@ -315,7 +315,7 @@ function animateRouletteSpin(targetIndex, onComplete) {
         return;
     }
 
-    if (window.playSound) window.playSound('card');
+    if (window.playSound) window.playSound('wheel');
 
     let startTime = performance.now();
     let duration = 4600; // 4.6 saniye akıcı dönüş
@@ -375,6 +375,7 @@ function animateRouletteSpin(targetIndex, onComplete) {
             drawRouletteWheel(canvas, rouletteWheelAngle, rouletteBallAngle, rouletteBallRadius);
             isRouletteSpinning = false;
             updateRouletteBetUI();
+            if (window.stopCasinoSound) window.stopCasinoSound('wheel');
             if (onComplete) onComplete();
         }
     }
@@ -387,6 +388,9 @@ function animateRouletteSpin(targetIndex, onComplete) {
 if (typeof socket !== 'undefined' && socket) {
     socket.on('roulette_init', (data) => {
         renderRouletteHistory(data.history || []);
+        if (window.playSound && document.getElementById('rouletteModal')?.style.display === 'flex') {
+            window.playSound('bet_start');
+        }
     });
 
     socket.on('roulette_result', (data) => {
@@ -399,6 +403,7 @@ if (typeof socket !== 'undefined' && socket) {
         showRouletteToast(msg, true);
         isRouletteSpinning = false;
         updateRouletteBetUI();
+        if (window.stopCasinoSound) window.stopCasinoSound('wheel');
         if (window.playSound) window.playSound('error');
     });
 }
@@ -420,15 +425,20 @@ function handleRouletteResult(data) {
         if (data.totalPayout > 0) {
             msgEl.innerHTML = `<span style="color:#facc15; font-size:16px; font-weight:900;">TEBRİKLER! KAZANDIN!</span>`;
             if (winAmountEl) winAmountEl.innerHTML = `+${data.totalPayout.toLocaleString('tr-TR')} TL <span style="font-size:12px; color:#a7f3d0;">(Net: +${data.netWin.toLocaleString('tr-TR')} TL)</span>`;
-            if (window.playSound) window.playSound('quest');
+            if (window.playSound) window.playSound('win');
         } else {
             msgEl.innerHTML = `<span style="color:#94a3b8; font-size:15px; font-weight:800;">Bu Tur Kazanamadınız</span>`;
             if (winAmountEl) winAmountEl.innerHTML = `<span style="color:#f87171;">-${data.totalBet.toLocaleString('tr-TR')} TL</span>`;
+            if (window.playSound) window.playSound('lose');
         }
 
         banner.style.display = 'flex';
         setTimeout(() => {
             if (banner) banner.style.display = 'none';
+            // Yeni tur bahis alımı başlama uyarısı
+            if (window.playSound && document.getElementById('rouletteModal')?.style.display === 'flex') {
+                window.playSound('bet_start');
+            }
         }, 4500);
     }
 }

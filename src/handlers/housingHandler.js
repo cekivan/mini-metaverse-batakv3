@@ -1,11 +1,13 @@
 // src/handlers/housingHandler.js - Konut Satın Alma, Mobilya Alımı ve Dekorasyon Yöneticisi
 const config = require('../config');
 const dataManager = require('../dataManager');
+const { checkRateLimit } = require('../utils/securityUtils');
 
 function registerHousingHandlers(io, socket, players) {
     // 1. EV SATIN ALMA
     socket.on('buyHouse', (houseType) => {
         if (!players[socket.id]) return;
+        if (!checkRateLimit(socket, 'buyHouse', 3, 5000)) return;
         let username = players[socket.id].name;
         let uKey = dataManager.findUserKey(username) || username;
         let uData = dataManager.persistentData.users[uKey];
@@ -55,6 +57,7 @@ function registerHousingHandlers(io, socket, players) {
     // 2. MOBİLYA SATIN ALMA
     socket.on('buyFurniture', (itemId) => {
         if (!players[socket.id]) return;
+        if (!checkRateLimit(socket, 'buyFurniture', 10, 3000)) return;
         let username = players[socket.id].name;
         let uKey = dataManager.findUserKey(username) || username;
         let uData = dataManager.persistentData.users[uKey];
@@ -89,6 +92,7 @@ function registerHousingHandlers(io, socket, players) {
     // 3. MOBİLYA YERLEŞTİRME
     socket.on('placeFurniture', (data) => {
         if (!players[socket.id] || !data || !data.itemId) return;
+        if (!checkRateLimit(socket, 'placeFurniture', 10, 3000)) return;
         let username = players[socket.id].name;
         let uKey = dataManager.findUserKey(username) || username;
         let uData = dataManager.persistentData.users[uKey];
@@ -115,11 +119,16 @@ function registerHousingHandlers(io, socket, players) {
 
         uData.furnitureInventory.splice(idx, 1);
         if (!targetHouse.furniture) targetHouse.furniture = [];
+
+        let safeX = Math.max(-500, Math.min(2500, Number.isFinite(Number(data.x)) ? Math.round(Number(data.x)) : 400));
+        let safeY = Math.max(-500, Math.min(2500, Number.isFinite(Number(data.y)) ? Math.round(Number(data.y)) : 300));
+        let safeRot = Number.isFinite(Number(data.rotation)) ? Math.round(Number(data.rotation)) % 4 : 0;
+
         targetHouse.furniture.push({
-            id: data.itemId,
-            x: Math.round(data.x || 400),
-            y: Math.round(data.y || 300),
-            rotation: data.rotation || 0
+            id: String(data.itemId),
+            x: safeX,
+            y: safeY,
+            rotation: safeRot
         });
         uData.house = targetHouse;
         dataManager.savePersistentData();
@@ -132,6 +141,7 @@ function registerHousingHandlers(io, socket, players) {
     // 4. MOBİLYA TAŞIMA
     socket.on('moveFurniture', (data) => {
         if (!players[socket.id] || !data || data.index === undefined) return;
+        if (!checkRateLimit(socket, 'moveFurniture', 25, 2000)) return;
         let username = players[socket.id].name;
         let uKey = dataManager.findUserKey(username) || username;
         let uData = dataManager.persistentData.users[uKey];
@@ -145,12 +155,14 @@ function registerHousingHandlers(io, socket, players) {
         let targetHouse = uData.houses[hType] || uData.house;
         if (!targetHouse || !targetHouse.furniture) return;
 
-        let index = parseInt(data.index);
+        let index = parseInt(data.index, 10);
         if (index >= 0 && index < targetHouse.furniture.length) {
-            targetHouse.furniture[index].x = Math.round(data.x);
-            targetHouse.furniture[index].y = Math.round(data.y);
-            if (data.rotation !== undefined) {
-                targetHouse.furniture[index].rotation = parseInt(data.rotation);
+            let safeX = Math.max(-500, Math.min(2500, Number.isFinite(Number(data.x)) ? Math.round(Number(data.x)) : targetHouse.furniture[index].x));
+            let safeY = Math.max(-500, Math.min(2500, Number.isFinite(Number(data.y)) ? Math.round(Number(data.y)) : targetHouse.furniture[index].y));
+            targetHouse.furniture[index].x = safeX;
+            targetHouse.furniture[index].y = safeY;
+            if (data.rotation !== undefined && Number.isFinite(Number(data.rotation))) {
+                targetHouse.furniture[index].rotation = parseInt(data.rotation, 10) % 4;
             }
             uData.house = targetHouse;
             dataManager.savePersistentData();
@@ -162,6 +174,7 @@ function registerHousingHandlers(io, socket, players) {
     // 4.1 MOBİLYA DÖNDÜRME (90 DERECE ÇEVİRME)
     socket.on('rotateFurniture', (data) => {
         if (!players[socket.id] || !data || data.index === undefined) return;
+        if (!checkRateLimit(socket, 'rotateFurniture', 20, 2000)) return;
         let username = players[socket.id].name;
         let uKey = dataManager.findUserKey(username) || username;
         let uData = dataManager.persistentData.users[uKey];
@@ -175,14 +188,14 @@ function registerHousingHandlers(io, socket, players) {
         let targetHouse = uData.houses[hType] || uData.house;
         if (!targetHouse || !targetHouse.furniture) return;
 
-        let index = parseInt(data.index);
+        let index = parseInt(data.index, 10);
         if (index >= 0 && index < targetHouse.furniture.length) {
             let curItem = targetHouse.furniture[index];
             let curRot = (typeof curItem.rotation === 'number') ? curItem.rotation : 0;
-            let newRot = (data.rotation !== undefined) ? (parseInt(data.rotation) % 4) : ((curRot + 1) % 4);
+            let newRot = (data.rotation !== undefined && Number.isFinite(Number(data.rotation))) ? (parseInt(data.rotation, 10) % 4) : ((curRot + 1) % 4);
             if (newRot < 0) newRot += 4;
             let facingList = ['front-right', 'front-left', 'back-left', 'back-right'];
-            let newFacing = (data.facing !== undefined) ? data.facing : facingList[newRot];
+            let newFacing = (data.facing !== undefined) ? String(data.facing) : facingList[newRot];
             
             curItem.rotation = newRot;
             curItem.facing = newFacing;
@@ -196,6 +209,7 @@ function registerHousingHandlers(io, socket, players) {
     // 5. MOBİLYA KALDIRMA
     socket.on('removeFurniture', (index) => {
         if (!players[socket.id]) return;
+        if (!checkRateLimit(socket, 'removeFurniture', 15, 2000)) return;
         let username = players[socket.id].name;
         let uKey = dataManager.findUserKey(username) || username;
         let uData = dataManager.persistentData.users[uKey];
@@ -209,7 +223,7 @@ function registerHousingHandlers(io, socket, players) {
         let targetHouse = uData.houses[hType] || uData.house;
         if (!targetHouse || !targetHouse.furniture) return;
 
-        let idx = parseInt(index);
+        let idx = parseInt(index, 10);
         if (idx >= 0 && idx < targetHouse.furniture.length) {
             let removed = targetHouse.furniture.splice(idx, 1)[0];
             if (!uData.furnitureInventory) uData.furnitureInventory = [];
@@ -336,10 +350,23 @@ function registerHousingHandlers(io, socket, players) {
     // 6.1 LİMONATA STANDINDAN LİMONATA SATIN ALMA (15 TL)
     socket.on('buyLemonadeFromStand', (data) => {
         if (!players[socket.id] || !data) return;
+        if (!checkRateLimit(socket, 'buyLemonade', 3, 2000)) return;
         let buyerName = players[socket.id].name;
-        let buyerKey = dataManager.findUserKey(buyerName) || buyerName;
+        let buyerKey = (dataManager.findUserKey ? dataManager.findUserKey(buyerName) : null) || buyerName;
         let buyerData = dataManager.persistentData.users[buyerKey];
         if (!buyerData) return;
+
+        let ownerName = data.owner;
+        let ownerKey = (dataManager.findUserKey ? dataManager.findUserKey(ownerName) : null) || ownerName;
+        if (!ownerKey || !dataManager.persistentData.users[ownerKey]) {
+            socket.emit('gameError', "Stand sahibi bulunamadı!");
+            return;
+        }
+
+        if (buyerKey.toLowerCase() === ownerKey.toLowerCase()) {
+            socket.emit('gameError', "Kendi limonata standınızdan limonata satın alamazsınız!");
+            return;
+        }
 
         const LEMONADE_PRICE = 15;
         if ((buyerData.money || 0) < LEMONADE_PRICE) {
@@ -347,121 +374,122 @@ function registerHousingHandlers(io, socket, players) {
             return;
         }
 
-        let ownerName = data.owner;
-        let ownerKey = dataManager.findUserKey(ownerName) || ownerName;
         let ownerData = dataManager.persistentData.users[ownerKey];
 
         // Alıcıdan 15 TL düş
-        buyerData.money = Math.max(0, buyerData.money - LEMONADE_PRICE);
+        buyerData.money = Math.max(0, (buyerData.money || 0) - LEMONADE_PRICE);
         players[socket.id].money = buyerData.money;
         socket.emit('moneyUpdate', buyerData.money);
 
         // Ev sahibine 15 TL ekle (kullanıcı kuralı: "limonata satın aldıkça ev sahibine gitsin o para ve bir limonata sattınız bildirimiyle belirtsin bunu.")
-        if (ownerData) {
-            ownerData.money = (ownerData.money || 0) + LEMONADE_PRICE;
+        ownerData.money = (ownerData.money || 0) + LEMONADE_PRICE;
 
-            // Eğer ev sahibi o an oyundaysa canlı bildirim ve bakiye güncellemesi gönder
-            for (let sid in players) {
-                if (players[sid] && players[sid].name && players[sid].name.toLowerCase() === ownerName.toLowerCase()) {
-                    players[sid].money = ownerData.money;
-                    io.to(sid).emit('moneyUpdate', ownerData.money);
-                    io.to(sid).emit('lemonadeSaleNotification', {
-                        buyer: buyerName,
-                        amount: LEMONADE_PRICE
-                    });
-                    io.to(sid).emit('systemMessage', `🍋 [${buyerName}] sizden 1 bardak taze limonata satın aldı! Hesabınıza +15 TL eklendi.`);
-                    break;
-                }
+        // Eğer ev sahibi o an oyundaysa canlı bildirim ve bakiye güncellemesi gönder
+        for (let sid in players) {
+            if (players[sid] && players[sid].name && players[sid].name.toLowerCase() === ownerName.toLowerCase()) {
+                players[sid].money = ownerData.money;
+                io.to(sid).emit('moneyUpdate', ownerData.money);
+                io.to(sid).emit('lemonadeSaleNotification', {
+                    buyer: buyerName,
+                    amount: LEMONADE_PRICE
+                });
+                io.to(sid).emit('systemMessage', `🍋 [${buyerName}] sizden 1 bardak taze limonata satın aldı! Hesabınıza +15 TL eklendi.`);
+                break;
             }
         }
+
+        // Alıcının eline taze limonata bardağı ver!
+        buyerData.avatar = buyerData.avatar || {};
+        buyerData.avatar.heldItem = 'limonata';
+        players[socket.id].heldItem = 'limonata';
+
         dataManager.savePersistentData();
+
+        let room = players[socket.id].room;
+        io.to(room).emit('playerAvatarChange', { id: socket.id, avatar: buyerData.avatar, heldItem: 'limonata' });
+        io.to(room).emit('chatUpdate', { id: socket.id, msg: '🍋 Buz gibi taze limonatamı yudumluyorum!' });
 
         // Alıcıya başarı mesajı
         socket.emit('lemonadePurchasedSuccess', { amount: LEMONADE_PRICE });
         socket.emit('systemMessage', `🍋 Buz gibi taze limonatayı afiyetle içtiniz! (-15 TL ev sahibine ödendi)`);
     });
 
-    // 7. KULLANILABİLİR EVLERİ LİSTELEME (HERKESE AÇIK EVLER DAHİL)
+    // 7. TÜM KULLANILABİLİR EVLERİ VE ARKADAŞ EVLERİNİ LİSTELEME (KONUTLAR PORTALI)
     socket.on('getAvailableHouses', () => {
         if (!players[socket.id]) return;
         let username = players[socket.id].name;
-        let uKey = dataManager.findUserKey(username) || username;
+        let uKey = (dataManager.findUserKey ? dataManager.findUserKey(username) : null) || username;
         let uData = dataManager.persistentData.users[uKey];
         if (!uData) return;
 
-        let availableList = [];
-        let addedKeys = new Set();
+        let availableHouses = [];
+        let hasSelfHouse = false;
+        let myFriends = uData.friends || [];
 
-        // 1. Kendi Evlerim
-        let myHouses = uData.houses || (uData.house ? { [uData.house.type]: uData.house } : {});
-        for (let hType in myHouses) {
-            let hObj = myHouses[hType];
-            let k = `${uKey}_${hType}`;
-            addedKeys.add(k);
-            availableList.push({
-                owner: uKey,
-                houseId: k,
-                type: hType,
-                isSelf: true,
-                privacy: hObj.privacy || 'public',
-                furnitureCount: (hObj.furniture || []).length
-            });
+        // 1. Kendi Evlerimiz
+        let selfHouses = uData.houses || {};
+        if (uData.house && uData.house.type && !selfHouses[uData.house.type]) {
+            selfHouses[uData.house.type] = uData.house;
         }
 
-        // 2. Arkadaşlarımın Evleri
-        let friends = uData.friends || [];
-        friends.forEach(fName => {
-            let clean = typeof fName === 'string' ? fName : (fName ? fName.username : '');
-            if (!clean) return;
-            let fKey = dataManager.findUserKey(clean) || clean;
-            let fData = dataManager.persistentData.users[fKey];
-            if (fData) {
-                let fHouses = fData.houses || (fData.house ? { [fData.house.type]: fData.house } : {});
-                for (let hType in fHouses) {
-                    let hObj = fHouses[hType];
-                    let k = `${fKey}_${hType}`;
-                    if (!addedKeys.has(k)) {
-                        addedKeys.add(k);
-                        availableList.push({
-                            owner: fKey,
-                            houseId: k,
-                            type: hType,
-                            isSelf: false,
-                            privacy: hObj.privacy || 'public',
-                            furnitureCount: (hObj.furniture || []).length
-                        });
-                    }
-                }
+        for (let hType in selfHouses) {
+            let h = selfHouses[hType];
+            if (h && (h.type || hType)) {
+                hasSelfHouse = true;
+                availableHouses.push({
+                    owner: username,
+                    type: h.type || hType,
+                    furnitureCount: (h.furniture || []).length,
+                    isSelf: true,
+                    privacy: h.privacy || 'public'
+                });
             }
-        });
+        }
 
-        // 3. Mahalledeki Herkese Açık Evler (Public Houses)
-        for (let otherUser in dataManager.persistentData.users) {
-            if (otherUser.toLowerCase() === uKey.toLowerCase()) continue;
-            let oData = dataManager.persistentData.users[otherUser];
-            let oHouses = oData.houses || (oData.house ? { [oData.house.type]: oData.house } : {});
-            for (let hType in oHouses) {
-                let hObj = oHouses[hType];
-                let k = `${otherUser}_${hType}`;
-                if (!addedKeys.has(k) && hObj.privacy === 'public') {
-                    addedKeys.add(k);
-                    availableList.push({
-                        owner: otherUser,
-                        houseId: k,
-                        type: hType,
-                        isSelf: false,
-                        isPublicCommunity: true,
-                        privacy: 'public',
-                        furnitureCount: (hObj.furniture || []).length
-                    });
-                }
+        // 2. Arkadaşlarımızın Evleri ve Mahalledeki Diğer Açık Evler
+        let friendUsernames = new Set(myFriends.map(f => {
+            let fn = typeof f === 'string' ? f : (f ? f.username : '');
+            return fn.toLowerCase();
+        }));
+
+        let allUsers = dataManager.persistentData.users || {};
+        for (let otherKey in allUsers) {
+            if (otherKey.toLowerCase() === uKey.toLowerCase()) continue;
+            let otherData = allUsers[otherKey];
+            if (!otherData) continue;
+
+            let isFriend = friendUsernames.has(otherKey.toLowerCase());
+            let otherHouses = otherData.houses || {};
+            if (otherData.house && otherData.house.type && !otherHouses[otherData.house.type]) {
+                otherHouses[otherData.house.type] = otherData.house;
+            }
+
+            for (let hType in otherHouses) {
+                let oh = otherHouses[hType];
+                if (!oh) continue;
+                let priv = oh.privacy || 'public';
+
+                // Eğer kilitliyse arkadaş da olsa listede kilitli görünür veya sadece açık olanlar gösterilir
+                if (priv === 'locked') continue;
+
+                // Eğer friends ise sadece arkadaşsa girebilir
+                if (priv === 'friends' && !isFriend) continue;
+
+                availableHouses.push({
+                    owner: otherKey,
+                    type: oh.type || hType,
+                    furnitureCount: (oh.furniture || []).length,
+                    isSelf: false,
+                    isPublicCommunity: !isFriend,
+                    privacy: priv
+                });
             }
         }
 
         socket.emit('availableHousesList', {
-            houses: availableList,
-            hasSelfHouse: Object.keys(myHouses).length > 0,
-            friendCount: friends.length
+            houses: availableHouses,
+            hasSelfHouse: hasSelfHouse,
+            friendCount: myFriends.length
         });
     });
 }

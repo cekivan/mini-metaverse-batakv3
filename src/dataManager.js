@@ -14,7 +14,9 @@ let persistentData = {
         billiard: {},
         batak: {},
         tavla: {},
-        okey101: {}
+        okey101: {},
+        xox: {},
+        amiral: {}
     }
 };
 
@@ -131,8 +133,10 @@ function loadPersistentData() {
             const content = fs.readFileSync(DATA_FILE, 'utf-8');
             const parsed = JSON.parse(content);
             persistentData.users = parsed.users || {};
-            persistentData.leaderboard = parsed.leaderboard || { billiard: {}, batak: {}, tavla: {}, okey101: {} };
+            persistentData.leaderboard = parsed.leaderboard || { billiard: {}, batak: {}, tavla: {}, okey101: {}, xox: {}, amiral: {} };
             if (!persistentData.leaderboard.okey101) persistentData.leaderboard.okey101 = {};
+            if (!persistentData.leaderboard.xox) persistentData.leaderboard.xox = {};
+            if (!persistentData.leaderboard.amiral) persistentData.leaderboard.amiral = {};
             console.log(`Kalıcı veriler başarıyla yüklendi (${Object.keys(persistentData.users).length} kullanıcı).`);
         } else {
             console.log("data.json bulunamadı, yeni veri şablonu oluşturuluyor.");
@@ -274,6 +278,10 @@ function registerUser(rawName, password, gender = 'male') {
     if (cleanName.length < 2 || cleanName.length > 20) {
         return { success: false, message: "❌ Kullanıcı adı 2-20 karakter arasında olmalıdır!" };
     }
+    const USERNAME_REGEX = /^[a-zA-Z0-9_çÇğĞıİöÖşŞüÜ-]+( [a-zA-Z0-9_çÇğĞıİöÖşŞüÜ-]+)*$/;
+    if (!USERNAME_REGEX.test(cleanName)) {
+        return { success: false, message: "❌ Kullanıcı adı yalnızca harf, rakam, boşluk, tire ve alt çizgi içerebilir!" };
+    }
     if (!password || typeof password !== 'string' || password.length < 3) {
         return { success: false, message: "❌ Şifre en az 3 karakter olmalıdır!" };
     }
@@ -296,6 +304,7 @@ function registerUser(rawName, password, gender = 'male') {
         role: isUserAdmin(cleanName) ? 'admin' : 'user',
         isAdmin: isUserAdmin(cleanName),
         avatar: {
+            model: 'classic',
             hat: isFem ? 'hair_long' : 'bere',
             face: 'none',
             skinColor: '#ffd1a4',
@@ -380,9 +389,27 @@ function sanitizeAmount(val, min = 1, max = 100000000) {
     return num;
 }
 
-function sanitizeString(str, maxLen = 100) {
+function escapeHtml(str) {
     if (typeof str !== 'string') return '';
-    return str.trim().slice(0, maxLen);
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function sanitizeString(str, maxLen = 100, doEscape = true) {
+    if (typeof str !== 'string') return '';
+    let clean = str.trim().slice(0, maxLen);
+    return doEscape ? escapeHtml(clean) : clean;
+}
+
+function sanitizeAmount(val, min = 0, max = 100000000) {
+    let num = parseInt(val, 10);
+    if (isNaN(num) || !Number.isFinite(num)) return null;
+    if (num < min || num > max) return null;
+    return num;
 }
 
 // --- 7. GÜNLÜK GÖREVLER (DAILY QUESTS) SİSTEMİ ---
@@ -481,6 +508,7 @@ module.exports = {
     verifyPassword,
     sanitizeAmount,
     sanitizeString,
+    escapeHtml,
     getUserDailyQuests,
     recordQuestProgress,
     claimQuestReward,

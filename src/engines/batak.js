@@ -28,22 +28,24 @@ function sortHand(hand) {
 
 function startBatakGame(players, existingScores = null, roundNumber = 1) {
     let deck = createAndShuffleDeck();
+    let numRounds = Math.max(1, Number(roundNumber) || 1);
+    let startTurn = (players && players.length > 0) ? (numRounds - 1) % players.length : 0;
     let gameData = {
         phase: 'ihale',
         players: [...players],
         hands: {},
         hiddenCards: deck.splice(0, 4), // Yere ayrılan 4 kart
         tableCards: [],
-        turnIndex: 0,
-        forcedPlayerIndex: 0,
+        turnIndex: startTurn,
+        forcedPlayerIndex: startTurn,
         bid: { current: 7, highestBidder: null },
         passedPlayers: [],
         trump: null,
         tricksTaken: {},
-        starterIndex: 0,
+        starterIndex: startTurn,
         trumpBroken: false,
         scores: existingScores || {},
-        roundNumber: roundNumber
+        roundNumber: numRounds
     };
 
     players.forEach((pid) => {
@@ -164,16 +166,19 @@ function isValidMove(gameData, hand, playedCard, tableCards) {
     else {
         let hasTrump = hand.some(c => c.suit === trump);
         if (hasTrump) {
-            if (playedCard.suit !== trump) {
-                return { valid: false, msg: `Dönen renkten elinde yok. Koz (${trump}) çakmak zorundasın!` };
-            }
-
             let trumpsOnTable = tableCards.filter(tc => tc.card.suit === trump);
             if (trumpsOnTable.length > 0) {
                 let highestTrumpValue = Math.max(...trumpsOnTable.map(tc => RANKS[tc.card.value]));
                 let higherTrumpsInHand = hand.filter(c => c.suit === trump && RANKS[c.value] > highestTrumpValue);
-                if (higherTrumpsInHand.length > 0 && RANKS[playedCard.value] < highestTrumpValue) {
-                    return { valid: false, msg: "Yerdeki kozdan daha büyük bir koz atmak zorundasın!" };
+                if (higherTrumpsInHand.length > 0) {
+                    if (playedCard.suit !== trump || RANKS[playedCard.value] < highestTrumpValue) {
+                        return { valid: false, msg: "Yerdeki kozdan daha büyük bir koz atmak zorundasın!" };
+                    }
+                }
+                // Masadaki kozu geçemiyorsa küçük koz da atabilir, yan renk (çöp) de kaçabilir
+            } else {
+                if (playedCard.suit !== trump) {
+                    return { valid: false, msg: `Dönen renkten elinde yok. Koz (${trump}) çakmak zorundasın!` };
                 }
             }
         }

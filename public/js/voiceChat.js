@@ -133,8 +133,12 @@
         if (bjModal && bjModal.style.display === 'flex') return;
         const gModal = document.getElementById('gameModal');
         if (gModal && gModal.style.display === 'flex') return;
-        const okeyModal = document.getElementById('okey101Modal');
-        if (okeyModal && okeyModal.style.display === 'flex') return;
+        const okeyArea = document.getElementById('okey101Area');
+        if (okeyArea && okeyArea.style.display !== 'none') return;
+        const xoxModal = document.getElementById('xoxModal');
+        if (xoxModal && xoxModal.style.display === 'flex') return;
+        const amiralModal = document.getElementById('amiralBattiModal');
+        if (amiralModal && amiralModal.style.display === 'flex') return;
 
         let targetChannel = 'room_' + newRoom;
         if (currentVoiceTableId !== targetChannel) {

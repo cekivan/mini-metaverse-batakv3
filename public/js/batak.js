@@ -71,7 +71,14 @@ socket.on('batakUpdate', (data) => {
     }
 
     trumpDisplay.innerText = `Koz: ${data.trump ? data.trump : 'Bekleniyor'}`;
-    bidDisplay.innerText = `İhale: ${data.bidInfo.current}`;
+    let is4Player = !!data.isBatak4 || (data.players && data.players.length === 4);
+    let bidderName = "";
+    if (data.bidInfo.highestBidder && data.playerInfos[data.bidInfo.highestBidder]) {
+        bidderName = ` (${data.playerInfos[data.bidInfo.highestBidder].name})`;
+    } else {
+        bidderName = is4Player ? " (Pas denirse 4 kalır)" : " (Pas denirse 7 kalır)";
+    }
+    bidDisplay.innerText = `İhale: ${data.bidInfo.current}${bidderName}`;
     if (tricksDisplay) tricksDisplay.innerText = "";
 
     // Alanları geçici olarak gizle
@@ -96,16 +103,19 @@ socket.on('batakUpdate', (data) => {
                 biddingArea.style.display = 'none';
             } else {
                 let currentBid = data.bidInfo.current;
+                let hasBidder = !!data.bidInfo.highestBidder;
+                let minReq = hasBidder ? (currentBid + 1) : (is4Player ? 4 : 8);
                 let titleEl = document.getElementById('biddingTitle');
                 if (titleEl) {
-                    let minReq = (currentBid < 8) ? "8 (Pas denirse 7 kalır)" : (currentBid + 1);
-                    titleEl.innerText = `İhale Zamanı! (Minimum: ${minReq})`;
+                    let pasText = is4Player ? "Pas denirse 4 kalır" : "Pas denirse 7 kalır";
+                    let minReqStr = hasBidder ? minReq : `${minReq} (${pasText})`;
+                    titleEl.innerText = `İhale Zamanı! (Minimum: ${minReqStr})`;
                 }
                 for (let i = 4; i <= 13; i++) {
                     let btn = document.getElementById('btn' + i);
                     if (btn) {
-                        btn.disabled = (i <= currentBid);
-                        btn.style.opacity = (i <= currentBid) ? "0.4" : "1";
+                        btn.disabled = (i < minReq);
+                        btn.style.opacity = (i < minReq) ? "0.4" : "1";
                     }
                 }
             }
