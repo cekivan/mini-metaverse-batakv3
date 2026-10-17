@@ -414,18 +414,18 @@ function registerEconomyHandlers(io, socket, players, helpers) {
     });
 
     // 6. GÜNLÜK GÖREVLER (DAILY QUESTS)
-    socket.on('getDailyQuests', () => {
+    socket.on('getDailyQuests', async () => {
         if (!players[socket.id]) return;
         let username = players[socket.id].name;
-        let quests = dataManager.getUserDailyQuests(username);
+        let quests = await dataManager.getUserDailyQuests(username);
         socket.emit('dailyQuestsData', quests);
     });
 
-    socket.on('claimDailyQuest', (questId) => {
+    socket.on('claimDailyQuest', async (questId) => {
         if (!players[socket.id] || !questId) return;
         if (!checkRateLimit(socket, 'claimDailyQuest', 5, 3000)) return;
         let username = players[socket.id].name;
-        let res = dataManager.claimQuestReward(username, questId);
+        let res = await dataManager.claimQuestReward(username, questId);
         if (res.success) {
             socket.emit('moneyUpdate', res.newMoney);
             socket.emit('dailyQuestsData', res.quests);

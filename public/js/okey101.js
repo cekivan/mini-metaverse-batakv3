@@ -20,7 +20,15 @@ socket.on('okey101Update', (data) => {
     const billiardArea = document.getElementById('billiardArea');
     const tavlaArea = document.getElementById('tavlaArea');
 
-    if (gameModal) gameModal.style.display = 'flex';
+    if (gameModal) {
+        if (gameModal.style.display === 'none' || !gameModal.style.display) {
+            gameModal.style.transform = 'translate(-50%, -50%)';
+            gameModal.style.left = '50%';
+            gameModal.style.top = '50%';
+            gameModal.style.animation = '';
+        }
+        gameModal.style.display = 'flex';
+    }
     if (batakArea) batakArea.style.display = 'none';
     if (billiardArea) billiardArea.style.display = 'none';
     if (tavlaArea) tavlaArea.style.display = 'none';
@@ -123,7 +131,13 @@ socket.on('tableLeft', () => {
     okey101Data = null;
     window.currentActiveTableId = null;
     const gameModal = document.getElementById('gameModal');
-    if (gameModal) gameModal.style.display = 'none';
+    if (gameModal) {
+        gameModal.style.display = 'none';
+        gameModal.style.transform = 'translate(-50%, -50%)';
+        gameModal.style.left = '50%';
+        gameModal.style.top = '50%';
+        gameModal.style.animation = '';
+    }
     const okeyArea = document.getElementById('okey101Area');
     if (okeyArea) okeyArea.style.display = 'none';
 });

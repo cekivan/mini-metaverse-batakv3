@@ -1,7 +1,9 @@
 // server.js - Mini Metaverse Ana Sunucusu & Modüler Soket Orkestratörü
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");
+const mongoose = require('mongoose');
 
 const config = require('./src/config');
 const dataManager = require('./src/dataManager');
@@ -68,6 +70,32 @@ initNargileLounge(io, players);
 
 // Canlı Reklam Panoları ve TV Ağı Motorunu Başlat
 adManager.init(io, players);
+
+// --- MONGODB VERİTABANI BAĞLANTISI ---
+const MONGO_URI = process.env.MONGO_URI;
+
+async function connectToDatabase() {
+    if (!MONGO_URI || MONGO_URI.includes('<kullanici_adi>') || MONGO_URI.includes('<username>') || MONGO_URI.includes('<password>') || MONGO_URI.includes('<sifre>')) {
+        console.warn('\n⚠️ [MONGODB UYARI]: .env dosyasında henüz geçerli bir MONGO_URI tanımlanmamış.');
+        console.warn('👉 Proje ana dizinindeki .env dosyasını açıp kendi MongoDB Atlas linkinizi yapıştırabilirsiniz:');
+        console.warn('   MONGO_URI=mongodb+srv://kullanici:sifre@cluster0.mongodb.net/mini_metaverse?retryWrites=true&w=majority\n');
+        return;
+    }
+
+    try {
+        console.log('🍃 MongoDB veritabanına bağlanılıyor...');
+        await mongoose.connect(MONGO_URI);
+        console.log('✅ [MONGODB]: MongoDB veritabanı bağlantısı başarıyla kuruldu!');
+        
+        // İlk bağlantıda verileri eşitle / aktar
+        await dataManager.syncDataJsonToMongo();
+    } catch (err) {
+        console.error('❌ [MONGODB BAĞLANTI HATASI]:', err.message);
+        console.warn('👉 .env dosyasındaki bağlantı adresinizi ve MongoDB Atlas ağ erişim (Network Access / IP Whitelist 0.0.0.0/0) ayarlarınızı kontrol edin.\n');
+    }
+}
+
+connectToDatabase();
 
 // --- SOKET BAĞLANTILARI ---
 io.on('connection', (socket) => {
@@ -154,6 +182,12 @@ io.on('connection', (socket) => {
                 clearTimeout(playerSwanTimers[socket.id]);
                 delete playerSwanTimers[socket.id];
             }
+        }
+        if (oldRoom === 'kafe' && newRoom !== 'kafe') {
+            let affected = tableManager.removePlayerFromLobbies(socket.id);
+            affected.forEach(t => {
+                t.players.forEach(pid => io.to(pid).emit('updateTableLobby', { name: t.name, count: t.players.length, min: t.min, tableId: t.id, bet: t.bet || 0 }));
+            });
         }
 
         socket.leave(oldRoom);
@@ -342,9 +376,15 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // Güvenli Kapanma (Graceful Shutdown)
-process.on('SIGINT', () => {
-    console.log('\nSunucu kapatılıyor, veriler diske atomik yazılıyor...');
-    dataManager.flushNow();
+process.on('SIGINT', async () => {
+    console.log('\nSunucu kapatılıyor, canlı veriler veritabanına kaydediliyor...');
+    try {
+        await dataManager.savePersistentData();
+        if (mongoose.connection.readyState === 1) {
+            await mongoose.connection.close();
+            console.log('🍃 MongoDB bağlantısı kapatıldı.');
+        }
+    } catch (_) {}
     process.exit(0);
 });
 

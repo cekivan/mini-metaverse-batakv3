@@ -1,6 +1,8 @@
 // src/handlers/housingHandler.js - Konut Satın Alma, Mobilya Alımı ve Dekorasyon Yöneticisi
+const mongoose = require('mongoose');
 const config = require('../config');
 const dataManager = require('../dataManager');
+const User = require('../models/User');
 const { checkRateLimit } = require('../utils/securityUtils');
 
 function registerHousingHandlers(io, socket, players) {
@@ -415,11 +417,15 @@ function registerHousingHandlers(io, socket, players) {
     });
 
     // 7. TÜM KULLANILABİLİR EVLERİ VE ARKADAŞ EVLERİNİ LİSTELEME (KONUTLAR PORTALI)
-    socket.on('getAvailableHouses', () => {
+    socket.on('getAvailableHouses', async () => {
         if (!players[socket.id]) return;
         let username = players[socket.id].name;
         let uKey = (dataManager.findUserKey ? dataManager.findUserKey(username) : null) || username;
         let uData = dataManager.persistentData.users[uKey];
+        if (!uData && mongoose.connection.readyState === 1) {
+            const dbU = await User.findByUsername(username);
+            if (dbU) uData = dbU.toObject ? dbU.toObject() : dbU;
+        }
         if (!uData) return;
 
         let availableHouses = [];
@@ -446,13 +452,34 @@ function registerHousingHandlers(io, socket, players) {
             }
         }
 
-        // 2. Arkadaşlarımızın Evleri ve Mahalledeki Diğer Açık Evler
+        // 2. Arkadaşlarımızın Evleri ve Mahalledeki Diğer Açık Evler (MongoDB Canlı Sorgu)
         let friendUsernames = new Set(myFriends.map(f => {
             let fn = typeof f === 'string' ? f : (f ? f.username : '');
             return fn.toLowerCase();
         }));
 
-        let allUsers = dataManager.persistentData.users || {};
+        let allUsers = {};
+        if (mongoose.connection.readyState === 1) {
+            try {
+                const dbUsers = await User.find({
+                    $or: [
+                        { house: { $ne: null } },
+                        { 'houses.standart': { $exists: true } },
+                        { 'houses.garden': { $exists: true } },
+                        { 'houses.pool': { $exists: true } }
+                    ]
+                }).lean();
+                for (let u of dbUsers) {
+                    allUsers[u.username] = u;
+                }
+            } catch (err) {
+                console.error("MongoDB getAvailableHouses hatası:", err.message);
+                allUsers = dataManager.persistentData.users || {};
+            }
+        } else {
+            allUsers = dataManager.persistentData.users || {};
+        }
+
         for (let otherKey in allUsers) {
             if (otherKey.toLowerCase() === uKey.toLowerCase()) continue;
             let otherData = allUsers[otherKey];

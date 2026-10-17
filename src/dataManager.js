@@ -1,13 +1,14 @@
-// src/dataManager.js - Güvenli Kalıcı Veri, Atomik Kayıt ve Kimlik Doğrulama Katmanı
+// src/dataManager.js - Mongoose & MongoDB Destekli Kalıcı Veri ve Kimlik Doğrulama Katmanı
 const fs = require('fs');
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 const config = require('./config');
+const User = require('./models/User');
 
 const DATA_FILE = config.DATA_FILE;
 const BACKUP_FILE = config.BACKUP_FILE;
-const TEMP_FILE = config.TEMP_FILE;
 
-// Bellek İçi Veri Durumu
+// Bellek İçi Hızlı Erişim & Çalışma Zamanı Havuzu
 let persistentData = {
     users: {},
     leaderboard: {
@@ -19,9 +20,6 @@ let persistentData = {
         amiral: {}
     }
 };
-
-let saveTimer = null;
-let isSaving = false;
 
 // --- 1. KRİPTOGRAFİK ŞİFRELEME (SCRYPT İLE GÜVENLİ HASH) ---
 function hashPassword(password, salt) {
@@ -45,120 +43,137 @@ function verifyPassword(password, storedHash, salt) {
     }
 }
 
-// --- 2. ASENKRON, ATOMİK VE DEBOUNCED GÜVENLİ DOSYA YAZIMI ---
-function flushNow() {
-    if (saveTimer) {
-        clearTimeout(saveTimer);
-        saveTimer = null;
-    }
-    savePersistentDataSync();
-}
+// --- 2. MONGOOSE İLE VERİ TABANINA ASENKRON ANLIK KAYIT ---
+async function saveUserData(username, updateFields = null) {
+    if (!username) return;
+    const uKey = findUserKey(username) || username;
+    const dataToSave = updateFields || persistentData.users[uKey];
+    if (!dataToSave) return;
 
-function scheduleSave(delay = 120) {
-    if (saveTimer) clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => {
-        saveTimer = null;
-        savePersistentDataAtomic();
-    }, delay);
-}
-
-function savePersistentDataSync() {
-    try {
-        const dataStr = JSON.stringify(persistentData, null, 2);
-        fs.writeFileSync(TEMP_FILE, dataStr, 'utf-8');
+    if (mongoose.connection.readyState === 1) {
         try {
-            fs.renameSync(TEMP_FILE, DATA_FILE);
-        } catch (renameErr) {
-            fs.copyFileSync(TEMP_FILE, DATA_FILE);
-            try { fs.unlinkSync(TEMP_FILE); } catch (_) {}
-        }
-    } catch (err) {
-        console.error("Kayıt hatası (sync):", err.message);
-        try {
-            fs.writeFileSync(DATA_FILE, JSON.stringify(persistentData, null, 2), 'utf-8');
-        } catch (e2) {
-            console.error("Kritik: Doğrudan yazım da başarısız (sync):", e2.message);
+            const updateDoc = { ...dataToSave };
+            delete updateDoc._id;
+            delete updateDoc.__v;
+            await User.findOneAndUpdate(
+                { username: { $regex: new RegExp(`^${uKey}$`, 'i') } },
+                { $set: updateDoc },
+                { upsert: true, new: true }
+            );
+        } catch (err) {
+            console.error(`❌ [MONGODB HATA]: ${username} kullanıcısı kaydedilemedi:`, err.message);
         }
     }
 }
 
-async function savePersistentDataAtomic() {
-    if (isSaving) {
-        // Zaten yazıyorsa bir sonraki döngüde tekrar dene
-        scheduleSave(60);
+async function savePersistentData(targetUsername = null) {
+    if (targetUsername) {
+        await saveUserData(targetUsername);
         return;
     }
-    isSaving = true;
 
-    try {
-        const dataStr = JSON.stringify(persistentData, null, 2);
-        // Node.js Event Loop'unu bloklamayan asenkron disk yazımı
-        await fs.promises.writeFile(TEMP_FILE, dataStr, 'utf-8');
-        // Windows NTFS dosya kilitleme ve üzerine yazma uyumluluğu
+    if (mongoose.connection.readyState === 1) {
         try {
-            await fs.promises.rename(TEMP_FILE, DATA_FILE);
-        } catch (renameErr) {
-            await fs.promises.copyFile(TEMP_FILE, DATA_FILE);
-            try { await fs.promises.unlink(TEMP_FILE); } catch (_) {}
-        }
-    } catch (err) {
-        console.error("Kayıt hatası (async):", err.message);
-        try {
-            // Doğrudan yazmayı dene
-            await fs.promises.writeFile(DATA_FILE, JSON.stringify(persistentData, null, 2), 'utf-8');
-        } catch (e2) {
-            console.error("Kritik: Doğrudan yazım da başarısız (async):", e2.message);
-        }
-    } finally {
-        isSaving = false;
-    }
-}
-
-// Geriye dönük uyumluluk için alias
-function savePersistentData() {
-    scheduleSave();
-}
-
-// --- 3. VERİ YÜKLEME VE YEDEKLEME ---
-function loadPersistentData() {
-    try {
-        if (fs.existsSync(DATA_FILE)) {
-            // Başlangıçta güvenli yedek al
-            try {
-                fs.copyFileSync(DATA_FILE, BACKUP_FILE);
-            } catch (copyErr) {
-                console.warn("Yedek kopyalama uyarısı:", copyErr.message);
+            const bulkOps = [];
+            for (const [uname, uData] of Object.entries(persistentData.users)) {
+                const doc = { ...uData };
+                delete doc._id;
+                delete doc.__v;
+                bulkOps.push({
+                    updateOne: {
+                        filter: { username: { $regex: new RegExp(`^${uname}$`, 'i') } },
+                        update: { $set: doc },
+                        upsert: true
+                    }
+                });
             }
+            if (bulkOps.length > 0) {
+                await User.bulkWrite(bulkOps);
+            }
+        } catch (err) {
+            console.error('❌ [MONGODB HATA]: Toplu kayıt hatası:', err.message);
+        }
+    }
 
+    // Yerel data.json yedeğini ve liderlik tablosunu (leaderboard) daima senkronize tut
+    try {
+        fs.writeFileSync(DATA_FILE, JSON.stringify(persistentData, null, 2), 'utf-8');
+    } catch (_) {}
+}
+
+// Geriye dönük uyumluluk aliasları
+function savePersistentDataAtomic() {
+    return savePersistentData();
+}
+
+function flushNow() {
+    return savePersistentData();
+}
+
+// --- 3. VERİ YÜKLEME VE İLK KURULUMDA DATA.JSON'DAN MONGODB'YE AKTARMA ---
+async function loadPersistentData() {
+    if (mongoose.connection.readyState === 1) {
+        try {
+            const users = await User.find({}).lean();
+            persistentData.users = {};
+            for (const u of users) {
+                persistentData.users[u.username] = u;
+            }
+            console.log(`🍃 [MONGODB]: Kalıcı veriler MongoDB'den yüklendi (${users.length} kullanıcı).`);
+            return;
+        } catch (err) {
+            console.error('❌ [MONGODB]: Veriler MongoDB\'den yüklenemedi:', err.message);
+        }
+    }
+
+    // MongoDB bağlantısı henüz aktif değilse yerel önbellek dosyasından yükle
+    if (fs.existsSync(DATA_FILE)) {
+        try {
             const content = fs.readFileSync(DATA_FILE, 'utf-8');
             const parsed = JSON.parse(content);
             persistentData.users = parsed.users || {};
             persistentData.leaderboard = parsed.leaderboard || { billiard: {}, batak: {}, tavla: {}, okey101: {}, xox: {}, amiral: {} };
-            if (!persistentData.leaderboard.okey101) persistentData.leaderboard.okey101 = {};
-            if (!persistentData.leaderboard.xox) persistentData.leaderboard.xox = {};
-            if (!persistentData.leaderboard.amiral) persistentData.leaderboard.amiral = {};
-            console.log(`Kalıcı veriler başarıyla yüklendi (${Object.keys(persistentData.users).length} kullanıcı).`);
-        } else {
-            console.log("data.json bulunamadı, yeni veri şablonu oluşturuluyor.");
-            savePersistentDataAtomic();
-        }
-    } catch (e) {
-        console.error("data.json okunamadı, yedek dosyaya bakılıyor:", e.message);
-        if (fs.existsSync(BACKUP_FILE)) {
-            try {
-                const bkpContent = fs.readFileSync(BACKUP_FILE, 'utf-8');
-                const parsed = JSON.parse(bkpContent);
-                persistentData.users = parsed.users || {};
-                persistentData.leaderboard = parsed.leaderboard || { billiard: {}, batak: {}, tavla: {}, okey101: {} };
-                console.log("Veriler data.json.bak yedeğinden başarıyla kurtarıldı.");
-            } catch (e2) {
-                console.error("Kritik: Yedek dosya da okunamadı!", e2.message);
-            }
+            console.log(`📁 Yerel önbellekten veriler yüklendi (${Object.keys(persistentData.users).length} kullanıcı).`);
+        } catch (e) {
+            console.warn("Yerel veri okuma uyarısı:", e.message);
         }
     }
 }
 
-// Sunucu başlangıcında veriyi belleğe al
+// MongoDB'ye ilk bağlantıda data.json'daki kullanıcıları içe aktarma
+async function syncDataJsonToMongo() {
+    if (mongoose.connection.readyState !== 1) return;
+    try {
+        const count = await User.countDocuments();
+        if (count === 0 && fs.existsSync(DATA_FILE)) {
+            console.log('🍃 [MONGODB]: MongoDB kullanıcı koleksiyonu boş. data.json verileri aktarılıyor...');
+            const raw = fs.readFileSync(DATA_FILE, 'utf8');
+            const parsed = JSON.parse(raw);
+            const userDocs = [];
+            for (const [uname, u] of Object.entries(parsed.users || {})) {
+                userDocs.push({
+                    username: uname,
+                    ...u
+                });
+            }
+            if (userDocs.length > 0) {
+                await User.insertMany(userDocs, { ordered: false });
+                console.log(`✅ [MONGODB]: ${userDocs.length} adet kullanıcı MongoDB'ye başarıyla aktarıldı!`);
+            }
+        }
+
+        // Güncel verileri MongoDB'den belleğe çek
+        const allUsers = await User.find({}).lean();
+        for (const u of allUsers) {
+            persistentData.users[u.username] = u;
+        }
+        console.log(`🍃 [MONGODB]: Canlı veriler MongoDB ile senkronize edildi (${allUsers.length} kullanıcı).`);
+    } catch (err) {
+        console.error('❌ [MONGODB]: Senkronizasyon hatası:', err.message);
+    }
+}
+
+// İlk başlatma
 loadPersistentData();
 
 // --- 3.1 ADMİN KULLANICILARI VE YETKİ KONTROLÜ ---
@@ -203,8 +218,8 @@ function getFriendListData(username, playersOnline = {}) {
     });
 }
 
-// --- 5. GÜVENLİ GİRİŞ, KAYIT VE ŞİFRE DEĞİŞTİRME ---
-function loginUser(rawName, password, playersOnline = {}) {
+// --- 5. GÜVENLİ GİRİŞ, KAYIT VE ŞİFRE DEĞİŞTİRME (ASYNC / MONGOOSE) ---
+async function loginUser(rawName, password, playersOnline = {}) {
     if (!rawName || typeof rawName !== 'string') {
         return { success: false, message: "❌ Kullanıcı adı boş olamaz!" };
     }
@@ -213,8 +228,30 @@ function loginUser(rawName, password, playersOnline = {}) {
         return { success: false, message: "❌ Şifre en az 3 karakter olmalıdır!" };
     }
 
-    const existingKey = findUserKey(cleanName);
-    if (!existingKey) {
+    let uData = null;
+    let existingKey = null;
+
+    if (mongoose.connection.readyState === 1) {
+        try {
+            const dbUser = await User.findByUsername(cleanName);
+            if (dbUser) {
+                uData = dbUser.toObject ? dbUser.toObject() : dbUser;
+                existingKey = uData.username;
+                persistentData.users[existingKey] = uData;
+            }
+        } catch (e) {
+            console.error('MongoDB loginUser sorgu hatası:', e.message);
+        }
+    }
+
+    if (!uData) {
+        existingKey = findUserKey(cleanName);
+        if (existingKey) {
+            uData = persistentData.users[existingKey];
+        }
+    }
+
+    if (!existingKey || !uData) {
         return { 
             success: false, 
             message: "❌ Böyle bir hesap bulunamadı! Henüz hesabınız yoksa lütfen 'Kayıt Ol' sekmesini kullanın." 
@@ -231,8 +268,6 @@ function loginUser(rawName, password, playersOnline = {}) {
             message: "⚠️ Bu hesap şu anda oyunda aktif! Eğer bu sizseniz diğer sekmeyi kapatın veya birkaç saniye bekleyin."
         };
     }
-
-    const uData = persistentData.users[existingKey];
 
     // Şifre Doğrulama
     if (uData.auth && uData.auth.hash && uData.auth.salt) {
@@ -259,7 +294,8 @@ function loginUser(rawName, password, playersOnline = {}) {
         uData.role = 'admin';
         uData.isAdmin = true;
     }
-    savePersistentDataAtomic();
+    persistentData.users[existingKey] = uData;
+    await saveUserData(existingKey, uData);
 
     return {
         success: true,
@@ -270,7 +306,7 @@ function loginUser(rawName, password, playersOnline = {}) {
     };
 }
 
-function registerUser(rawName, password, gender = 'male') {
+async function registerUser(rawName, password, gender = 'male') {
     if (!rawName || typeof rawName !== 'string') {
         return { success: false, message: "❌ Kullanıcı adı boş olamaz!" };
     }
@@ -286,8 +322,15 @@ function registerUser(rawName, password, gender = 'male') {
         return { success: false, message: "❌ Şifre en az 3 karakter olmalıdır!" };
     }
 
-    const existingKey = findUserKey(cleanName);
-    if (existingKey) {
+    if (mongoose.connection.readyState === 1) {
+        const existing = await User.findByUsername(cleanName);
+        if (existing) {
+            return { 
+                success: false, 
+                message: "❌ Bu kullanıcı adı zaten alınmış! Lütfen başka bir ad seçin veya 'Giriş Yap' sekmesini kullanın." 
+            };
+        }
+    } else if (findUserKey(cleanName)) {
         return { 
             success: false, 
             message: "❌ Bu kullanıcı adı zaten alınmış! Lütfen başka bir ad seçin veya 'Giriş Yap' sekmesini kullanın." 
@@ -298,6 +341,7 @@ function registerUser(rawName, password, gender = 'male') {
     const { hash, salt } = hashPassword(password);
 
     const newUser = {
+        username: cleanName,
         money: 1000,
         gender: gender || 'male',
         auth: { hash, salt },
@@ -324,8 +368,16 @@ function registerUser(rawName, password, gender = 'male') {
         propInventory: {}
     };
 
+    if (mongoose.connection.readyState === 1) {
+        try {
+            await User.create(newUser);
+        } catch (dbErr) {
+            console.error('MongoDB registerUser hatası:', dbErr.message);
+            return { success: false, message: "❌ Veritabanına kayıt sırasında bir hata oluştu!" };
+        }
+    }
+
     persistentData.users[cleanName] = newUser;
-    savePersistentDataAtomic();
 
     return {
         success: true,
@@ -335,16 +387,30 @@ function registerUser(rawName, password, gender = 'male') {
     };
 }
 
-function changeUserPassword(username, oldPassword, newPassword) {
+async function changeUserPassword(username, oldPassword, newPassword) {
     if (!username || !oldPassword || !newPassword) {
         return { success: false, message: "❌ Lütfen tüm şifre alanlarını doldurun!" };
     }
     const cleanName = username.trim();
-    const uKey = findUserKey(cleanName);
-    if (!uKey || !persistentData.users[uKey]) {
+    let uData = null;
+    let uKey = null;
+
+    if (mongoose.connection.readyState === 1) {
+        const userDoc = await User.findByUsername(cleanName);
+        if (userDoc) {
+            uData = userDoc;
+            uKey = userDoc.username;
+        }
+    }
+
+    if (!uData) {
+        uKey = findUserKey(cleanName);
+        if (uKey) uData = persistentData.users[uKey];
+    }
+
+    if (!uKey || !uData) {
         return { success: false, message: "❌ Kullanıcı bulunamadı!" };
     }
-    const uData = persistentData.users[uKey];
 
     if (!uData.auth || !uData.auth.hash) {
         return { success: false, message: "❌ Hesabın şifresi doğrulanamadı!" };
@@ -365,7 +431,12 @@ function changeUserPassword(username, oldPassword, newPassword) {
 
     const { hash, salt } = hashPassword(newPassword);
     uData.auth = { hash, salt };
-    savePersistentDataAtomic();
+
+    if (persistentData.users[uKey]) {
+        persistentData.users[uKey].auth = { hash, salt };
+    }
+
+    await saveUserData(uKey, { auth: { hash, salt } });
 
     return { success: true, message: "✅ Şifreniz başarıyla değiştirildi!" };
 }
@@ -380,12 +451,10 @@ function authenticateOrRegister(rawName, password, gender = 'male', playersOnlin
 }
 
 // --- 6. GİRDİ SANİTİZASYON VE DOĞRULAMA (INPUT SANITIZATION) ---
-function sanitizeAmount(val, min = 1, max = 100000000) {
-    if (val === null || val === undefined) return null;
-    let num = Math.floor(Number(val));
-    if (isNaN(num) || !isFinite(num)) return null;
-    if (num < min) return null;
-    if (num > max) return max;
+function sanitizeAmount(val, min = 0, max = 100000000) {
+    let num = parseInt(val, 10);
+    if (isNaN(num) || !Number.isFinite(num)) return null;
+    if (num < min || num > max) return null;
     return num;
 }
 
@@ -405,13 +474,6 @@ function sanitizeString(str, maxLen = 100, doEscape = true) {
     return doEscape ? escapeHtml(clean) : clean;
 }
 
-function sanitizeAmount(val, min = 0, max = 100000000) {
-    let num = parseInt(val, 10);
-    if (isNaN(num) || !Number.isFinite(num)) return null;
-    if (num < min || num > max) return null;
-    return num;
-}
-
 // --- 7. GÜNLÜK GÖREVLER (DAILY QUESTS) SİSTEMİ ---
 function getTodayDateString() {
     const d = new Date();
@@ -426,10 +488,19 @@ const DEFAULT_DAILY_QUESTS_DEF = [
     { id: 'go_fishing', title: '🎣 Göl Kenarı Balıkçısı', desc: "Göl kenarında 1 kez olta atıp balık tut", target: 1, reward: 30 }
 ];
 
-function getUserDailyQuests(username) {
-    const uKey = findUserKey(username);
-    if (!uKey || !persistentData.users[uKey]) return [];
-    const uData = persistentData.users[uKey];
+async function getUserDailyQuests(username) {
+    const uKey = findUserKey(username) || username;
+    let uData = persistentData.users[uKey];
+
+    if (!uData && mongoose.connection.readyState === 1) {
+        const dbU = await User.findByUsername(username);
+        if (dbU) {
+            uData = dbU.toObject ? dbU.toObject() : dbU;
+            persistentData.users[uData.username] = uData;
+        }
+    }
+
+    if (!uData) return [];
     const today = getTodayDateString();
 
     if (!uData.dailyQuests || uData.dailyQuests.date !== today) {
@@ -445,32 +516,33 @@ function getUserDailyQuests(username) {
                 claimed: false
             }))
         };
-        savePersistentData();
+        await saveUserData(uKey, { dailyQuests: uData.dailyQuests });
     }
 
     return uData.dailyQuests.quests;
 }
 
-function recordQuestProgress(username, questId, amount = 1) {
-    const uKey = findUserKey(username);
-    if (!uKey || !persistentData.users[uKey]) return null;
-    const quests = getUserDailyQuests(uKey);
+async function recordQuestProgress(username, questId, amount = 1) {
+    const uKey = findUserKey(username) || username;
+    let uData = persistentData.users[uKey];
+    if (!uData) return null;
+    const quests = await getUserDailyQuests(uKey);
     const quest = quests.find(q => q.id === questId);
     if (!quest) return null;
 
     if (quest.current < quest.target) {
         quest.current = Math.min(quest.target, quest.current + amount);
-        savePersistentData();
+        await saveUserData(uKey, { dailyQuests: uData.dailyQuests });
         return quest;
     }
     return null;
 }
 
-function claimQuestReward(username, questId) {
-    const uKey = findUserKey(username);
-    if (!uKey || !persistentData.users[uKey]) return { success: false, msg: "Kullanıcı bulunamadı!" };
-    const uData = persistentData.users[uKey];
-    const quests = getUserDailyQuests(uKey);
+async function claimQuestReward(username, questId) {
+    const uKey = findUserKey(username) || username;
+    let uData = persistentData.users[uKey];
+    if (!uData) return { success: false, msg: "Kullanıcı bulunamadı!" };
+    const quests = await getUserDailyQuests(uKey);
     const quest = quests.find(q => q.id === questId);
 
     if (!quest) return { success: false, msg: "Görev bulunamadı!" };
@@ -479,7 +551,7 @@ function claimQuestReward(username, questId) {
 
     quest.claimed = true;
     uData.money = (uData.money || 100) + quest.reward;
-    savePersistentData();
+    await saveUserData(uKey, { money: uData.money, dailyQuests: uData.dailyQuests });
 
     return {
         success: true,
@@ -493,8 +565,9 @@ function claimQuestReward(username, questId) {
 module.exports = {
     persistentData,
     loadPersistentData,
+    syncDataJsonToMongo,
     savePersistentData,
-    saveUserData: savePersistentData,
+    saveUserData,
     savePersistentDataAtomic,
     flushNow,
     findUserKey,

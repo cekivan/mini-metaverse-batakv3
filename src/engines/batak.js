@@ -75,6 +75,12 @@ function handleBid(gameData, playerId, bidValue) {
         if (bidValue >= minAllowedBid) {
             gameData.bid.current = bidValue;
             gameData.bid.highestBidder = playerId;
+            if (bidValue >= 13) {
+                // Maksimum ihale verildiğinde kimse artıramaz, ihale hemen biter
+                gameData.phase = 'koz_secimi';
+                gameData.turnIndex = gameData.players.indexOf(playerId);
+                return true;
+            }
         } else {
             return false;
         }
@@ -82,16 +88,23 @@ function handleBid(gameData, playerId, bidValue) {
 
     let activePlayers = gameData.players.filter(p => !gameData.passedPlayers.includes(p));
 
-    if (activePlayers.length <= 1) {
-        if (gameData.bid.highestBidder === null) {
-            gameData.bid.highestBidder = gameData.players[gameData.forcedPlayerIndex];
-            gameData.bid.current = 7;
-        }
+    // 1) Eğer birisi teklif vermişse ve kalan diğer herkes pas demişse ihale biter
+    if (gameData.bid.highestBidder !== null && activePlayers.length <= 1) {
         gameData.phase = 'koz_secimi';
         gameData.turnIndex = gameData.players.indexOf(gameData.bid.highestBidder);
         return true;
     }
 
+    // 2) Eğer masadaki HERKES (tüm oyuncular) pas demişse, ihale mecburcuya 7'den kalır
+    if (gameData.passedPlayers.length >= gameData.players.length) {
+        gameData.bid.highestBidder = gameData.players[gameData.forcedPlayerIndex];
+        gameData.bid.current = 7;
+        gameData.phase = 'koz_secimi';
+        gameData.turnIndex = gameData.players.indexOf(gameData.bid.highestBidder);
+        return true;
+    }
+
+    // Sıradaki henüz pas dememiş oyuncuya geç
     do {
         gameData.turnIndex = (gameData.turnIndex + 1) % gameData.players.length;
     } while (gameData.passedPlayers.includes(gameData.players[gameData.turnIndex]));

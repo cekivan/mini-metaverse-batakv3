@@ -128,30 +128,73 @@ document.addEventListener('DOMContentLoaded', () => {
     // B) OYUN MASASINI (MODAL) SÜRÜKLEME
     const gameModal = document.getElementById('gameModal');
     const modalHeader = document.getElementById('modalHeader');
-    let isModalDragging = false, mStartX, mStartY, mInitialLeft, mInitialTop;
+    let isModalDragging = false, mStartX = 0, mStartY = 0, mInitialLeft = 0, mInitialTop = 0;
+
+    function startModalDrag(clientX, clientY) {
+        if (!gameModal) return;
+        isModalDragging = true;
+        mStartX = clientX;
+        mStartY = clientY;
+
+        // CSS animasyonunu durdur ve tam ekran koordinatlarına kilitle
+        gameModal.style.animation = 'none';
+        const rect = gameModal.getBoundingClientRect();
+        gameModal.style.transform = 'none';
+        gameModal.style.margin = '0';
+        gameModal.style.left = rect.left + 'px';
+        gameModal.style.top = rect.top + 'px';
+
+        mInitialLeft = rect.left;
+        mInitialTop = rect.top;
+    }
+
+    function moveModalDrag(clientX, clientY) {
+        if (!isModalDragging || !gameModal) return;
+        const dx = clientX - mStartX;
+        const dy = clientY - mStartY;
+        let newLeft = mInitialLeft + dx;
+        let newTop = mInitialTop + dy;
+
+        // Ekran dışına kaçmasını engelle (Clamping)
+        const modalW = gameModal.offsetWidth || 500;
+        const maxL = Math.max(10, window.innerWidth - 60);
+        const minL = Math.min(10, 10 - modalW + 100);
+        const maxT = Math.max(10, window.innerHeight - 50);
+        newLeft = Math.max(minL, Math.min(newLeft, maxL));
+        newTop = Math.max(5, Math.min(newTop, maxT));
+
+        gameModal.style.left = newLeft + 'px';
+        gameModal.style.top = newTop + 'px';
+    }
+
+    function endModalDrag() {
+        isModalDragging = false;
+    }
 
     if (modalHeader && gameModal) {
         modalHeader.addEventListener('mousedown', (e) => {
             if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
-            isModalDragging = true;
-            mStartX = e.clientX; mStartY = e.clientY;
-
-            // Transformu kaldırıp px tabanlı konumlandırmaya geçiyoruz
-            const rect = gameModal.getBoundingClientRect();
-            gameModal.style.transform = 'none';
-            gameModal.style.left = rect.left + 'px';
-            gameModal.style.top = rect.top + 'px';
-
-            mInitialLeft = gameModal.offsetLeft;
-            mInitialTop = gameModal.offsetTop;
+            startModalDrag(e.clientX, e.clientY);
             e.preventDefault();
         });
         document.addEventListener('mousemove', (e) => {
-            if (!isModalDragging) return;
-            gameModal.style.left = (mInitialLeft + (e.clientX - mStartX)) + 'px';
-            gameModal.style.top = (mInitialTop + (e.clientY - mStartY)) + 'px';
+            moveModalDrag(e.clientX, e.clientY);
         });
-        document.addEventListener('mouseup', () => { isModalDragging = false; });
+        document.addEventListener('mouseup', endModalDrag);
+
+        // Dokunmatik (Mobil / Tablet) Sürükleme Desteği
+        modalHeader.addEventListener('touchstart', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+            if (e.touches && e.touches.length === 1) {
+                startModalDrag(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+        document.addEventListener('touchmove', (e) => {
+            if (isModalDragging && e.touches && e.touches.length === 1) {
+                moveModalDrag(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+        document.addEventListener('touchend', endModalDrag);
     }
 
     // Enter tuşu desteği ve Karakter Sayacı
@@ -670,7 +713,14 @@ function leaveCurrentTable() {
     if (turnTimerInterval) { clearInterval(turnTimerInterval); turnTimerInterval = null; }
     const tContainer = document.getElementById('turnTimerContainer');
     if (tContainer) tContainer.style.display = 'none';
-    document.getElementById('gameModal').style.display = 'none';
+    const gModal = document.getElementById('gameModal');
+    if (gModal) {
+        gModal.style.display = 'none';
+        gModal.style.transform = 'translate(-50%, -50%)';
+        gModal.style.left = '50%';
+        gModal.style.top = '50%';
+        gModal.style.animation = '';
+    }
     document.getElementById('billiardArea').style.display = 'none';
     document.getElementById('batakArea').style.display = 'none';
     const tavlaArea = document.getElementById('tavlaArea');
@@ -1257,13 +1307,18 @@ function gameLoop(timestamp) {
                 tapRipples.splice(i, 1);
                 continue;
             }
-            // Dış ışıltılı cyan halka
+            // Dış yumuşak cyan aura (Sıfır Gaussian blur maliyeti, %100 GPU dostu 60-120 FPS)
+            ctx.beginPath();
+            ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(56, 189, 248, ${Math.max(0, r.alpha * 0.35)})`;
+            ctx.lineWidth = 4.8;
+            ctx.stroke();
+
+            // Orta net cyan halka
             ctx.beginPath();
             ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
             ctx.strokeStyle = `rgba(56, 189, 248, ${Math.max(0, r.alpha)})`;
-            ctx.lineWidth = 2.2;
-            ctx.shadowColor = '#38bdf8';
-            ctx.shadowBlur = 6;
+            ctx.lineWidth = 2.0;
             ctx.stroke();
 
             // İç altın sarısı halka
@@ -1276,10 +1331,10 @@ function gameLoop(timestamp) {
         ctx.restore();
     }
 
-    // 2. Kendi Oyuncumuzu Hareket Ettir (Normal hız: 2.0; Atlı hız: 5.0)
+    // 2. Kendi Oyuncumuzu Hareket Ettir (Normal hız: 2.6; Atlı hız: 6.5 - Kullanıcı isteği: %30 artırıldı)
     if (players[myId]) {
         let isMounted = !!(players[myId] && players[myId].hasHorse);
-        let speed = isMounted ? 5.0 : 2.0;
+        let speed = isMounted ? 6.5 : 2.6;
         let p = players[myId];
         let isMoving = false;
         let moveDx = 0;
@@ -1363,7 +1418,7 @@ function gameLoop(timestamp) {
             standUpIfSitting(curDir);
             isMoving = true;
             let prevWalkCycle = walkCycle;
-            walkCycle += (isMounted ? 0.35 : 0.16) * timeScale;
+            walkCycle += (isMounted ? 0.45 : 0.21) * timeScale;
 
             // Ritmik doğal adım sesi (Footsteps SFX)
             if (Math.floor(walkCycle / Math.PI) !== Math.floor(prevWalkCycle / Math.PI)) {
@@ -1379,7 +1434,7 @@ function gameLoop(timestamp) {
             // Akıllı Köşe Kayması (Corner Nudging & Sliding)
             // Bir engele (masa, sandalye, duvar köşesi) takıldığında karakterin köşeden yumuşakça sıyrılmasını sağla
             const nudgeScan = 6;
-            const nudgeAmount = 1.3 * timeScale;
+            const nudgeAmount = 1.7 * timeScale;
             if (colX && Math.abs(activeVx) > 0.1) {
                 let upOpen = !checkWorldCollision(nextX, p.y - nudgeScan) && !checkWorldCollision(p.x, p.y - nudgeScan);
                 let downOpen = !checkWorldCollision(nextX, p.y + nudgeScan) && !checkWorldCollision(p.x, p.y + nudgeScan);
@@ -1468,7 +1523,7 @@ function gameLoop(timestamp) {
     }
 
     // 3. Uzaktaki (Remote) Oyuncuların Yumuşak Delta-Time Lerp Hareketi ve Adım Senkronizasyonu
-    let lerpFactor = 1 - Math.exp(-18 * dt); // Monitör yenileme hızından bağımsız pürüzsüz ve tepkisel enterpolasyon
+    let lerpFactor = 1 - Math.exp(-22 * dt); // 60-120Hz monitörlerde pürüzsüz ve mikro-gecikmesiz enterpolasyon
     for (let id in players) {
         if (id !== myId) {
             let p = players[id];
@@ -1492,7 +1547,7 @@ function gameLoop(timestamp) {
                     p.x += dx * lerpFactor;
                     p.y += dy * lerpFactor;
                     p.isMoving = true;
-                    p.walkCycle = (p.walkCycle || 0) + (13 * dt);
+                    p.walkCycle = (p.walkCycle || 0) + (17 * dt);
                     // 2.2 Yön Geçişlerinde Yumuşak Dönüş (Facing Lerp / Turn Smoothing)
                     let isClassic = (p && p.model !== 'classic_2' && p.model !== 'sanalika_v2');
                     if (isClassic) {

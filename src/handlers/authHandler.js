@@ -101,7 +101,7 @@ function registerAuthHandlers(io, socket, players, helpers) {
     }
 
     // 1. MEVCUT HESAP İLE GİRİŞ
-    socket.on('login', (data) => {
+    socket.on('login', async (data) => {
         if (!data) {
             socket.emit('loginFailed', "Giriş bilgileri eksik!");
             return;
@@ -110,7 +110,7 @@ function registerAuthHandlers(io, socket, players, helpers) {
         const inputName = dataManager.sanitizeString(data.name || "Oyuncu", 20);
         const pass = typeof data.pass === 'string' ? data.pass.trim() : "";
 
-        const authResult = dataManager.loginUser(inputName, pass, players);
+        const authResult = await dataManager.loginUser(inputName, pass, players);
 
         if (!authResult.success) {
             socket.emit('loginFailed', authResult.message || "Giriş başarısız!");
@@ -133,7 +133,7 @@ function registerAuthHandlers(io, socket, players, helpers) {
                 uData.banExpiresAt = null;
                 uData.banReason = null;
                 uData.bannedBy = null;
-                dataManager.savePersistentData();
+                await dataManager.saveUserData(username, { banExpiresAt: null, banReason: null, bannedBy: null });
             }
         }
 
@@ -143,7 +143,7 @@ function registerAuthHandlers(io, socket, players, helpers) {
     });
 
     // 2. YENİ HESAP KAYIT (REGISTER)
-    socket.on('register', (data) => {
+    socket.on('register', async (data) => {
         if (!data) {
             socket.emit('registerFailed', "Kayıt bilgileri eksik!");
             return;
@@ -153,7 +153,7 @@ function registerAuthHandlers(io, socket, players, helpers) {
         const pass = typeof data.pass === 'string' ? data.pass.trim() : "";
         const chosenGender = (data.gender === 'female') ? 'female' : 'male';
 
-        const regResult = dataManager.registerUser(inputName, pass, chosenGender);
+        const regResult = await dataManager.registerUser(inputName, pass, chosenGender);
 
         if (!regResult.success) {
             socket.emit('registerFailed', regResult.message || "Kayıt başarısız!");
@@ -169,13 +169,13 @@ function registerAuthHandlers(io, socket, players, helpers) {
     });
 
     // 3. OYUN İÇİ ŞİFRE DEĞİŞTİRME
-    socket.on('changePassword', (data) => {
+    socket.on('changePassword', async (data) => {
         if (!players[socket.id] || !data) return;
         const username = players[socket.id].name;
         const oldPass = typeof data.oldPass === 'string' ? data.oldPass.trim() : "";
         const newPass = typeof data.newPass === 'string' ? data.newPass.trim() : "";
 
-        const result = dataManager.changeUserPassword(username, oldPass, newPass);
+        const result = await dataManager.changeUserPassword(username, oldPass, newPass);
 
         if (result.success) {
             socket.emit('passwordChangeResult', { success: true, message: result.message });

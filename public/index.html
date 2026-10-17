@@ -2235,13 +2235,17 @@
         </div>
     </div>
 
-    <div id="mobileControlsOverlay" class="mobile-dpad-container" style="display: none;">
-        <div style="position: relative; width: 100%; height: 100%;">
-            <button class="mobile-dpad-btn up" onmousedown="handleTouchKey('w', true, event)" onmouseup="handleTouchKey('w', false, event)" onmouseleave="handleTouchKey('w', false, event)" ontouchstart="handleTouchKey('w', true, event)" ontouchend="handleTouchKey('w', false, event)" ontouchcancel="handleTouchKey('w', false, event)">⬆️</button>
-            <button class="mobile-dpad-btn left" onmousedown="handleTouchKey('a', true, event)" onmouseup="handleTouchKey('a', false, event)" onmouseleave="handleTouchKey('a', false, event)" ontouchstart="handleTouchKey('a', true, event)" ontouchend="handleTouchKey('a', false, event)" ontouchcancel="handleTouchKey('a', false, event)">⬅️</button>
-            <div class="mobile-dpad-center"></div>
-            <button class="mobile-dpad-btn right" onmousedown="handleTouchKey('d', true, event)" onmouseup="handleTouchKey('d', false, event)" onmouseleave="handleTouchKey('d', false, event)" ontouchstart="handleTouchKey('d', true, event)" ontouchend="handleTouchKey('d', false, event)" ontouchcancel="handleTouchKey('d', false, event)">➡️</button>
-            <button class="mobile-dpad-btn down" onmousedown="handleTouchKey('s', true, event)" onmouseup="handleTouchKey('s', false, event)" onmouseleave="handleTouchKey('s', false, event)" ontouchstart="handleTouchKey('s', true, event)" ontouchend="handleTouchKey('s', false, event)" ontouchcancel="handleTouchKey('s', false, event)">⬇️</button>
+    <!-- 📱 MOBİL ANALOG SANAL JOYSTICK (360° VIRTUAL JOYSTICK) -->
+    <div id="mobileControlsOverlay" class="mobile-joystick-container" style="display: none;">
+        <div id="joystickBase" class="mobile-joystick-base">
+            <div class="joystick-ring"></div>
+            <div id="joystickKnob" class="mobile-joystick-knob">
+                <div class="knob-inner-dot"></div>
+            </div>
+            <div class="joy-dir joy-up">▲</div>
+            <div class="joy-dir joy-down">▼</div>
+            <div class="joy-dir joy-left">◀</div>
+            <div class="joy-dir joy-right">▶</div>
         </div>
     </div>
 
