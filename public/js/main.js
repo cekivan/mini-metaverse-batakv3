@@ -378,13 +378,31 @@ window.togglePlacesMenu = function(e) {
     }
     const menu = document.getElementById('placesDropdownMenu');
     if (menu) {
-        menu.classList.toggle('active');
+        const isShown = menu.style.display === 'flex' || menu.classList.contains('active');
+        if (isShown) {
+            menu.style.display = 'none';
+            menu.classList.remove('active');
+        } else {
+            menu.style.display = 'flex';
+            menu.classList.add('active');
+        }
+        const arrow = document.getElementById('placesArrow');
+        if (arrow) arrow.style.transform = (menu.style.display === 'flex') ? 'rotate(180deg)' : 'rotate(0deg)';
     }
 };
 
 window.selectPlace = function(place) {
     const menu = document.getElementById('placesDropdownMenu');
-    if (menu) menu.classList.remove('active');
+    if (menu) {
+        menu.style.display = 'none';
+        menu.classList.remove('active');
+    }
+    const arrow = document.getElementById('placesArrow');
+    if (arrow) arrow.style.transform = 'rotate(0deg)';
+    if (place === 'housing_portal') {
+        if (typeof openHousingPortalModal === 'function') openHousingPortalModal();
+        return;
+    }
     if (typeof changeRoom === 'function') {
         changeRoom(place);
     }
@@ -393,9 +411,12 @@ window.selectPlace = function(place) {
 document.addEventListener('click', (e) => {
     const dropdown = document.getElementById('placesDropdownMenu');
     const btn = document.getElementById('placesDropdownBtn');
-    if (dropdown && dropdown.classList.contains('active')) {
+    if (dropdown && (dropdown.style.display === 'flex' || dropdown.classList.contains('active'))) {
         if (!dropdown.contains(e.target) && e.target !== btn && !btn?.contains(e.target)) {
+            dropdown.style.display = 'none';
             dropdown.classList.remove('active');
+            const arrow = document.getElementById('placesArrow');
+            if (arrow) arrow.style.transform = 'rotate(0deg)';
         }
     }
 });
@@ -1575,10 +1596,9 @@ window.addEventListener('keydown', (e) => {
     let ganyanModal = document.getElementById('ganyanKuponModal');
     if (ganyanModal && ganyanModal.style.display === 'flex') return;
 
-    let isMounted = !!(players[myId] && players[myId].hasHorse);
-    if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') { if (!isMounted) myFacing = 'up'; standUpIfSitting('up'); keys.w = true; targetWalkPos = null; }
+    if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') { myFacing = 'up'; standUpIfSitting('up'); keys.w = true; targetWalkPos = null; }
     if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') { myFacing = 'left'; standUpIfSitting('left'); keys.a = true; targetWalkPos = null; }
-    if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') { if (!isMounted) myFacing = 'down'; standUpIfSitting('down'); keys.s = true; targetWalkPos = null; }
+    if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') { myFacing = 'down'; standUpIfSitting('down'); keys.s = true; targetWalkPos = null; }
     if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') { myFacing = 'right'; standUpIfSitting('right'); keys.d = true; targetWalkPos = null; }
     if (e.key === 'e' || e.key === 'E') { triggerMobileInteract(); }
 });
@@ -1593,14 +1613,8 @@ window.addEventListener('keyup', (e) => {
 function setKey(dir, isPressed) {
     keys[dir] = isPressed;
     if (isPressed) {
-        let isMounted = !!(players[myId] && players[myId].hasHorse);
         let dirName = dir === 'w' ? 'up' : (dir === 's' ? 'down' : (dir === 'a' ? 'left' : 'right'));
-        if (isMounted) {
-            if (dir === 'a') myFacing = 'left';
-            else if (dir === 'd') myFacing = 'right';
-        } else {
-            myFacing = dirName;
-        }
+        myFacing = dirName;
         standUpIfSitting(dirName);
         targetWalkPos = null;
     }
@@ -1909,16 +1923,10 @@ function gameLoop(timestamp) {
 
         if (moveDx !== 0 || moveDy !== 0) {
             let curDir = keys.w ? 'up' : (keys.s ? 'down' : (keys.a ? 'left' : 'right'));
-            if (isMounted) {
-                if (keys.a) curDir = 'left';
-                else if (keys.d) curDir = 'right';
-                else curDir = (myFacing === 'left') ? 'left' : 'right';
-                myFacing = curDir;
-            }
             standUpIfSitting(curDir);
             isMoving = true;
             let prevWalkCycle = walkCycle;
-            walkCycle += isMounted ? 0.38 : 0.16;
+            walkCycle += isMounted ? 0.35 : 0.16;
 
             // Ritmik doğal adım sesi (Footsteps SFX)
             if (Math.floor(walkCycle / Math.PI) !== Math.floor(prevWalkCycle / Math.PI)) {

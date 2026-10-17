@@ -770,7 +770,23 @@ body {
 
 .tavla-row {
     display: flex;
+    gap: 0;
+    align-items: stretch;
+}
+
+.tavla-quadrant {
+    display: flex;
     gap: 3px;
+}
+
+.tavla-vertical-divider {
+    width: 14px;
+    margin: 0 4px;
+    background: linear-gradient(90deg, #1f0f04 0%, #3a1c07 50%, #1f0f04 100%);
+    border-left: 1.5px solid #78350f;
+    border-right: 1.5px solid #78350f;
+    border-radius: 2px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.8);
 }
 
 .tavla-middle-divider {
@@ -3810,4 +3826,51 @@ body {
 #bjVoiceToggleBtn:hover {
     transform: translateY(-1px);
     filter: brightness(1.15);
+}
+
+/* Mekanlar Açılır Menü Stilleri */
+.places-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.places-dropdown-btn {
+    user-select: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.places-dropdown-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.55) !important;
+    filter: brightness(1.1);
+}
+
+.place-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 14px;
+    background: rgba(30, 41, 59, 0.65);
+    color: #f1f5f9;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    box-sizing: border-box;
+    transition: all 0.16s ease-in-out;
+}
+
+.place-menu-item:hover {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.35), rgba(99, 102, 241, 0.35));
+    border-color: rgba(56, 189, 248, 0.5);
+    color: #ffffff;
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+}
+
+.place-menu-item:active {
+    transform: scale(0.98) translateX(2px);
 }

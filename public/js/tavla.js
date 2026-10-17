@@ -54,7 +54,7 @@ function renderTavlaBoard(state) {
         statusEl.innerHTML = `<span style="color:#38bdf8;">👁️ Yancısın | Sıra: <b>${turnName}</b></span>`;
         if (rollBtn) rollBtn.style.display = 'none';
     } else {
-        let colorName = myColor === 'white' ? "⚪ Beyaz Taşlar (Alt)" : "⚫ Siyah Taşlar (Üst)";
+        let colorName = myColor === 'white' ? "⚪ Beyaz Taşlar" : "⚫ Siyah Taşlar";
         if (isMyTurn) {
             if (!state.hasRolled) {
                 statusEl.innerHTML = `<span style="color:#2ecc71; font-weight:bold;">SIRA SENDE (${colorName})! Zarları atın.</span>`;
@@ -120,100 +120,132 @@ function drawTavlaBoardHTML(state, myColor, isMyTurn) {
     const boardEl = document.getElementById('tavlaBoard');
     if (!boardEl) return;
 
-    // Y Ekseninde Kusursuz Simetrik Düzen:
-    // Üst Sıra: Sol Kanat (13-18) | Sağ Kanat / Siyah Evi (19-24)
-    // Alt Sıra: Sol Kanat (12-7)  | Sağ Kanat / Beyaz Evi (6-1)
-    let topPoints = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
-    let bottomPoints = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+    let viewColor = (state.isSpectator || !myColor) ? 'white' : myColor;
+    let oppColor = viewColor === 'white' ? 'black' : 'white';
 
-    let canBearOffNow = tavlaValidTargets.some(t => t.target === 'off');
+    // Klasik Tavla Yolculuk Rotası (Herkesin kendi bakış açısından):
+    // Sol Üst (24..19) -> Sağ Üst (18..13) -> Sağ Alt (12..7) -> Sol Alt / Ev (6..1) -> Toplama (Sol Tepsisi)
+    let topSlotsLeft = [24, 23, 22, 21, 20, 19];   // Sol Üst (Rakip Evi)
+    let topSlotsRight = [18, 17, 16, 15, 14, 13]; // Sağ Üst (Rakip Dış Alanı)
+    let bottomSlotsLeft = [1, 2, 3, 4, 5, 6];      // Sol Alt (Kendi Önündeki Sol Taraf - EVİMİZ)
+    let bottomSlotsRight = [7, 8, 9, 10, 11, 12];  // Sağ Alt (Kendi Dış Alanımız)
+
+    let canBearOffNow = !state.isSpectator && tavlaValidTargets.some(t => t.target === 'off');
+
+    // Toplama Tepsileri
+    let myBorne = state.borneOff[viewColor] || 0;
+    let oppBorne = state.borneOff[oppColor] || 0;
+    let myBorneTitle = viewColor === 'white' ? '⚪ Beyaz Toplanan' : '⚫ Siyah Toplanan';
+    let oppBorneTitle = oppColor === 'white' ? '⚪ Beyaz Toplanan' : '⚫ Siyah Toplanan';
+
+    // Kırık Taşlar
+    let myBar = state.bar[viewColor] || 0;
+    let oppBar = state.bar[oppColor] || 0;
+    let myBarTitle = viewColor === 'white' ? '⚪ Kırık (Beyaz)' : '⚫ Kırık (Siyah)';
+    let oppBarTitle = oppColor === 'white' ? '⚪ Kırık (Beyaz)' : '⚫ Kırık (Siyah)';
+
+    function renderPointHTML(slotNum, isTop) {
+        // Ekrandaki 1-24 slot numarasından sunucu kapı indeksine dönüşüm
+        let serverPoint = (viewColor === 'black') ? (25 - slotNum) : slotNum;
+        let pt = state.board[serverPoint];
+        let isSelected = (selectedTavlaPoint === serverPoint);
+        let isValidTarget = tavlaValidTargets.some(t => t.target === serverPoint);
+
+        // Klasik ahşap tavla üçgen deseni (koyu/açık dönüşümlü)
+        let isDark = (slotNum % 2 === 0);
+        let triangleColorClass = isDark ? "tri-dark" : "tri-light";
+
+        let isHome = (slotNum >= 1 && slotNum <= 6);
+        let isOppHome = (slotNum >= 19 && slotNum <= 24);
+
+        if (isTop) {
+            return `<div class="tavla-point top-point ${triangleColorClass} ${isOppHome ? 'home-point-top' : ''} ${isSelected ? 'selected-point' : ''} ${isValidTarget ? 'target-point' : ''}" onclick="handleTavlaPointClick(${serverPoint})">
+                <span class="point-num point-num-top">${slotNum}</span>
+                <div class="point-checkers-top">
+                    ${renderCheckers(pt.player, pt.count, isSelected)}
+                </div>
+            </div>`;
+        } else {
+            return `<div class="tavla-point bot-point ${triangleColorClass} ${isHome ? 'home-point-bot' : ''} ${isSelected ? 'selected-point' : ''} ${isValidTarget ? 'target-point' : ''}" onclick="handleTavlaPointClick(${serverPoint})">
+                <div class="point-checkers-bot">
+                    ${renderCheckers(pt.player, pt.count, isSelected)}
+                </div>
+                <span class="point-num point-num-bot">${slotNum}</span>
+            </div>`;
+        }
+    }
 
     let html = `<div class="tavla-container">
-        <!-- BAR (Kırık Taşlar) Sol Bölüm -->
-        <div class="tavla-bar" onclick="handleTavlaPointClick('bar')">
-            <div class="bar-section bar-top ${selectedTavlaPoint === 'bar' && myColor === 'white' ? 'selected-point' : ''}">
-                <div class="bar-sec-title">⚪ Kırık (Beyaz)</div>
-                <div class="bar-checkers">
-                    ${renderCheckers('white', state.bar.white, selectedTavlaPoint === 'bar' && myColor === 'white')}
-                </div>
-            </div>
-            <div class="bar-divider"><span>BAR</span></div>
-            <div class="bar-section bar-bot ${selectedTavlaPoint === 'bar' && myColor === 'black' ? 'selected-point' : ''}">
-                <div class="bar-checkers">
-                    ${renderCheckers('black', state.bar.black, selectedTavlaPoint === 'bar' && myColor === 'black')}
-                </div>
-                <div class="bar-sec-title">⚫ Kırık (Siyah)</div>
-            </div>
-        </div>
-
-        <!-- 24 KAPI ALANI (Tavla Tahtası) -->
-        <div class="tavla-fields">
-            <!-- Üst Sıra (13 - 24) -->
-            <div class="tavla-row top-row">`;
-
-    topPoints.forEach((ptIndex, idx) => {
-        let pt = state.board[ptIndex];
-        let isSelected = (selectedTavlaPoint === ptIndex);
-        let isValidTarget = tavlaValidTargets.some(t => t.target === ptIndex);
-        let triangleColorClass = (idx % 2 === 0) ? "tri-dark" : "tri-light";
-        let isBlackHome = ptIndex >= 19;
-
-        html += `<div class="tavla-point top-point ${triangleColorClass} ${isBlackHome ? 'home-point-top' : ''} ${isSelected ? 'selected-point' : ''} ${isValidTarget ? 'target-point' : ''}" onclick="handleTavlaPointClick(${ptIndex})">
-            <span class="point-num point-num-top">${ptIndex}</span>
-            <div class="point-checkers-top">
-                ${renderCheckers(pt.player, pt.count, isSelected)}
-            </div>
-        </div>`;
-    });
-
-    html += `</div>
-            <!-- Orta Ayraç Şerit (Ahşap İntarsiya) -->
-            <div class="tavla-middle-divider">
-                <div class="middle-line"></div>
-            </div>
-            <!-- Alt Sıra (12 - 1) -->
-            <div class="tavla-row bot-row">`;
-
-    bottomPoints.forEach((ptIndex, idx) => {
-        let pt = state.board[ptIndex];
-        let isSelected = (selectedTavlaPoint === ptIndex);
-        let isValidTarget = tavlaValidTargets.some(t => t.target === ptIndex);
-        let triangleColorClass = (idx % 2 === 0) ? "tri-light" : "tri-dark";
-        let isWhiteHome = ptIndex <= 6;
-
-        html += `<div class="tavla-point bot-point ${triangleColorClass} ${isWhiteHome ? 'home-point-bot' : ''} ${isSelected ? 'selected-point' : ''} ${isValidTarget ? 'target-point' : ''}" onclick="handleTavlaPointClick(${ptIndex})">
-            <div class="point-checkers-bot">
-                ${renderCheckers(pt.player, pt.count, isSelected)}
-            </div>
-            <span class="point-num point-num-bot">${ptIndex}</span>
-        </div>`;
-    });
-
-    html += `</div>
-        </div>
-
-        <!-- Y EKSENİNDE SİMETRİK TOPLAMA BÖLMESİ (Borne Off Trays) -->
+        <!-- 1. SOL TARAF: TOPLAMA BÖLMESİ (Borne Off - Kendi Önündeki Sol Tarafta Toplama) -->
         <div class="tavla-borne-area">
-            <!-- Üst Tepsi: Siyah Toplanan (19-24 evinden toplanır) -->
-            <div class="tavla-borne-box borne-black ${canBearOffNow && myColor === 'black' ? 'target-point' : ''}" onclick="handleTavlaPointClick('off')">
-                <div class="borne-box-title">⚫ Siyah Toplanan</div>
-                <div class="borne-box-count"><b>${state.borneOff.black}</b> / 15</div>
+            <!-- Üst Tepsi: Rakip Toplanan -->
+            <div class="tavla-borne-box borne-opp">
+                <div class="borne-box-title">${oppBorneTitle}</div>
+                <div class="borne-box-count"><b>${oppBorne}</b> / 15</div>
                 <div class="borne-checkers-stack">
-                    ${renderBorneCheckers('black', state.borneOff.black)}
+                    ${renderBorneCheckers(oppColor, oppBorne)}
                 </div>
-                ${canBearOffNow && myColor === 'black' ? '<div class="collect-btn-badge">Buraya Topla!</div>' : ''}
             </div>
 
             <div class="borne-divider"></div>
 
-            <!-- Alt Tepsi: Beyaz Toplanan (1-6 evinden toplanır) -->
-            <div class="tavla-borne-box borne-white ${canBearOffNow && myColor === 'white' ? 'target-point' : ''}" onclick="handleTavlaPointClick('off')">
-                ${canBearOffNow && myColor === 'white' ? '<div class="collect-btn-badge">Buraya Topla!</div>' : ''}
+            <!-- Alt Tepsi: Benim Toplanan (Kendi Önündeki Sol Taraf) -->
+            <div class="tavla-borne-box borne-my ${canBearOffNow ? 'target-point' : ''}" onclick="handleTavlaPointClick('off')">
+                ${canBearOffNow ? '<div class="collect-btn-badge">Buraya Topla!</div>' : ''}
                 <div class="borne-checkers-stack">
-                    ${renderBorneCheckers('white', state.borneOff.white)}
+                    ${renderBorneCheckers(viewColor, myBorne)}
                 </div>
-                <div class="borne-box-count"><b>${state.borneOff.white}</b> / 15</div>
-                <div class="borne-box-title">⚪ Beyaz Toplanan</div>
+                <div class="borne-box-count"><b>${myBorne}</b> / 15</div>
+                <div class="borne-box-title">${myBorneTitle}</div>
+            </div>
+        </div>
+
+        <!-- 2. ORTA: 24 KAPI ALANI (Tavla Tahtası) -->
+        <div class="tavla-fields">
+            <!-- Üst Sıra (Sol Üst: 24-19 -> Ahşap Orta Çıta -> Sağ Üst: 18-13) -->
+            <div class="tavla-row top-row">
+                <div class="tavla-quadrant quad-top-left">
+                    ${topSlotsLeft.map(s => renderPointHTML(s, true)).join('')}
+                </div>
+                <div class="tavla-vertical-divider"></div>
+                <div class="tavla-quadrant quad-top-right">
+                    ${topSlotsRight.map(s => renderPointHTML(s, true)).join('')}
+                </div>
+            </div>
+
+            <!-- Yatay Ahşap İntarsiya Şeridi -->
+            <div class="tavla-middle-divider">
+                <div class="middle-line"></div>
+            </div>
+
+            <!-- Alt Sıra (Sol Alt: 1-6 / Ev -> Ahşap Orta Çıta -> Sağ Alt: 7-12) -->
+            <div class="tavla-row bot-row">
+                <div class="tavla-quadrant quad-bot-left home-quadrant">
+                    ${bottomSlotsLeft.map(s => renderPointHTML(s, false)).join('')}
+                </div>
+                <div class="tavla-vertical-divider"></div>
+                <div class="tavla-quadrant quad-bot-right">
+                    ${bottomSlotsRight.map(s => renderPointHTML(s, false)).join('')}
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. SAĞ TARAF: KIRIK TAŞLAR (BAR) -->
+        <div class="tavla-bar" onclick="handleTavlaPointClick('bar')">
+            <!-- Üst Kısım: Rakip Kırık -->
+            <div class="bar-section bar-top">
+                <div class="bar-sec-title">${oppBarTitle}</div>
+                <div class="bar-checkers">
+                    ${renderCheckers(oppColor, oppBar, false)}
+                </div>
+            </div>
+            <div class="bar-divider"><span>BAR</span></div>
+            <!-- Alt Kısım: Benim Kırık -->
+            <div class="bar-section bar-bot ${selectedTavlaPoint === 'bar' ? 'selected-point' : ''}">
+                <div class="bar-checkers">
+                    ${renderCheckers(viewColor, myBar, selectedTavlaPoint === 'bar')}
+                </div>
+                <div class="bar-sec-title">${myBarTitle}</div>
             </div>
         </div>
     </div>`;
@@ -282,6 +314,22 @@ function handleTavlaPointClick(pointIndex) {
             selectedTavlaPoint = null;
             tavlaValidTargets = [];
             return;
+        }
+
+        // Seçili taşa tekrar tıklanırsa ve toplama hamlesi varsa doğrudan topla
+        if (selectedTavlaPoint === pointIndex) {
+            let offMove = tavlaValidTargets.find(t => t.target === 'off');
+            if (offMove) {
+                if (window.playSound) window.playSound('card');
+                socket.emit('tavlaMove', {
+                    fromPoint: selectedTavlaPoint,
+                    toPoint: 'off',
+                    usedDie: offMove.die
+                });
+                selectedTavlaPoint = null;
+                tavlaValidTargets = [];
+                return;
+            }
         }
     }
 

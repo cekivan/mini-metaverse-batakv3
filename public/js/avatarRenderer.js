@@ -1161,401 +1161,6 @@ function drawHeldItem(targetCtx, pX, pY, heldItem, isPreview = false, facing = '
 }
 
 
-// --- BİNEK ATI YAN PROFİL BİNİCİ GÖRSELİ (RIDING-SIDE.PNG) VE DÖRTNALA ANİMASYON SİSTEMİ ---
-let ridingSideImg = null;
-let ridingSideCanvas = null;
-let ridingSideReady = false;
-
-function initRidingSideAsset() {
-    if (typeof Image === 'undefined') return;
-    ridingSideImg = new Image();
-    ridingSideImg.onload = () => {
-        try {
-            const off = document.createElement('canvas');
-            off.width = ridingSideImg.width;
-            off.height = ridingSideImg.height;
-            const octx = off.getContext('2d');
-            octx.drawImage(ridingSideImg, 0, 0);
-            const imgData = octx.getImageData(0, 0, off.width, off.height);
-            const d = imgData.data;
-            // Beyaz arka planı otomatik olarak şeffaflaştır (Chroma-key)
-            for (let i = 0; i < d.length; i += 4) {
-                if (d[i] > 230 && d[i + 1] > 230 && d[i + 2] > 230) {
-                    d[i + 3] = 0;
-                }
-            }
-            octx.putImageData(imgData, 0, 0);
-            ridingSideCanvas = off;
-            ridingSideReady = true;
-        } catch (e) {
-            ridingSideCanvas = ridingSideImg;
-            ridingSideReady = true;
-        }
-    };
-    ridingSideImg.onerror = () => {
-        ridingSideReady = false;
-    };
-    ridingSideImg.src = 'images/riding-side.png';
-}
-if (typeof window !== 'undefined') {
-    initRidingSideAsset();
-}
-
-function drawSideProfileHair(ctx, x, y, hairType, gender) {
-    ctx.fillStyle = (gender === 'female') ? "#7c2d12" : "#18181b";
-    if (hairType === 'long' || hairType === 'wavy' || gender === 'female') {
-        ctx.beginPath();
-        ctx.arc(x, y - 1, 6, Math.PI, Math.PI * 2);
-        ctx.lineTo(x - 5, y + 4);
-        ctx.quadraticCurveTo(x - 9, y + 8, x - 7, y + 14);
-        ctx.lineTo(x - 4, y + 3);
-        ctx.closePath();
-        ctx.fill();
-    } else {
-        ctx.beginPath();
-        ctx.arc(x, y - 1, 6, Math.PI * 0.8, Math.PI * 2.1);
-        ctx.lineTo(x + 3, y - 5);
-        ctx.lineTo(x - 5, y);
-        ctx.closePath();
-        ctx.fill();
-    }
-}
-
-function drawSideProfileHat(ctx, x, y, hatType) {
-    if (hatType === 'cap') {
-        ctx.fillStyle = "#ef4444";
-        ctx.beginPath();
-        ctx.arc(x, y, 6, Math.PI, 0);
-        ctx.fill();
-        ctx.fillRect(x + 1, y, 7, 2.5);
-    } else if (hatType === 'fedora' || hatType === 'cowboy') {
-        ctx.fillStyle = "#78350f";
-        ctx.beginPath();
-        ctx.ellipse(x + 1, y + 1, 9, 2.5, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillRect(x - 4, y - 5, 8, 6);
-    } else if (hatType === 'crown') {
-        ctx.fillStyle = "#facc15";
-        ctx.beginPath();
-        ctx.moveTo(x - 5, y); ctx.lineTo(x - 4, y - 5); ctx.lineTo(x, y - 2); ctx.lineTo(x + 4, y - 5); ctx.lineTo(x + 5, y);
-        ctx.closePath();
-        ctx.fill();
-    }
-}
-
-function drawProceduralGallopingEquestrian(ctx, p, isMoving, gallopPhase) {
-    let hindSwing1 = isMoving ? -Math.sin(gallopPhase) * 16 : 0;
-    let hindSwing2 = isMoving ? -Math.sin(gallopPhase - 0.45) * 14 : 0;
-    let hindLift1 = isMoving ? Math.max(0, Math.cos(gallopPhase) * 10) : 0;
-    let hindLift2 = isMoving ? Math.max(0, Math.cos(gallopPhase - 0.45) * 8) : 0;
-
-    // Arka Bacak 2 (Uzak)
-    ctx.strokeStyle = '#5c2b09';
-    ctx.lineWidth = 4;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(-12, 4);
-    ctx.quadraticCurveTo(-14 + hindSwing2 * 0.5, 10 - hindLift2, -16 + hindSwing2, 19 - hindLift2);
-    ctx.stroke();
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect(-18 + hindSwing2, 17 - hindLift2, 5, 3);
-
-    // Arka Bacak 1 (Yakın)
-    ctx.strokeStyle = '#78350f';
-    ctx.lineWidth = 4.5;
-    ctx.beginPath();
-    ctx.moveTo(-10, 4);
-    ctx.quadraticCurveTo(-12 + hindSwing1 * 0.5, 10 - hindLift1, -14 + hindSwing1, 19 - hindLift1);
-    ctx.stroke();
-    ctx.fillStyle = '#1e293b';
-    ctx.fillRect(-16 + hindSwing1, 17 - hindLift1, 5, 3);
-
-    // Ön Bacaklar
-    let frontSwing1 = isMoving ? Math.sin(gallopPhase) * 16 : 0;
-    let frontSwing2 = isMoving ? Math.sin(gallopPhase - 0.45) * 13 : 0;
-    let frontLift1 = isMoving ? Math.max(0, -Math.cos(gallopPhase) * 9) : 0;
-    let frontLift2 = isMoving ? Math.max(0, -Math.cos(gallopPhase - 0.45) * 7) : 0;
-
-    // Ön Bacak 2 (Uzak)
-    ctx.strokeStyle = '#5c2b09';
-    ctx.lineWidth = 3.8;
-    ctx.beginPath();
-    ctx.moveTo(11, 4);
-    ctx.quadraticCurveTo(13 + frontSwing2 * 0.5, 10 - frontLift2, 14 + frontSwing2, 19 - frontLift2);
-    ctx.stroke();
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect(12 + frontSwing2, 17 - frontLift2, 5, 3);
-
-    // Ön Bacak 1 (Yakın)
-    ctx.strokeStyle = '#78350f';
-    ctx.lineWidth = 4.2;
-    ctx.beginPath();
-    ctx.moveTo(13, 4);
-    ctx.quadraticCurveTo(15 + frontSwing1 * 0.5, 10 - frontLift1, 17 + frontSwing1, 19 - frontLift1);
-    ctx.stroke();
-    ctx.fillStyle = '#1e293b';
-    ctx.fillRect(15 + frontSwing1, 17 - frontLift1, 5, 3);
-
-    // Kestane At Gövdesi
-    ctx.fillStyle = '#92400e';
-    ctx.beginPath();
-    ctx.ellipse(0, 1, 24, 13, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#78350f';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    // Kuyruk
-    let tailWag = isMoving ? Math.sin(gallopPhase * 1.5) * 14 : Math.sin(Date.now() / 320) * 3;
-    ctx.strokeStyle = '#3b1402';
-    ctx.lineWidth = 4.5;
-    ctx.beginPath();
-    ctx.moveTo(-22, -1);
-    ctx.quadraticCurveTo(-34, 4 + tailWag, -30, 18 + tailWag);
-    ctx.stroke();
-    ctx.lineWidth = 2.5;
-    ctx.strokeStyle = '#451a03';
-    ctx.beginPath();
-    ctx.moveTo(-22, 1);
-    ctx.quadraticCurveTo(-31, 8 + tailWag, -26, 21 + tailWag);
-    ctx.stroke();
-
-    // Boyun & Baş
-    ctx.fillStyle = '#92400e';
-    ctx.beginPath();
-    ctx.moveTo(12, -2);
-    ctx.lineTo(20, -18);
-    ctx.lineTo(29, -16);
-    ctx.lineTo(25, 3);
-    ctx.closePath();
-    ctx.fill();
-    ctx.strokeStyle = '#78350f';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    // Burun & Ağız
-    ctx.fillStyle = '#78350f';
-    ctx.beginPath();
-    ctx.ellipse(29, -16, 7, 5, 0.2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#291002';
-    ctx.beginPath();
-    ctx.arc(31, -16, 1.3, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Beyaz Akıtma
-    ctx.fillStyle = '#f8fafc';
-    ctx.beginPath();
-    ctx.ellipse(24, -18, 2, 4, 0.3, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Kulaklar
-    ctx.fillStyle = '#92400e';
-    ctx.beginPath();
-    ctx.moveTo(19, -18); ctx.lineTo(21, -26); ctx.lineTo(24, -18);
-    ctx.closePath();
-    ctx.fill();
-    ctx.strokeStyle = '#78350f';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // Göz
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath(); ctx.arc(24, -18, 2.5, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#0f172a';
-    ctx.beginPath(); ctx.arc(25, -18, 1.4, 0, Math.PI * 2); ctx.fill();
-
-    // Yele
-    let maneWave = isMoving ? Math.sin(gallopPhase * 2) * 3 : 0;
-    ctx.fillStyle = '#3b1402';
-    ctx.beginPath();
-    ctx.moveTo(14, -3);
-    ctx.quadraticCurveTo(18 + maneWave, -11, 20, -19);
-    ctx.lineTo(16, -18);
-    ctx.quadraticCurveTo(14 + maneWave, -10, 10, -2);
-    ctx.closePath();
-    ctx.fill();
-
-    // Eyer & Üzengi
-    ctx.fillStyle = '#b91c1c';
-    ctx.beginPath();
-    ctx.roundRect(-9, -5, 18, 9, 3);
-    ctx.fill();
-
-    ctx.fillStyle = '#451a03';
-    ctx.beginPath();
-    ctx.roundRect(-8, -7, 16, 7, [4, 4, 2, 2]);
-    ctx.fill();
-    ctx.strokeStyle = '#d97706';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    ctx.strokeStyle = '#78350f';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(-1, -2);
-    ctx.lineTo(1, 9);
-    ctx.stroke();
-
-    // YANDAN GÖRÜNEN BİNİCİ: Bacakları attan sarkan, diz bükülü, üzengide ayak
-    let skin = p.skinColor || "#ffd1a4";
-    let shirtColor = p.color && p.color.startsWith('#') ? p.color : "#2563eb";
-    if (p.color === 'leather') shirtColor = "#1e293b";
-    else if (p.color === 'polo') shirtColor = "#f8fafc";
-    else if (p.color === 'hoodie') shirtColor = "#6366f1";
-    else if (p.color && p.color.startsWith('dress_')) shirtColor = "#ec4899";
-
-    // Binicinin sarkmış bacağı
-    ctx.strokeStyle = '#1e293b';
-    ctx.lineWidth = 5;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    ctx.moveTo(-3, -7);
-    ctx.lineTo(4, 0);
-    ctx.lineTo(1, 9);
-    ctx.stroke();
-
-    ctx.fillStyle = '#0f172a';
-    ctx.beginPath();
-    ctx.roundRect(-1, 8, 7, 4, 1.5);
-    ctx.fill();
-
-    ctx.strokeStyle = '#e2e8f0';
-    ctx.lineWidth = 1.6;
-    ctx.beginPath();
-    ctx.ellipse(1, 10, 3.8, 2.5, 0, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // Binici Gövdesi (Öne doğru dinamik dörtnal duruşu)
-    ctx.save();
-    ctx.translate(-2, -9);
-    ctx.rotate(0.12);
-    ctx.fillStyle = shirtColor;
-    ctx.beginPath();
-    ctx.roundRect(-5, -12, 10, 13, [3, 4, 2, 2]);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // Binici Başı & Yan Profil Yüz
-    ctx.fillStyle = skin;
-    ctx.beginPath();
-    ctx.arc(0, -18, 5.5, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.moveTo(3, -19); ctx.lineTo(6, -18); ctx.lineTo(4, -16);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.fillStyle = '#0f172a';
-    ctx.beginPath();
-    ctx.arc(3, -19, 1.2, 0, Math.PI * 2);
-    ctx.fill();
-
-    drawSideProfileHair(ctx, 0, -18, p.hair || 'short', p.gender || 'male');
-
-    if (p.hat && p.hat !== 'none') {
-        drawSideProfileHat(ctx, 0, -21, p.hat);
-    }
-    ctx.restore();
-
-    // Binicinin elleri ve atın dizgin ipi
-    ctx.strokeStyle = shirtColor;
-    ctx.lineWidth = 4;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(-2, -17);
-    ctx.lineTo(6, -11);
-    ctx.lineTo(12, -10);
-    ctx.stroke();
-
-    ctx.fillStyle = skin;
-    ctx.beginPath();
-    ctx.arc(12, -10, 2.5, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Gergin At Dizgini / İpi (Gemden ele uzanan)
-    ctx.strokeStyle = '#b45309';
-    ctx.lineWidth = 1.6;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(28, -15);
-    ctx.quadraticCurveTo(20, -10, 12, -10);
-    ctx.stroke();
-
-    ctx.strokeStyle = '#78350f';
-    ctx.lineWidth = 1.2;
-    ctx.beginPath();
-    ctx.moveTo(27, -14);
-    ctx.quadraticCurveTo(18, -8, 12, -10);
-    ctx.stroke();
-
-    ctx.strokeStyle = '#9a3412';
-    ctx.lineWidth = 1.4;
-    ctx.beginPath();
-    ctx.moveTo(20, -19); ctx.lineTo(28, -15);
-    ctx.moveTo(24, -18); ctx.lineTo(22, -12);
-    ctx.stroke();
-
-    ctx.fillStyle = '#cbd5e1';
-    ctx.beginPath();
-    ctx.arc(28, -15, 1.8, 0, Math.PI * 2);
-    ctx.fill();
-}
-
-function drawMountedEquestrian(p, id, pX, pY, isMoving, playerWalkCycle, facing) {
-    ctx.save();
-    let flip = (facing === 'left') ? -1 : 1;
-
-    let gallopPhase = (playerWalkCycle || 0) * 1.8;
-    let gallopBob = isMoving ? (Math.sin(gallopPhase) * 5.2 - Math.abs(Math.cos(gallopPhase)) * 2) : Math.sin(Date.now() / 420) * 1.5;
-    let gallopPitch = isMoving ? (Math.sin(gallopPhase) * 0.1) : 0;
-
-    // 1. Zemin ve At Gölgesi
-    ctx.save();
-    let shadowScale = isMoving ? (1 - Math.sin(gallopPhase) * 0.12) : 1;
-    ctx.fillStyle = "rgba(0, 0, 0, 0.32)";
-    ctx.beginPath();
-    ctx.ellipse(pX, pY + 18, 28 * shadowScale, 9 * shadowScale, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    // 2. Dörtnal Toz Püskürtme (Gallop dust clouds)
-    if (isMoving) {
-        ctx.save();
-        let dustTime = Date.now() / 65;
-        for (let d = 0; d < 3; d++) {
-            let dOffset = (dustTime + d * 2.1) % 6;
-            let dAlpha = Math.max(0, 0.42 * (1 - dOffset / 6));
-            let dSize = 3 + dOffset * 1.6;
-            ctx.fillStyle = `rgba(217, 119, 6, ${dAlpha})`;
-            ctx.beginPath();
-            ctx.arc(pX - flip * (22 + dOffset * 4), pY + 16 - dOffset * 1.2, dSize, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        ctx.restore();
-    }
-
-    ctx.translate(pX, pY + gallopBob);
-    ctx.scale(flip, 1);
-    ctx.rotate(gallopPitch);
-
-    if (ridingSideReady && ridingSideCanvas) {
-        // riding-side.png: Yandan görünen, bacakları sarkmış ve elinde atın ipini tutan asil binici
-        let spriteW = 74;
-        let spriteH = 74;
-        ctx.drawImage(ridingSideCanvas, -spriteW / 2 - 2, -spriteH + 18, spriteW, spriteH);
-    } else {
-        // Prosedürel yüksek detaylı dörtnala at ve bacakları sarkan, elinde dizgin tutan yan profil binici
-        drawProceduralGallopingEquestrian(ctx, p, isMoving, gallopPhase);
-    }
-
-    ctx.restore();
-}
-
 function drawAnimatedPlayer(p, id) {
     let isSitting = (p.action === 'sitting');
     let playerWalkCycle = (id === myId) ? walkCycle : (p.walkCycle || 0);
@@ -1567,21 +1172,16 @@ function drawAnimatedPlayer(p, id) {
     let pX = p.x;
     let pY = p.y + (isSitting ? 7 : bob);
 
-    if (p.hasHorse) {
-        let facing = (id === myId) ? myFacing : (p.facing || 'right');
-        if (facing !== 'left' && facing !== 'right') facing = 'right';
-        drawMountedEquestrian(p, id, pX, p.y, isMoving, playerWalkCycle, facing);
-    } else {
-        // Dans efekti (Gövde sağa-sola sallanır)
-        let isDancing = (p.action === 'dance');
-        let danceTilt = isDancing ? Math.sin(Date.now() / 140) * 0.15 : 0;
+    // Dans efekti (Gövde sağa-sola sallanır)
+    let isDancing = (p.action === 'dance');
+    let danceTilt = isDancing ? Math.sin(Date.now() / 140) * 0.15 : 0;
 
-        ctx.save();
-        if (isDancing) {
-            ctx.translate(pX, pY);
-            ctx.rotate(danceTilt);
-            ctx.translate(-pX, -pY);
-        }
+    ctx.save();
+    if (isDancing) {
+        ctx.translate(pX, pY);
+        ctx.rotate(danceTilt);
+        ctx.translate(-pX, -pY);
+    }
 
     // 1. Yumuşak Zemin Gölgesi (Otururken koltuk/minderle bütünleşen geniş gölge)
     ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
@@ -1790,6 +1390,128 @@ function drawAnimatedPlayer(p, id) {
     }
 
     ctx.restore(); // Dans tilt restorasyonu
+
+    // 10.0 BİNEK ATI (5 Dakikalık Kiralık Hızlı Asil At - 2x Hız)
+    if (p.hasHorse) {
+        ctx.save();
+        let isMoving = p.isMoving;
+        let walkCycle = p.walkCycle || 0;
+        let gallopBob = isMoving ? Math.sin(walkCycle * 2) * 3 : 0;
+        let dir = p.facing || 'down';
+        let flip = (dir === 'left') ? -1 : 1;
+
+        ctx.translate(pX, pY + 12 + gallopBob);
+        ctx.scale(flip, 1);
+
+        // 1. Atın Gölgesi
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+        ctx.beginPath();
+        ctx.ellipse(0, 15, 24, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 2. Dörtnal Toz Püskürtme
+        if (isMoving) {
+            ctx.fillStyle = 'rgba(217, 119, 6, 0.45)';
+            ctx.beginPath();
+            ctx.arc(-18 + Math.sin(walkCycle) * 3, 13, 4, 0, Math.PI * 2);
+            ctx.arc(-24 - Math.cos(walkCycle) * 3, 15, 5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // 3. Arka & Ön Bacaklar
+        let legSwingFront = isMoving ? Math.sin(walkCycle * 1.5) * 8 : 0;
+        let legSwingBack = isMoving ? -Math.sin(walkCycle * 1.5) * 8 : 0;
+
+        ctx.strokeStyle = '#78350f';
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+
+        ctx.beginPath();
+        ctx.moveTo(-10, 4);
+        ctx.lineTo(-12 + legSwingBack, 15);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(10, 4);
+        ctx.lineTo(12 + legSwingFront, 15);
+        ctx.stroke();
+
+        // Nallar
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(-14 + legSwingBack, 13, 4, 3);
+        ctx.fillRect(10 + legSwingFront, 13, 4, 3);
+
+        // 4. Kestane At Gövdesi
+        ctx.fillStyle = '#92400e';
+        ctx.beginPath();
+        ctx.ellipse(0, 2, 22, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#78350f';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // 5. At Kuyruğu
+        let tailWag = isMoving ? Math.sin(walkCycle * 2) * 6 : Math.sin(Date.now() / 300) * 2;
+        ctx.strokeStyle = '#451a03';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(-20, 0);
+        ctx.quadraticCurveTo(-28, 4 + tailWag, -25, 14 + tailWag);
+        ctx.stroke();
+
+        // 6. At Boynu ve Başı
+        ctx.fillStyle = '#92400e';
+        ctx.beginPath();
+        ctx.moveTo(12, -2);
+        ctx.lineTo(19, -17);
+        ctx.lineTo(27, -15);
+        ctx.lineTo(24, 2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // At Burnu & Ağzı
+        ctx.fillStyle = '#78350f';
+        ctx.beginPath();
+        ctx.ellipse(27, -15, 6, 4.5, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Kulaklar
+        ctx.fillStyle = '#92400e';
+        ctx.beginPath();
+        ctx.moveTo(18, -17); ctx.lineTo(20, -24); ctx.lineTo(23, -17);
+        ctx.closePath();
+        ctx.fill();
+
+        // Yele
+        ctx.fillStyle = '#451a03';
+        ctx.beginPath();
+        ctx.moveTo(14, -4); ctx.lineTo(19, -18); ctx.lineTo(16, -17); ctx.lineTo(11, -3);
+        ctx.closePath();
+        ctx.fill();
+
+        // Göz
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(23, -16, 2.5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath(); ctx.arc(24, -16, 1.2, 0, Math.PI * 2); ctx.fill();
+
+        // 7. Altın Eyer ve Dizgin
+        ctx.fillStyle = '#d97706';
+        ctx.beginPath();
+        ctx.roundRect(-8, -4, 16, 8, 3);
+        ctx.fill();
+        ctx.strokeStyle = '#facc15';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.strokeStyle = '#b45309';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(26, -13); ctx.lineTo(0, -2);
+        ctx.stroke();
+
+        ctx.restore();
     }
 
     // 10.1 Kuğu Deniz Bisikleti (Sahilde kiralanmışsa oyuncunun altındaki kuğu pedalo)
@@ -1863,14 +1585,13 @@ function drawAnimatedPlayer(p, id) {
     }
     let nameWidth = p._cachedNameWidth;
 
-    let nameTagY = p.hasHorse ? (p.y - 58) : (pY - 42);
     ctx.fillStyle = "rgba(15, 23, 42, 0.75)";
     ctx.beginPath();
-    ctx.roundRect(pX - nameWidth / 2 - 6, nameTagY, nameWidth + 12, 16, 6);
+    ctx.roundRect(pX - nameWidth / 2 - 6, pY - 42, nameWidth + 12, 16, 6);
     ctx.fill();
     ctx.fillStyle = id === myId ? "#38bdf8" : "#ffffff";
     ctx.textAlign = "center";
-    ctx.fillText(p.name, pX, nameTagY + 12);
+    ctx.fillText(p.name, pX, pY - 30);
 
     // 11.1 Oturma & Kalkma İpucu Rozeti (Sadece Kendi Karakterimiz İçin)
     if (id === myId) {
@@ -1899,7 +1620,7 @@ function drawAnimatedPlayer(p, id) {
                 ctx.save();
                 ctx.font = "bold 10px sans-serif";
                 let promptW = ctx.measureText(promptText).width + 14;
-                let promptY = (p.hasHorse ? p.y - 74 : pY - 60) + pulse;
+                let promptY = pY - 60 + pulse;
                 ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
                 ctx.beginPath();
                 ctx.roundRect(pX - promptW / 2, promptY, promptW, 17, 7);
@@ -1926,14 +1647,14 @@ function drawAnimatedPlayer(p, id) {
         ctx.stroke();
 
         ctx.font = "12px sans-serif";
-        ctx.fillText("🎙️", pX + nameWidth / 2 + 12, nameTagY + 12);
+        ctx.fillText("🎙️", pX + nameWidth / 2 + 12, pY - 30);
         ctx.restore();
     }
 
     // 12. Konuşma Baloncukları (Kuyruklu)
     if (activeChatBubbles[id] && activeChatBubbles[id].length > 0) {
         let bubbles = activeChatBubbles[id];
-        let bubbleY = p.hasHorse ? (p.y - 74) : (pY - 54);
+        let bubbleY = pY - 54;
 
         for (let i = bubbles.length - 1; i >= 0; i--) {
             let bObj = bubbles[i];
