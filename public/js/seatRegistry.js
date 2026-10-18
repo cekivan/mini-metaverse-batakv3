@@ -95,6 +95,25 @@ const STATIC_ROOM_SEATS = {
         { x: 1220, y: 760, facing: 'right', label: '1. Cadde Plaj Şezlongu' },
         { x: 1260, y: 810, facing: 'right', label: '1. Cadde Plaj Şezlongu' },
         { x: 1330, y: 840, facing: 'right', label: '1. Cadde Plaj Şezlongu' }
+    ],
+    star_caddesi: [
+        // Star Bistro Açık Teras Sandalyeleri
+        { x: 90, y: 152, facing: 'down', label: 'Bistro Sandalyesi' },
+        { x: 90, y: 172, facing: 'up', label: 'Bistro Sandalyesi' },
+        { x: 205, y: 152, facing: 'down', label: 'Bistro Sandalyesi' },
+        { x: 205, y: 172, facing: 'up', label: 'Bistro Sandalyesi' },
+        // Star Park & Süs Havuzu Bankları
+        { x: 190, y: 510, facing: 'right', label: 'Star Park Bankı' },
+        { x: 395, y: 510, facing: 'left', label: 'Star Park Bankı' },
+        // Sahil Şezlongları
+        { x: 900, y: 435, facing: 'down', label: 'Plaj Şezlongu' },
+        { x: 945, y: 435, facing: 'down', label: 'Plaj Şezlongu' }
+    ],
+    meydanv2: [
+        { x: 235, y: 195, facing: 'down', label: 'Bulvar Park Bankı' },
+        { x: 440, y: 285, facing: 'down', label: 'Fıskiye Meydan Bankı' },
+        { x: 590, y: 285, facing: 'down', label: 'Billboard Önü Bankı' },
+        { x: 360, y: 405, facing: 'up', label: 'Çınar Altı Park Bankı' }
     ]
 };
 

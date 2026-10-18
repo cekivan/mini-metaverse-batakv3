@@ -337,7 +337,22 @@ const ROOM_TRANSITION_SPAWNS = {
     dedenin_yeri: { default: { x: 400, y: 410 } },
     nargile_cafe: { default: { x: 400, y: 390 } },
     market: { default: { x: 400, y: 420 } },
-    sanalika_cadde: { default: { x: 750, y: 520 } }
+    sanalika_cadde: { default: { x: 750, y: 520 } },
+    star_caddesi: {
+        sokak: { x: 120, y: 360 },
+        default: { x: 500, y: 360 }
+    },
+    meydanv2: {
+        sokak: { x: 500, y: 350 },
+        cadde: { x: 920, y: 330 },
+        sahil: { x: 500, y: 560 },
+        kafe: { x: 380, y: 195 },
+        emlakci: { x: 140, y: 195 },
+        nargile_cafe: { x: 640, y: 195 },
+        market: { x: 880, y: 195 },
+        housing_portal: { x: 180, y: 560 },
+        default: { x: 500, y: 350 }
+    }
 };
 let sanalikaCamera = { x: 0, y: 0 };
 window.sanalikaCamera = sanalikaCamera;
@@ -365,6 +380,25 @@ function changeRoom(newRoom, targetSpawn) {
     }
     currentRoom = newRoom;
     roomTransitionFadeAlpha = 0.95; // Sinematik mekan geçiş kararması (Fade in)
+
+    // Dinamik Ekran Büyütme (Star Caddesi & Meydan v2: 1000 x 625, Diğerleri: 800 x 500)
+    if (newRoom === 'star_caddesi' || newRoom === 'meydanv2') {
+        canvas.width = 1000;
+        canvas.height = 625;
+        canvas.style.width = '1000px';
+        canvas.style.aspectRatio = '1000 / 625';
+        canvas.classList.add('wide-screen');
+    } else {
+        canvas.width = 800;
+        canvas.height = 500;
+        canvas.style.width = '800px';
+        canvas.style.aspectRatio = '800 / 500';
+        canvas.classList.remove('wide-screen');
+    }
+    if (typeof updateCanvasRect === 'function') {
+        updateCanvasRect();
+    }
+
     if (typeof bgCache !== 'undefined') bgCache.invalidate();
     if (newRoom === 'sanalika_cadde') {
         sanalikaCamera.x = Math.max(0, Math.min(1600 - canvas.width, 750 - canvas.width / 2));
@@ -446,14 +480,7 @@ function changeRoom(newRoom, targetSpawn) {
         fishBtn.style.display = (newRoom === 'sahil') ? 'flex' : 'none';
     }
 
-    const caddeBtn = document.getElementById('btnCaddeTeleportAction');
-    if (caddeBtn) {
-        caddeBtn.style.display = (newRoom === 'sanalika_cadde') ? 'none' : 'flex';
-    }
-    const leaveCaddeBtn = document.getElementById('btnLeaveCaddeAction');
-    if (leaveCaddeBtn) {
-        leaveCaddeBtn.style.display = (newRoom === 'sanalika_cadde') ? 'flex' : 'none';
-    }
+
 
     updateSwanBoatButtonUI();
 
@@ -1369,6 +1396,10 @@ function gameLoop(timestamp) {
         if (typeof drawEmlakciEnvironment === 'function') drawEmlakciEnvironment();
     } else if (currentRoom === "sanalika_cadde") {
         if (typeof drawSanalikaCaddeEnvironment === 'function') drawSanalikaCaddeEnvironment();
+    } else if (currentRoom === "star_caddesi") {
+        if (typeof drawStarCaddesiEnvironment === 'function') drawStarCaddesiEnvironment();
+    } else if (currentRoom === "meydanv2") {
+        if (typeof drawMeydanV2Environment === 'function') drawMeydanV2Environment();
     } else if (currentRoom.startsWith("house_")) {
         if (typeof drawHouseEnvironment === 'function') drawHouseEnvironment();
     } else {

@@ -90,6 +90,38 @@
                 check: (p, w, h) => p.y >= h - 35 && p.x >= w / 2 - 45 && p.x <= w / 2 + 45,
                 target: 'sokak'
             }
+        ],
+        star_caddesi: [
+            {
+                check: (p, w, h) => p.x <= 35 && p.y >= 320 && p.y <= 440,
+                target: 'sokak'
+            }
+        ],
+        meydanv2: [
+            {
+                check: (p, w, h) => p.x >= w - 30 && p.y >= 260 && p.y <= 400,
+                target: 'cadde'
+            },
+            {
+                check: (p, w, h) => p.y >= h - 35 && p.x >= 430 && p.x <= 570,
+                target: 'sahil'
+            },
+            {
+                check: (p, w, h) => p.x >= 140 && p.x <= 200 && p.y <= 165,
+                target: 'emlakci'
+            },
+            {
+                check: (p, w, h) => p.x >= 350 && p.x <= 415 && p.y <= 165,
+                target: 'kafe'
+            },
+            {
+                check: (p, w, h) => p.x >= 610 && p.x <= 675 && p.y <= 165,
+                target: 'nargile_cafe'
+            },
+            {
+                check: (p, w, h) => p.x >= 845 && p.x <= 910 && p.y <= 165,
+                target: 'market'
+            }
         ]
     };
 
@@ -352,6 +384,24 @@
         if (currentRoom === "sanalika_cadde") {
             if (typeof handleSanalikaCaddeClick === 'function') {
                 let handled = handleSanalikaCaddeClick(clickX, clickY);
+                if (handled) return true;
+            }
+            return false;
+        }
+
+        // --- STAR CADDESİ (1000x625 GENİŞ FORMAT) ---
+        if (currentRoom === "star_caddesi") {
+            if (typeof handleStarCaddesiClick === 'function') {
+                let handled = handleStarCaddesiClick(clickX, clickY, p);
+                if (handled) return true;
+            }
+            return false;
+        }
+
+        // --- MEYDAN V2 (1000x625 GENİŞ İZOMETRİK HARİTA) ---
+        if (currentRoom === "meydanv2") {
+            if (typeof handleMeydanV2Click === 'function') {
+                let handled = handleMeydanV2Click(clickX, clickY, p);
                 if (handled) return true;
             }
             return false;
@@ -701,6 +751,22 @@
             if (p.x <= 185 && p.y >= 330) {
                 if (typeof openPetShopModal === 'function') openPetShopModal();
                 return true;
+            }
+            return false;
+        }
+
+        if (currentRoom === "star_caddesi") {
+            if (typeof handleStarCaddesiMobileInteract === 'function') {
+                let handled = handleStarCaddesiMobileInteract(p);
+                if (handled) return true;
+            }
+            return false;
+        }
+
+        if (currentRoom === "meydanv2") {
+            if (typeof handleMeydanV2MobileInteract === 'function') {
+                let handled = handleMeydanV2MobileInteract(p);
+                if (handled) return true;
             }
             return false;
         }

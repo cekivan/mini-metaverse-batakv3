@@ -65,6 +65,14 @@ function renderStaticRoomTo(bctx, room, width, height) {
         if (typeof renderStaticSanalikaCaddeTo === 'function') {
             renderStaticSanalikaCaddeTo(bctx, width, height);
         }
+    } else if (room === 'star_caddesi') {
+        if (typeof renderStaticStarCaddesiTo === 'function') {
+            renderStaticStarCaddesiTo(bctx, width, height);
+        }
+    } else if (room === 'meydanv2') {
+        if (typeof renderStaticMeydanV2To === 'function') {
+            renderStaticMeydanV2To(bctx, width, height);
+        }
     } else if (room.startsWith('house_')) {
         let type = room.replace('house_', '');
         if (typeof renderStaticHouseTo === 'function') {
@@ -1943,6 +1951,20 @@ function checkWorldCollision(x, y) {
         if (x >= 420 && x <= 710 && y >= 720 && y <= 900) return true; // VIP Lounge
         // Derin deniz suyu sınırı
         if (x > 1420 && y > 840) return true;
+        return false;
+    }
+
+    if (currentRoom === "star_caddesi") {
+        if (typeof checkStarCaddesiCollision === 'function') {
+            return checkStarCaddesiCollision(x, y);
+        }
+        return false;
+    }
+
+    if (currentRoom === "meydanv2") {
+        if (typeof checkMeydanV2Collision === 'function') {
+            return checkMeydanV2Collision(x, y);
+        }
         return false;
     }
 

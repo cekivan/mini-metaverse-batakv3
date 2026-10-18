@@ -44,6 +44,21 @@ const ROOM_SPAWN_MAP = {
     },
     sanalika_cadde: {
         default: { x: 750, y: 520 }
+    },
+    star_caddesi: {
+        sokak: { x: 120, y: 360 },
+        default: { x: 500, y: 360 }
+    },
+    meydanv2: {
+        sokak: { x: 500, y: 350 },
+        cadde: { x: 920, y: 330 },
+        sahil: { x: 500, y: 560 },
+        kafe: { x: 380, y: 195 },
+        emlakci: { x: 140, y: 195 },
+        nargile_cafe: { x: 640, y: 195 },
+        market: { x: 880, y: 195 },
+        housing_portal: { x: 180, y: 560 },
+        default: { x: 500, y: 350 }
     }
 };
 
