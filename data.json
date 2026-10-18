@@ -3,7 +3,7 @@
     "yasin": {
       "_id": "6ad3debb1552c02d3989a159",
       "username": "yasin",
-      "money": 1198,
+      "money": 2898,
       "gender": "male",
       "auth": {
         "hash": "f971b4fe5d3824a081cf8a822f54f75bef7054f50824de8e50d3d7882874c491",
@@ -18,7 +18,7 @@
         "skinColor": "#8d5524",
         "shirtColor": "outfit_c2_street_cool",
         "color": "outfit_c2_street_cool",
-        "heldItem": "cocktail_pineapple",
+        "heldItem": "asagold",
         "shoes": "sneakers",
         "shirt": "polo",
         "outfit": "outfit_c2_street_cool"
@@ -405,7 +405,7 @@
             "desc": "Batak masasında 1 el tamamla",
             "target": 1,
             "reward": 50,
-            "current": 0,
+            "current": 1,
             "claimed": false,
             "_id": "6ad3debb1552c02d3989a15b"
           },
@@ -448,8 +448,9 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:51.839Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
-      "__v": 0
+      "updatedAt": "2026-10-18T01:50:39.246Z",
+      "__v": 0,
+      "isMod": false
     },
     "babake": {
       "_id": "6ad3debb1552c02d3989a15f",
@@ -501,7 +502,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:51.944Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "rümeysa": {
@@ -556,20 +557,14 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:52.043Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "ahmet": {
-      "_id": "6ad3debc1552c02d3989a161",
-      "username": "ahmet",
-      "money": 20000,
-      "gender": "male",
       "auth": {
-        "hash": null,
-        "salt": null
+        "hash": "4bd549a11414f5688a4f9c2fe3a0a4b2b9660e7a927dab9d2094d25e2e8e1778",
+        "salt": "a85797869fedc737ed7b36d006d30420"
       },
-      "role": "user",
-      "isAdmin": false,
       "avatar": {
         "model": "classic",
         "hat": "bere",
@@ -582,6 +577,17 @@
         "shirt": null,
         "outfit": null
       },
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "isMod": false,
+      "_id": "6ad3debc1552c02d3989a161",
+      "username": "ahmet",
+      "money": 18000,
+      "gender": "male",
+      "role": "user",
+      "isAdmin": false,
       "inventory": [
         "hats_bere",
         "skins_#facc15",
@@ -594,10 +600,6 @@
       "friends": [],
       "friendRequests": [],
       "house": null,
-      "dailyQuests": {
-        "date": "",
-        "quests": []
-      },
       "teaExpiresAt": null,
       "banExpiresAt": null,
       "banReason": null,
@@ -607,7 +609,7 @@
       "propInventory": {},
       "houses": {},
       "createdAt": "2026-10-17T20:46:52.143Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "maltoroz": {
@@ -719,7 +721,7 @@
       "muteReason": null,
       "houses": {},
       "createdAt": "2026-10-17T20:46:52.241Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "denemelik": {
@@ -770,7 +772,7 @@
       "muteReason": null,
       "houses": {},
       "createdAt": "2026-10-17T20:46:52.347Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "qwdqd": {
@@ -821,7 +823,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:52.447Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "aşldkwşlqkd": {
@@ -872,7 +874,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:52.545Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "taktukhamdi": {
@@ -923,7 +925,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:52.645Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "Black_Widow": {
@@ -1027,7 +1029,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:52.748Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "deneme": {
@@ -1134,7 +1136,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:52.847Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "mehmet": {
@@ -1185,7 +1187,7 @@
       "propInventory": {},
       "houses": {},
       "createdAt": "2026-10-17T20:46:52.953Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "cemal": {
@@ -1236,7 +1238,7 @@
       "propInventory": {},
       "houses": {},
       "createdAt": "2026-10-17T20:46:53.094Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "kadın": {
@@ -1288,7 +1290,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:53.196Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "ceki": {
@@ -1342,13 +1344,13 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:53.295Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "Elyesa": {
       "_id": "6ad3f0c9435135d09468fd7c",
       "username": "Elyesa",
-      "money": 49250,
+      "money": 330193,
       "gender": "male",
       "auth": {
         "hash": "2c4e1c2934b78d3cc80bd5bd12278faa269f8b53a37b29acce0f3324accd6bfe",
@@ -1356,17 +1358,16 @@
       },
       "role": "mod",
       "isAdmin": false,
-      "isMod": true,
       "avatar": {
         "model": "classic_2",
-        "hat": "korsan",
-        "face": "beard",
-        "skinColor": "#8d5524",
-        "shirtColor": "#0f172a",
-        "color": "#0f172a",
-        "heldItem": "kilic",
-        "shoes": "boots",
-        "shirt": "#0f172a",
+        "hat": "kasket",
+        "face": "sunglasses",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "leather",
+        "color": "leather",
+        "heldItem": "tespih2",
+        "shoes": "boots_thigh_high",
+        "shirt": "leather",
         "outfit": null
       },
       "inventory": [
@@ -1391,11 +1392,17 @@
         "shoes_boots",
         "pants_pants_classic_black",
         "tshirts_#0f172a",
-        "faces_beard"
+        "faces_beard",
+        "skins_#ffd1a4",
+        "outfits_outfit_c2_gentleman",
+        "hats_kulaklik",
+        "hats_sihirbaz",
+        "props_oyuncak_araba"
       ],
       "propInventory": {
         "props_kilic": 1,
-        "props_tespih2": 1
+        "props_tespih2": 1,
+        "props_oyuncak_araba": 1
       },
       "furnitureInventory": [],
       "friends": [
@@ -1406,8 +1413,59 @@
       "house": null,
       "houses": {},
       "dailyQuests": {
-        "date": "",
-        "quests": []
+        "date": "2026-10-17",
+        "quests": [
+          {
+            "id": "okey101_play",
+            "title": "🀄 101 Okey Partisi",
+            "desc": "101 Okey masasında 1 el tamamla",
+            "target": 1,
+            "reward": 60,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad40b22435135d094695014"
+          },
+          {
+            "id": "batak_play",
+            "title": "🃏 Koz Batak Ustası",
+            "desc": "Batak masasında 1 el tamamla",
+            "target": 1,
+            "reward": 50,
+            "current": 1,
+            "claimed": false,
+            "_id": "6ad40b22435135d094695015"
+          },
+          {
+            "id": "tavla_play",
+            "title": "🎲 Tavla Mücadelesi",
+            "desc": "Tavla masasında 1 oyun tamamla",
+            "target": 1,
+            "reward": 40,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad40b22435135d094695016"
+          },
+          {
+            "id": "drink_tea",
+            "title": "☕ Tavşan Kanı Çay",
+            "desc": "Kıraathane çay ocağından taze çay iç",
+            "target": 1,
+            "reward": 20,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad40b22435135d094695017"
+          },
+          {
+            "id": "go_fishing",
+            "title": "🎣 Göl Kenarı Balıkçısı",
+            "desc": "Göl kenarında 1 kez olta atıp balık tut",
+            "target": 1,
+            "reward": 30,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad40b22435135d094695018"
+          }
+        ]
       },
       "teaExpiresAt": null,
       "banExpiresAt": null,
@@ -1416,8 +1474,9 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:03:53.473Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
-      "__v": 0
+      "updatedAt": "2026-10-18T01:55:53.365Z",
+      "__v": 0,
+      "isMod": true
     },
     "taha": {
       "_id": "6ad3f0d2435135d09468fd7d",
@@ -1481,7 +1540,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:04:02.082Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "sebon": {
@@ -1502,7 +1561,7 @@
         "skinColor": "#ffd1a4",
         "shirtColor": "leather",
         "color": "leather",
-        "heldItem": "cay",
+        "heldItem": "none",
         "shoes": "sneakers",
         "shirt": "leather",
         "outfit": null
@@ -1519,8 +1578,7 @@
         "props_kilic"
       ],
       "propInventory": {
-        "props_kilic": 2,
-        "props_cay": 1
+        "props_kilic": 2
       },
       "furnitureInventory": [],
       "friends": [],
@@ -1528,17 +1586,68 @@
       "house": null,
       "houses": {},
       "dailyQuests": {
-        "date": "",
-        "quests": []
+        "date": "2026-10-17",
+        "quests": [
+          {
+            "id": "okey101_play",
+            "title": "🀄 101 Okey Partisi",
+            "desc": "101 Okey masasında 1 el tamamla",
+            "target": 1,
+            "reward": 60,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad40b22435135d094695019"
+          },
+          {
+            "id": "batak_play",
+            "title": "🃏 Koz Batak Ustası",
+            "desc": "Batak masasında 1 el tamamla",
+            "target": 1,
+            "reward": 50,
+            "current": 1,
+            "claimed": false,
+            "_id": "6ad40b22435135d09469501a"
+          },
+          {
+            "id": "tavla_play",
+            "title": "🎲 Tavla Mücadelesi",
+            "desc": "Tavla masasında 1 oyun tamamla",
+            "target": 1,
+            "reward": 40,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad40b22435135d09469501b"
+          },
+          {
+            "id": "drink_tea",
+            "title": "☕ Tavşan Kanı Çay",
+            "desc": "Kıraathane çay ocağından taze çay iç",
+            "target": 1,
+            "reward": 20,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad40b22435135d09469501c"
+          },
+          {
+            "id": "go_fishing",
+            "title": "🎣 Göl Kenarı Balıkçısı",
+            "desc": "Göl kenarında 1 kez olta atıp balık tut",
+            "target": 1,
+            "reward": 30,
+            "current": 0,
+            "claimed": false,
+            "_id": "6ad40b22435135d09469501d"
+          }
+        ]
       },
-      "teaExpiresAt": 1792279836465,
+      "teaExpiresAt": null,
       "banExpiresAt": null,
       "banReason": null,
       "bannedBy": null,
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:13:16.672Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "Pelin": {
@@ -1587,13 +1696,13 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:35:27.389Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "Pelinn": {
       "_id": "6ad3f888435135d094690825",
       "username": "Pelinn",
-      "money": 30,
+      "money": 11000,
       "gender": "female",
       "auth": {
         "hash": "b3966ca90f284579b3b74a8a47ece9faf1305caff8eaa320ca67e1cbca7c8049",
@@ -1644,8 +1753,9 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:36:56.686Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
-      "__v": 0
+      "updatedAt": "2026-10-18T01:50:39.246Z",
+      "__v": 0,
+      "isMod": false
     },
     "amdöndüren": {
       "_id": "6ad3fa06435135d094690862",
@@ -1693,7 +1803,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:43:18.083Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "kaşar": {
@@ -1742,7 +1852,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:43:47.889Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "bacıdürten": {
@@ -1794,7 +1904,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:44:18.585Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "EskişehirKaşarı": {
@@ -1849,7 +1959,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:44:50.287Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "BacıKovalayan": {
@@ -1902,7 +2012,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:45:25.282Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "KırmıziŞortli": {
@@ -1954,7 +2064,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:45:54.383Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "BabaNoluyooo": {
@@ -2006,7 +2116,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:47:14.481Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "Kimolumbu": {
@@ -2056,7 +2166,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:47:41.580Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "BenTahayım": {
@@ -2108,7 +2218,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:52:14.273Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "Benİbneyim": {
@@ -2163,7 +2273,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:52:26.886Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "BenElyesayımAmaİbne": {
@@ -2216,7 +2326,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:52:49.390Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "tahaKALPpelin": {
@@ -2265,7 +2375,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:53:23.085Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "YasinimBen": {
@@ -2318,7 +2428,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:53:53.780Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "SonerKüçük": {
@@ -2367,7 +2477,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:54:36.279Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "test_u_24315": {
@@ -2418,7 +2528,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:55:04.360Z",
-      "updatedAt": "2026-10-17T22:55:04.360Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "test_u_15175": {
@@ -2469,7 +2579,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:55:04.493Z",
-      "updatedAt": "2026-10-17T22:55:04.493Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "ÖmerÇelik": {
@@ -2522,7 +2632,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:55:08.280Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "MuzcuArman": {
@@ -2575,7 +2685,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:55:57.276Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "KüçükElyesa": {
@@ -2628,7 +2738,7 @@
             "reward": 60,
             "current": 0,
             "claimed": false,
-            "_id": "6ad404b6435135d0946926ed"
+            "_id": "6ad40b22435135d09469501e"
           },
           {
             "id": "batak_play",
@@ -2638,7 +2748,7 @@
             "reward": 50,
             "current": 0,
             "claimed": false,
-            "_id": "6ad404b6435135d0946926ee"
+            "_id": "6ad40b22435135d09469501f"
           },
           {
             "id": "tavla_play",
@@ -2648,7 +2758,7 @@
             "reward": 40,
             "current": 0,
             "claimed": false,
-            "_id": "6ad404b6435135d0946926ef"
+            "_id": "6ad40b22435135d094695020"
           },
           {
             "id": "drink_tea",
@@ -2658,7 +2768,7 @@
             "reward": 20,
             "current": 0,
             "claimed": false,
-            "_id": "6ad404b6435135d0946926f0"
+            "_id": "6ad40b22435135d094695021"
           },
           {
             "id": "go_fishing",
@@ -2668,7 +2778,7 @@
             "reward": 30,
             "current": 1,
             "claimed": false,
-            "_id": "6ad404b6435135d0946926f1"
+            "_id": "6ad40b22435135d094695022"
           }
         ]
       },
@@ -2679,7 +2789,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:57:32.480Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "yav": {
@@ -2728,7 +2838,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:58:22.380Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "HarryPother": {
@@ -2777,10 +2887,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T23:07:35.985Z",
-      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "bil_u1_56913": {
+      "_id": "6ad40535101e9329cd423754",
       "username": "bil_u1_56913",
       "money": 1000,
       "gender": "male",
@@ -2808,14 +2919,28 @@
         "face_none",
         "props_none"
       ],
+      "propInventory": {},
+      "furnitureInventory": [],
       "friends": [],
       "friendRequests": [],
       "house": null,
       "houses": {},
-      "furnitureInventory": [],
-      "propInventory": {}
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T23:31:01.556Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
+      "__v": 0
     },
     "bil_u2_80101": {
+      "_id": "6ad40535101e9329cd423755",
       "username": "bil_u2_80101",
       "money": 1000,
       "gender": "male",
@@ -2825,6 +2950,315 @@
       },
       "role": "user",
       "isAdmin": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-17T23:31:01.678Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
+      "__v": 0
+    },
+    "BabaTester_2774": {
+      "_id": "6ad412a8e7e7ca7c9f86c264",
+      "username": "BabaTester_2774",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "391da525d85cec9354a9a2e05dc0217e4423dce105813c9db7d46c4922091340",
+        "salt": "cd1ea4d63d0f85aaf1eada4f70cf76fb"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "isMod": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-18T00:28:24.704Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
+      "__v": 0
+    },
+    "BabaTester_6250": {
+      "_id": "6ad412d9ebcd87350bd4b7e6",
+      "username": "BabaTester_6250",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "32f4c2829403a48908bcc00655fb961fc6b393dbc85d6ef247bc593f7aedfd81",
+        "salt": "9c02ffd3ad88ccf9f28bb17f4cd6c482"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "isMod": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-18T00:29:13.848Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
+      "__v": 0
+    },
+    "CaddeTest_3651": {
+      "_id": "6ad42286edf4915f4ccf4993",
+      "username": "CaddeTest_3651",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "c1235ce0703d32ad10404ae623979990f00078efd1327bac3ff936f98cab3fdc",
+        "salt": "e107d2a2de1813897616e3336be1922e"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "isMod": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-18T01:36:06.361Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
+      "__v": 0
+    },
+    "CaddeTest_5402": {
+      "_id": "6ad42296edf4915f4ccf4994",
+      "username": "CaddeTest_5402",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "d1e7d1270de4aa30a8d057d366e11f303cbfe2c6c312139985f049c0fd67754d",
+        "salt": "02ae7be7c58c7cc29caff95d2ec074cc"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "isMod": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-18T01:36:22.286Z",
+      "updatedAt": "2026-10-18T01:50:39.246Z",
+      "__v": 0
+    },
+    "CaddeTest_3425": {
+      "_id": "6ad42687edf4915f4ccf4995",
+      "username": "CaddeTest_3425",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "f0bf0133e3fff13a99c3451220c22d0ea55f4434b04c54364980b7369a21b398",
+        "salt": "b97974798a67fb68a192e9058563607c"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "isMod": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers",
+        "shirt": null,
+        "outfit": null
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "propInventory": {},
+      "furnitureInventory": [],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": null,
+      "banExpiresAt": null,
+      "banReason": null,
+      "bannedBy": null,
+      "muteExpiresAt": null,
+      "muteReason": null,
+      "createdAt": "2026-10-18T01:53:11.216Z",
+      "updatedAt": "2026-10-18T01:53:11.216Z",
+      "__v": 0
+    },
+    "PetTestUser_2623": {
+      "username": "PetTestUser_2623",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "bd8dab413197f19c7d32dfce84bd8d5d73e67c98ea273b008d107768cc15d9b8",
+        "salt": "0bf5ba66f69b860b99877be0f6c08e19"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "isMod": false,
       "avatar": {
         "model": "classic",
         "hat": "bere",

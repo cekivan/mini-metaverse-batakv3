@@ -2,6 +2,7 @@ const dataManager = require('../dataManager');
 const tableManager = require('../tableManager');
 const gameCoordinator = require('../gameCoordinator');
 const fatherPetManager = require('../fatherPetManager');
+const petManager = require('../petManager');
 
 function registerAuthHandlers(io, socket, players, helpers) {
     const { getPlayersInRoom, givePlayerTeaWithTimer, broadcastOnlineCount } = helpers;
@@ -78,8 +79,10 @@ function registerAuthHandlers(io, socket, players, helpers) {
         });
 
         fatherPetManager.handleLogin(socket, username);
+        petManager.handleLogin(socket, username);
         socket.emit('currentPlayers', getPlayersInRoom("sokak"));
         socket.emit('activeFatherPets', fatherPetManager.getPetsInRoom("sokak"));
+        socket.emit('activeCompanionPets', petManager.getPetsInRoom("sokak"));
         socket.to("sokak").emit('newPlayer', { id: socket.id, player: players[socket.id] });
         if (typeof broadcastOnlineCount === 'function') broadcastOnlineCount();
 

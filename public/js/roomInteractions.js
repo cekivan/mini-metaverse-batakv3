@@ -340,6 +340,11 @@
                 if (typeof openBillboardAdModal === 'function') openBillboardAdModal();
                 return true;
             }
+            // Pet Shop Kulübesi
+            if (clickX >= 25 && clickX <= 175 && clickY >= 335 && clickY <= 465) {
+                if (typeof openPetShopModal === 'function') openPetShopModal();
+                return true;
+            }
             return false;
         }
 
@@ -691,6 +696,10 @@
             }
             if (p.x >= 465 && p.x <= 735 && p.y >= 335) {
                 if (typeof openBillboardAdModal === 'function') openBillboardAdModal();
+                return true;
+            }
+            if (p.x <= 185 && p.y >= 330) {
+                if (typeof openPetShopModal === 'function') openPetShopModal();
                 return true;
             }
             return false;

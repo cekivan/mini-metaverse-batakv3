@@ -2120,6 +2120,10 @@ function checkWorldCollision(x, y) {
         if (x >= 465 && x <= 735 && y >= 345 && y <= 470) {
             return true;
         }
+        // Pet Shop Kulübesi (x: 28..170, y: 340..455)
+        if (x >= 28 && x <= 170 && y >= 340 && y <= 455) {
+            return true;
+        }
         // Alt Park Alanındaki Süs Havuzu (Katı Engel: x: 185..255, y: 380..450)
         if (Math.hypot(x - 220, y - 415) < 38) return true;
         return false;

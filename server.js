@@ -10,6 +10,7 @@ const dataManager = require('./src/dataManager');
 const tableManager = require('./src/tableManager');
 const gameCoordinator = require('./src/gameCoordinator');
 const fatherPetManager = require('./src/fatherPetManager');
+const petManager = require('./src/petManager');
 const { getRoomSpawn, getDemoHouseConfig } = require('./src/config/roomSpawns');
 
 // Handler Modülleri
@@ -25,6 +26,7 @@ const { registerRouletteHandlers } = require('./src/handlers/rouletteHandler');
 const { registerSlotHandlers } = require('./src/handlers/slotHandler');
 const { initGanyanEngine, registerGanyanHandlers } = require('./src/handlers/ganyanHandler');
 const { initNargileLounge, registerNargileLoungeHandlers, handlePlayerDisconnect: handleNargileDisconnect } = require('./src/handlers/nargileLoungeHandler');
+const { registerPetShopHandlers } = require('./src/handlers/petShopHandler');
 const adManager = require('./src/adManager');
 
 const app = express();
@@ -69,6 +71,9 @@ const helpers = {
 // Baba Peti (Denizden Babam Çıksa Yerim) Yöneticisini Başlat
 fatherPetManager.init(io, players, dataManager);
 
+// Sevimli Patiler Pet Shop Yöneticisini Başlat
+petManager.init(io, players, dataManager);
+
 // Altılı Ganyan Hipodrom Yarış Motorunu Başlat
 initGanyanEngine(io, players);
 
@@ -108,6 +113,7 @@ connectToDatabase();
 io.on('connection', (socket) => {
     // 1. Modüler Handler'ları Kaydet
     registerAuthHandlers(io, socket, players, helpers);
+    registerPetShopHandlers(io, socket, players);
     registerSocialHandlers(io, socket, players, helpers);
     registerHousingHandlers(io, socket, players);
     registerEconomyHandlers(io, socket, players, helpers);
@@ -170,6 +176,7 @@ io.on('connection', (socket) => {
                     facing: movementData.facing || players[socket.id].facing || 'down'
                 });
                 fatherPetManager.updateOwnerPosition(socket.id, movementData.x, movementData.y);
+                petManager.updateOwnerPosition(socket.id, movementData.x, movementData.y);
             }
         }
     });
@@ -253,12 +260,14 @@ io.on('connection', (socket) => {
         }
 
         fatherPetManager.handleRoomChange(socket.id, oldRoom, newRoom);
+        petManager.handleRoomChange(socket.id, oldRoom, newRoom);
         if (oldRoom === 'nargile_cafe' && newRoom !== 'nargile_cafe') {
             handleNargileDisconnect(socket.id);
         }
 
         socket.emit('currentPlayers', getRoomPlayers(newRoom));
         socket.emit('activeFatherPets', fatherPetManager.getPetsInRoom(newRoom));
+        socket.emit('activeCompanionPets', petManager.getPetsInRoom(newRoom));
         socket.to(newRoom).emit('newPlayer', { id: socket.id, player: players[socket.id] });
     });
 
@@ -266,6 +275,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         handleNargileDisconnect(socket.id);
         fatherPetManager.handleDisconnect(socket.id);
+        petManager.handleDisconnect(socket.id);
         if (playerFishingTimers[socket.id]) {
             clearTimeout(playerFishingTimers[socket.id]);
             delete playerFishingTimers[socket.id];

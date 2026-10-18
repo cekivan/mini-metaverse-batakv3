@@ -175,15 +175,14 @@ function renderStaticCaddeTo(bctx, width, height) {
     bctx.fillStyle = "#f8fafc";
     bctx.beginPath(); bctx.arc(fX, fY, 6, 0, Math.PI * 2); bctx.fill();
 
-    // Park Bankları ve Sokak Lambaları
-    drawBench(bctx, 100, 410);
+    // Park Bankları, Pet Shop ve Sokak Lambaları
+    drawPetShopBooth(bctx, 30, 340, 140, 110);
     drawBench(bctx, 340, 410);
     drawBench(bctx, 380, 225);
 
     drawLampPost(bctx, 50, 220);
     drawLampPost(bctx, 320, 220);
     drawLampPost(bctx, 420, 360);
-    drawTree(bctx, 50, 400);
 }
 
 function drawCaddeEnvironment() {
@@ -223,11 +222,22 @@ function drawCaddeEnvironment() {
     }
 
     // Hover Etkileşim Kontrolleri
+    let isPetShopHover = (canvasMouseX >= 30 && canvasMouseX <= 170 && canvasMouseY >= 340 && canvasMouseY <= 455);
     let isGanyanHover = (canvasMouseX >= 90 && canvasMouseX <= 390 && canvasMouseY >= 12 && canvasMouseY <= 125);
     let isCasinoHover = (canvasMouseX >= 440 && canvasMouseX <= 740 && canvasMouseY >= 12 && canvasMouseY <= 125);
     let isExitStreetHover = (canvasMouseX <= 66 && canvasMouseY >= 140 && canvasMouseY <= 315);
 
-    if (isBillboardCaddeHover) {
+    if (isPetShopHover) {
+        hoveredTableId = 'cadde_petshop';
+        ctx.strokeStyle = "#fb923c";
+        ctx.lineWidth = 3;
+        ctx.strokeRect(30, 340, 140, 110);
+        ctx.fillStyle = "#fef08a";
+        ctx.font = "bold 11px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("🐾 Sevimli Patiler Pet Shop (Tıkla)", 100, 332);
+        setGameCursor('pointer');
+    } else if (isBillboardCaddeHover) {
         hoveredTableId = 'billboard_cadde';
         setGameCursor('pointer');
     } else if (isGanyanHover) {
@@ -257,7 +267,7 @@ function drawCaddeEnvironment() {
         ctx.strokeRect(4, 180, 64, 60);
         setGameCursor('pointer');
     } else {
-        if (hoveredTableId === 'cadde_ganyan' || hoveredTableId === 'cadde_casino' || hoveredTableId === 'cadde_to_street' || hoveredTableId === 'billboard_cadde') {
+        if (hoveredTableId === 'cadde_ganyan' || hoveredTableId === 'cadde_casino' || hoveredTableId === 'cadde_to_street' || hoveredTableId === 'billboard_cadde' || hoveredTableId === 'cadde_petshop') {
             hoveredTableId = null;
         }
         setGameCursor('default');
@@ -268,7 +278,76 @@ function drawCaddeEnvironment() {
 // 13. DEDENİN YERİ CASINO & BLACKJACK 21 SALONU (İÇ MEKAN)
 // ============================================================================
 
+function drawPetShopBooth(bctx, psX, psY, psW, psH) {
+    bctx.save();
+    bctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+    bctx.beginPath();
+    bctx.roundRect(psX + 4, psY + psH - 8, psW + 4, 12, 6);
+    bctx.fill();
+    bctx.fillStyle = isNightMode ? "#451a03" : "#fef3c7";
+    bctx.beginPath();
+    bctx.roundRect(psX, psY + 18, psW, psH - 18, 8);
+    bctx.fill();
+    bctx.strokeStyle = "#d97706";
+    bctx.lineWidth = 2;
+    bctx.stroke();
+    let stripeCount = 8;
+    let stripeW = psW / stripeCount;
+    for (let i = 0; i < stripeCount; i++) {
+        bctx.fillStyle = (i % 2 === 0) ? "#f97316" : "#ffffff";
+        bctx.beginPath();
+        bctx.roundRect(psX + i * stripeW, psY + 16, stripeW, 14, [0, 0, 4, 4]);
+        bctx.fill();
+    }
+    bctx.fillStyle = isNightMode ? "#1e293b" : "#ea580c";
+    bctx.beginPath();
+    bctx.roundRect(psX + 6, psY, psW - 12, 20, 6);
+    bctx.fill();
+    bctx.strokeStyle = "#facc15";
+    bctx.lineWidth = 1.5;
+    bctx.stroke();
+    bctx.fillStyle = "#fef08a";
+    bctx.font = "bold 11px sans-serif";
+    bctx.textAlign = "center";
+    bctx.fillText("🐾 PET SHOP 🐾", psX + psW / 2, psY + 14);
+    let winX = psX + 8, winY = psY + 36, winW = 74, winH = 54;
+    bctx.fillStyle = isNightMode ? "rgba(254, 240, 138, 0.18)" : "#e0f2fe";
+    bctx.beginPath();
+    bctx.roundRect(winX, winY, winW, winH, 4);
+    bctx.fill();
+    bctx.strokeStyle = "#b45309";
+    bctx.lineWidth = 1.8;
+    bctx.stroke();
+    bctx.font = "18px sans-serif";
+    bctx.fillText("🐱", winX + 22, winY + 28);
+    bctx.fillText("🐶", winX + 52, winY + 28);
+    bctx.fillStyle = "rgba(15, 23, 42, 0.75)";
+    bctx.beginPath();
+    bctx.roundRect(winX + 4, winY + winH - 18, winW - 8, 14, 3);
+    bctx.fill();
+    bctx.fillStyle = "#facc15";
+    bctx.font = "bold 8px sans-serif";
+    bctx.fillText("15 Dk Yoldaş ⏳", winX + winW / 2, winY + winH - 7);
+    let doorX = psX + 88, doorY = psY + 36, doorW = 44, doorH = 64;
+    bctx.fillStyle = "#78350f";
+    bctx.beginPath();
+    bctx.roundRect(doorX, doorY, doorW, doorH, 4);
+    bctx.fill();
+    bctx.strokeStyle = "#f59e0b";
+    bctx.lineWidth = 1.5;
+    bctx.stroke();
+    bctx.fillStyle = "#10b981";
+    bctx.beginPath();
+    bctx.roundRect(doorX + 6, doorY + 44, doorW - 12, 12, 3);
+    bctx.fill();
+    bctx.fillStyle = "#ffffff";
+    bctx.font = "bold 7.5px sans-serif";
+    bctx.fillText("AÇIK", doorX + doorW / 2, doorY + 53);
+    bctx.restore();
+}
+
 if (typeof window !== 'undefined') {
     window.renderStaticCaddeTo = renderStaticCaddeTo;
     window.drawCaddeEnvironment = drawCaddeEnvironment;
+    window.drawPetShopBooth = drawPetShopBooth;
 }

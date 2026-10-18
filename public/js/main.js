@@ -429,6 +429,15 @@ function changeRoom(newRoom, targetSpawn) {
             myPet.y = p.y;
             myPet.isMoving = false;
         }
+
+        // Sevimli Patiler Yoldaş Peti Varsa Oyuncuyla Beraber Yeni Mekana Geçsin
+        if (window.activeCompanionPets && window.activeCompanionPets[myId]) {
+            let myCompPet = window.activeCompanionPets[myId];
+            myCompPet.room = newRoom;
+            myCompPet.x = p.x + 24;
+            myCompPet.y = p.y + 6;
+            myCompPet.isMoving = false;
+        }
     }
 
     socket.emit('changeRoom', newRoom);
@@ -1668,6 +1677,10 @@ function gameLoop(timestamp) {
 
     if (typeof updateAndRenderFatherPets === 'function') {
         updateAndRenderFatherPets(ctx, dt);
+    }
+
+    if (typeof updateAndRenderCompanionPets === 'function') {
+        updateAndRenderCompanionPets(ctx, dt);
     }
 
     // 5. Nargile Cafe Yoğun Ekran Dumanı (20. Fırt Felaketi: Tüm ekranı 5 sn kaplayıp kimseyi göstermez)
