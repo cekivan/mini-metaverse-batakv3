@@ -437,6 +437,15 @@ function changeRoom(newRoom, targetSpawn) {
         fishBtn.style.display = (newRoom === 'sahil') ? 'flex' : 'none';
     }
 
+    const caddeBtn = document.getElementById('btnCaddeTeleportAction');
+    if (caddeBtn) {
+        caddeBtn.style.display = (newRoom === 'sanalika_cadde') ? 'none' : 'flex';
+    }
+    const leaveCaddeBtn = document.getElementById('btnLeaveCaddeAction');
+    if (leaveCaddeBtn) {
+        leaveCaddeBtn.style.display = (newRoom === 'sanalika_cadde') ? 'flex' : 'none';
+    }
+
     updateSwanBoatButtonUI();
 
     const editBtn = document.getElementById('btnEditHouseFurniture');

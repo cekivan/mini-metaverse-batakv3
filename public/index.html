@@ -17,7 +17,12 @@
                 <span>🗺️ Mekanlar</span>
                 <span id="placesArrow" style="font-size: 10px; transition: transform 0.2s;">▼</span>
             </button>
-            <div id="placesDropdownMenu" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 220px; background: rgba(15, 23, 42, 0.96); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; padding: 6px; box-shadow: 0 20px 45px rgba(0,0,0,0.75); backdrop-filter: blur(16px); z-index: 10050; flex-direction: column; gap: 4px;">
+            <div id="placesDropdownMenu" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 240px; max-height: 80vh; overflow-y: auto; background: rgba(15, 23, 42, 0.98); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; padding: 6px; box-shadow: 0 20px 45px rgba(0,0,0,0.75); backdrop-filter: blur(16px); z-index: 10050; flex-direction: column; gap: 4px;">
+                <button type="button" class="place-menu-item" style="color: #38bdf8; font-weight: 800; border-left: 3px solid #38bdf8; background: rgba(56, 189, 248, 0.18);" onclick="selectPlace('sanalika_cadde')">
+                    <span>🏙️ 1. Cadde (İzometrik 3D)</span>
+                    <span style="background: #ef4444; color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 6px; margin-left: auto;">YENİ</span>
+                </button>
+                <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 3px 0;"></div>
                 <button type="button" class="place-menu-item" onclick="selectPlace('sokak')">🌳 Meydan (Merkez)</button>
                 <button type="button" class="place-menu-item" onclick="selectPlace('kafe')">☕ Kafe & Oyun Salonu</button>
                 <button type="button" class="place-menu-item" onclick="selectPlace('nargile_cafe')">💨 Nargile Cafe & 101</button>
@@ -27,11 +32,14 @@
                 <button type="button" class="place-menu-item" onclick="selectPlace('dedenin_yeri')">⚡ Dedenin Yeri (Casino)</button>
                 <button type="button" class="place-menu-item" onclick="selectPlace('emlakci')">🏢 Prestij Emlak Ofisi</button>
                 <button type="button" class="place-menu-item" onclick="selectPlace('market')">🛒 Mobilya Marketi</button>
-                <button type="button" class="place-menu-item" style="color: #38bdf8; font-weight: 800; border-left: 3px solid #38bdf8; background: rgba(56, 189, 248, 0.1);" onclick="selectPlace('sanalika_cadde')">🏙️ 1. Cadde (İzometrik 3D)</button>
                 <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 3px 0;"></div>
                 <button type="button" class="place-menu-item" style="color: #fb923c;" onclick="selectPlace('housing_portal')">🏢 Konutlar & Evler Portal</button>
             </div>
         </div>
+        <button id="caddeDirectNavBtn" class="nav-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.5); display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.25);" onclick="selectPlace('sanalika_cadde')">
+            <span>🏙️ 1. Cadde</span>
+            <span style="background: #ef4444; color: white; font-size: 10px; font-weight: 800; padding: 1px 5px; border-radius: 4px;">YENİ</span>
+        </button>
         <button id="onlineUsersNavBtn" class="nav-btn" style="position: relative; background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 4px 12px rgba(14, 165, 233, 0.35); font-weight: 800; display: flex; align-items: center; gap: 6px;" onclick="openOnlinePlayersModal()">
             <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: onlineDotPulse 1.8s infinite ease-in-out;"></span>
             <span>🟢 Çevrimiçi (<span id="onlinePlayersCountBadge">1</span>)</span>
@@ -2158,6 +2166,8 @@
 
     <!-- SOSYAL EYLEM BUTONLARI -->
     <div id="socialActionBar" style="display: flex; gap: 10px; margin-top: 14px; justify-content: center; flex-wrap: wrap;">
+        <button id="btnCaddeTeleportAction" onclick="selectPlace('sanalika_cadde')" style="padding: 9px 16px; background: linear-gradient(135deg, #0284c7, #38bdf8); color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);">🏙️ 1. Cadde'ye Git</button>
+        <button id="btnLeaveCaddeAction" onclick="selectPlace('sokak')" style="display: none; padding: 9px 16px; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 13px; cursor: pointer; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);">🌳 Meydana Dön</button>
         <button id="btnFishAction" onclick="triggerFishing()" style="display: none; padding: 9px 16px; background: linear-gradient(135deg, #0284c7, #0369a1); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);">🎣 Oltayı At (Balık Tut)</button>
         <button id="btnSwanBoatAction" onclick="handleRentSwanBoat()" style="display: none; padding: 9px 16px; background: linear-gradient(135deg, #f43f5e, #be123c); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(244, 63, 94, 0.4);">🦢 Kuğu Deniz Bisikleti Kirala (20 TL)</button>
         <button id="btnEditHouseFurniture" onclick="toggleHouseEditMode()" style="display: none; padding: 9px 16px; background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);">🛋️ Evi Düzenle</button>

@@ -191,15 +191,16 @@ function sendSideChat() {
     let rawMsg = input.value.trim();
     if (!rawMsg) return;
 
-    let targetChannel = activeSendChannel;
-
-    // Slash command kısayolları: /all, /g, /genel => All chat; /oda, /o, /room => Oda chat
-    if (rawMsg.startsWith('/all ') || rawMsg.startsWith('/g ') || rawMsg.startsWith('/genel ')) {
-        targetChannel = 'all';
-        rawMsg = rawMsg.replace(/^\/(all|g|genel)\s+/, '').trim();
-    } else if (rawMsg.startsWith('/oda ') || rawMsg.startsWith('/o ') || rawMsg.startsWith('/room ')) {
-        targetChannel = 'room';
-        rawMsg = rawMsg.replace(/^\/(oda|o|room)\s+/, '').trim();
+    // Hızlı Işınlanma Komutları: /cadde, /sanalika, /1cadde
+    if (rawMsg.toLowerCase() === '/cadde' || rawMsg.toLowerCase() === '/sanalika' || rawMsg.toLowerCase() === '/1cadde') {
+        input.value = "";
+        updateChatCharCounter();
+        if (typeof selectPlace === 'function') {
+            selectPlace('sanalika_cadde');
+        } else if (typeof changeRoom === 'function') {
+            changeRoom('sanalika_cadde');
+        }
+        return;
     }
 
     if (!rawMsg) return;
