@@ -1,4 +1,5 @@
 const dataManager = require('../dataManager');
+const fatherPetManager = require('../fatherPetManager');
 const { checkRateLimit } = require('../utils/securityUtils');
 
 function registerSocialHandlers(io, socket, players, helpers) {
@@ -110,8 +111,15 @@ function registerSocialHandlers(io, socket, players, helpers) {
             }
         }
 
+        // 🧔‍♂️ /baba Komutu: TÜM KULLANICILAR İÇİN "Babayı Tuttu" (Baba Yoldaş Çağırma)
+        if (cleanMsg.toLowerCase() === '/baba') {
+            fatherPetManager.spawnFatherPet(socket.id);
+            socket.emit('systemMessage', "✨ Baban yanında belirdi! 'Babayı tuttun!' 🧔‍♂️");
+            return;
+        }
+
         // Geliştirici / Test Kısayolu: /testbaba (Yalnızca Admin)
-        if ((cleanMsg === '/testbaba' || cleanMsg === '/baba') && players[socket.id]?.isAdmin) {
+        if (cleanMsg === '/testbaba' && players[socket.id]?.isAdmin) {
             players[socket.id].pendingFatherChoice = true;
             socket.emit('fatherCaughtPrompt', {
                 title: "Denizden Baban Çıktı!",
@@ -591,6 +599,8 @@ function registerSocialHandlers(io, socket, players, helpers) {
                 room: p.room || 'sokak',
                 location: friendlyLoc || '🌳 Meydan',
                 isAdmin: !!p.isAdmin,
+                isMod: !!(p.isMod || p.role === 'mod' || p.role === 'moderator' || (p.name && p.name.toLowerCase() === 'elyesa')),
+                role: p.role || (p.isAdmin ? 'admin' : ((p.isMod || (p.name && p.name.toLowerCase() === 'elyesa')) ? 'mod' : 'user')),
                 isVip: !!(uData.isVip || (p.money && p.money >= 50000)),
                 isFishing: !!p.isFishing,
                 hasTea: !!p.hasTea,

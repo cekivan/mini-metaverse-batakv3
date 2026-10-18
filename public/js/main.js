@@ -66,9 +66,26 @@ socket.on('loginSuccess', (data) => {
         }
 
         const ADMIN_NAMES = ['yasin', 'maltoroz'];
-        if (data.isAdmin || (data.username && ADMIN_NAMES.includes(data.username.toLowerCase()))) {
-            const adminBtn = document.getElementById('adminPanelNavBtn');
-            if (adminBtn) adminBtn.style.display = 'flex';
+        const MOD_NAMES = ['elyesa'];
+        const isUserAdmin = !!(data.isAdmin || data.role === 'admin' || (data.username && ADMIN_NAMES.includes(data.username.toLowerCase())));
+        const isUserMod = !!(data.isMod || data.role === 'mod' || data.role === 'moderator' || (data.username && MOD_NAMES.includes(data.username.toLowerCase())));
+
+        window.currentUserIsAdmin = isUserAdmin;
+        window.currentUserIsMod = isUserMod;
+
+        const adminBtn = document.getElementById('adminPanelNavBtn');
+        if (adminBtn) {
+            if (isUserAdmin) {
+                adminBtn.style.display = 'flex';
+                adminBtn.innerHTML = '👑 Admin Paneli';
+                adminBtn.style.background = 'linear-gradient(135deg, #ef4444, #991b1b)';
+                adminBtn.style.boxShadow = '0 4px 12px rgba(239,68,68,0.4)';
+            } else if (isUserMod) {
+                adminBtn.style.display = 'flex';
+                adminBtn.innerHTML = '🛡️ Moderatör Paneli';
+                adminBtn.style.background = 'linear-gradient(135deg, #0284c7, #0369a1)';
+                adminBtn.style.boxShadow = '0 4px 12px rgba(2,132,199,0.4)';
+            }
         }
 
         // Yeni Güncellemeler (Beta v1.3) Panelini Aç

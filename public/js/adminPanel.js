@@ -7,6 +7,35 @@ let adminCurrentBanTarget = null;
 function openAdminPanel() {
     const modal = document.getElementById('adminPanelModal');
     if (modal) modal.style.display = 'flex';
+
+    const titleEl = document.getElementById('adminPanelModalTitle');
+    const descEl = document.getElementById('adminPanelModalDesc');
+    const boxEl = document.getElementById('adminPanelModalBox');
+
+    if (window.currentUserIsMod && !window.currentUserIsAdmin) {
+        if (titleEl) {
+            titleEl.innerHTML = '🛡️ Moderatör Paneli';
+            titleEl.style.color = '#38bdf8';
+        }
+        if (descEl) {
+            descEl.innerHTML = 'Aktif oyuncuları incele, canlı konumları takip et, sohbet düzenini sağla ve duyuru yayınla.';
+        }
+        if (boxEl) {
+            boxEl.style.borderColor = '#0284c7';
+        }
+    } else {
+        if (titleEl) {
+            titleEl.innerHTML = '👑 Admin Kontrol & Yönetim Paneli';
+            titleEl.style.color = '#ef4444';
+        }
+        if (descEl) {
+            descEl.innerHTML = 'Aktif oyuncuların canlı konumlarını gör, bakiye yönet ve sunucuya duyuru yayınla.';
+        }
+        if (boxEl) {
+            boxEl.style.borderColor = '#ef4444';
+        }
+    }
+
     switchAdminTab('users');
     if (window.socket) window.socket.emit('adminGetUsers');
 }
@@ -71,9 +100,14 @@ function renderAdminUsers(users) {
         return;
     }
 
+    let viewerIsAdmin = !!window.currentUserIsAdmin;
+    let viewerIsMod = !!(window.currentUserIsMod && !viewerIsAdmin);
+
     container.innerHTML = users.map(user => {
         let isMe = (user.username.toLowerCase() === (window.myUsername || '').toLowerCase());
         let isUserAdminAccount = (user.isAdmin || ['yasin', 'maltoroz'].includes(user.username.toLowerCase()));
+        let isUserModAccount = (user.isMod || user.role === 'mod' || user.role === 'moderator' || ['elyesa'].includes(user.username.toLowerCase()));
+
         let statusBadge = user.isOnline
             ? `<span style="font-size:11px; background:rgba(34,197,94,0.2); color:#4ade80; border:1px solid #22c55e; padding:1px 6px; border-radius:4px; font-weight:700;">🟢 Çevrimiçi</span>`
             : `<span style="font-size:11px; background:rgba(148,163,184,0.2); color:#94a3b8; border:1px solid #64748b; padding:1px 6px; border-radius:4px;">⚪ Çevrimdışı</span>`;
@@ -87,13 +121,25 @@ function renderAdminUsers(users) {
             ? `<span style="font-size:11px; background:rgba(168,85,247,0.2); color:#c084fc; border:1px solid #a855f7; padding:1px 6px; border-radius:4px; font-weight:700;">🛋️ Oturuyor</span>`
             : '';
 
+        let roleBadge = '';
+        if (isUserAdminAccount) {
+            roleBadge = `<span style="font-size:10px; background:#ef4444; color:white; font-weight:800; padding:1px 6px; border-radius:4px;">👑 ADMİN</span>`;
+        } else if (isUserModAccount) {
+            roleBadge = `<span style="font-size:10px; background:#0284c7; color:white; font-weight:800; padding:1px 6px; border-radius:4px;">🛡️ MOD</span>`;
+        }
+
+        // Hiyerarşi kuralları: Moderatör admini banlayamaz veya susturamaz
+        let canMuteOrBan = viewerIsAdmin || (!isUserAdminAccount && !isUserModAccount);
+        let canSummon = viewerIsAdmin || !isUserAdminAccount;
+        let canModifyMoney = viewerIsAdmin || !isUserAdminAccount;
+
         return `
         <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255,255,255,0.08); padding: 12px 14px; border-radius: 12px; display:flex; flex-direction:column; gap:10px;">
             <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px;">
                 <div style="min-width: 220px;">
                     <div style="font-weight: 800; font-size: 15px; color: #f8fafc; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                         <span>${user.username}</span>
-                        ${isUserAdminAccount ? '<span style="font-size:10px; background:#ef4444; color:white; font-weight:800; padding:1px 6px; border-radius:4px;">ADMİN</span>' : ''}
+                        ${roleBadge}
                         ${isMe ? '<span style="font-size:10px; background:#3b82f6; color:white; font-weight:800; padding:1px 6px; border-radius:4px;">SEN</span>' : ''}
                         ${statusBadge}
                         ${muteBadge}
@@ -112,41 +158,49 @@ function renderAdminUsers(users) {
                     </div>
                 </div>
 
-                <!-- ADMIN HIZLI EYLEMLER (IŞINLAN, ÇEK, SUSTUR, BANLA) -->
+                <!-- ADMIN/MOD HIZLI EYLEMLER (IŞINLAN, ÇEK, SUSTUR, BANLA) -->
                 ${!isMe ? `
                 <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                     <button onclick="adminTeleportTo('${user.username}')" style="padding: 6px 10px; background: linear-gradient(135deg, #0284c7, #0369a1); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; box-shadow:0 2px 5px rgba(2,132,199,0.3);" title="Oyuncunun yanına git">
                         🚀 Yanına Git
                     </button>
+                    ${canSummon ? `
                     <button onclick="adminSummon('${user.username}')" style="padding: 6px 10px; background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; box-shadow:0 2px 5px rgba(124,58,237,0.3);" title="Oyuncuyu kendi yanına çek">
                         🧲 Yanıma Çek
                     </button>
-                    ${user.isMuted ? `
-                    <button onclick="adminUnmuteUser('${user.username}')" style="padding: 6px 10px; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px;" title="Susturmayı kaldır">
-                        🔊 Susturmayı Aç
-                    </button>
-                    ` : `
-                    <button onclick="openMutePromptModal('${user.username}')" style="padding: 6px 10px; background: linear-gradient(135deg, #eab308, #ca8a04); color: #0f172a; border: none; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 11px;" title="Süreli sustur">
-                        🔇 Sustur
-                    </button>
-                    `}
-                    ${!isUserAdminAccount ? `
-                    <button onclick="openBanPromptModal('${user.username}')" style="padding: 6px 10px; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 11px;" title="Süreli banla">
-                        ⛔ Banla
-                    </button>
                     ` : ''}
+                    ${canMuteOrBan ? `
+                        ${user.isMuted ? `
+                        <button onclick="adminUnmuteUser('${user.username}')" style="padding: 6px 10px; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px;" title="Susturmayı kaldır">
+                            🔊 Susturmayı Aç
+                        </button>
+                        ` : `
+                        <button onclick="openMutePromptModal('${user.username}')" style="padding: 6px 10px; background: linear-gradient(135deg, #eab308, #ca8a04); color: #0f172a; border: none; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 11px;" title="Süreli sustur">
+                            🔇 Sustur
+                        </button>
+                        `}
+                        <button onclick="openBanPromptModal('${user.username}')" style="padding: 6px 10px; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 11px;" title="Süreli banla">
+                            ⛔ Banla
+                        </button>
+                    ` : (isUserAdminAccount && viewerIsMod ? `
+                        <span style="font-size:11px; color:#facc15; font-weight:800; background:rgba(234,179,8,0.15); border:1px solid #eab308; padding:4px 8px; border-radius:6px;">👑 Dokunulmaz (Admin)</span>
+                    ` : '')}
                 </div>
                 ` : ''}
             </div>
 
             <!-- BAKİYE YÖNETİMİ SATIRI -->
             <div style="display:flex; align-items:center; justify-content:flex-end; gap:6px; flex-wrap:wrap; border-top:1px dashed rgba(255,255,255,0.08); padding-top:8px;">
+                ${canModifyMoney ? `
                 <span style="font-size:11px; color:#94a3b8; font-weight:bold;">Para İşlemi:</span>
                 <input type="number" id="adminInput_${user.username}" placeholder="Miktar" value="100" style="width: 75px; padding: 5px 8px; background: rgba(15,23,42,0.85); border: 1px solid #475569; border-radius: 6px; color: white; font-weight: bold; font-size: 12px; text-align: center; outline:none;">
                 <button onclick="adminModifyUser('${user.username}', 'add')" style="padding: 5px 10px; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px;">+ Ekle</button>
                 <button onclick="adminModifyUser('${user.username}', 'set')" style="padding: 5px 10px; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px;">= Belirle</button>
                 <button onclick="adminQuickAdd('${user.username}', 250)" style="padding: 5px 8px; background: rgba(245,158,11,0.15); border: 1px solid #f59e0b; color: #facc15; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 10px;">+250</button>
                 <button onclick="adminQuickAdd('${user.username}', 1000)" style="padding: 5px 8px; background: rgba(245,158,11,0.15); border: 1px solid #f59e0b; color: #facc15; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 10px;">+1000</button>
+                ` : `
+                <span style="font-size:11px; color:#94a3b8; font-style:italic;">Admin bakiyesi moderatör tarafından düzenlenemez.</span>
+                `}
             </div>
         </div>
         `;
@@ -180,6 +234,12 @@ function adminSummon(targetUsername) {
 
 // Admin Mute Handlers
 function openMutePromptModal(username) {
+    if (window.currentUserIsMod && !window.currentUserIsAdmin) {
+        if (['yasin', 'maltoroz'].includes((username || '').toLowerCase())) {
+            alert("Adminler susturulamaz! Adminin görev yetkisi daha yüksektir.");
+            return;
+        }
+    }
     adminCurrentMuteTarget = username;
     const targetSpan = document.getElementById('muteTargetUsername');
     if (targetSpan) targetSpan.innerText = username;
@@ -223,6 +283,12 @@ function adminUnmuteUser(targetUsername) {
 
 // Admin Ban Handlers
 function openBanPromptModal(username) {
+    if (window.currentUserIsMod && !window.currentUserIsAdmin) {
+        if (['yasin', 'maltoroz'].includes((username || '').toLowerCase())) {
+            alert("Adminler banlanamaz! Adminin görev yetkisi daha yüksektir.");
+            return;
+        }
+    }
     adminCurrentBanTarget = username;
     const targetSpan = document.getElementById('banTargetUsername');
     if (targetSpan) targetSpan.innerText = username;

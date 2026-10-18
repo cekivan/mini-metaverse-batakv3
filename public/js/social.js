@@ -28,9 +28,39 @@ function openPlayerInteractionModal(targetId, targetPlayer) {
     const modal = document.getElementById('playerInteractionModal');
     if (!modal) return;
 
+    const titleEl = document.getElementById('playerInteractionModalTitle');
+    const boxEl = document.getElementById('playerInteractionModalBox');
+    const targetName = (targetPlayer.name || '').toLowerCase();
+    const isTargetAdmin = !!(targetPlayer.isAdmin || targetPlayer.role === 'admin' || ['yasin', 'maltoroz'].includes(targetName));
+    const isTargetMod = !!(targetPlayer.isMod || targetPlayer.role === 'mod' || targetPlayer.role === 'moderator' || ['elyesa'].includes(targetName));
+
+    if (titleEl) {
+        if (isTargetMod) {
+            titleEl.innerHTML = '🛡️ Moderatör';
+            titleEl.style.color = '#38bdf8';
+            if (boxEl) boxEl.style.borderColor = '#0284c7';
+        } else if (isTargetAdmin) {
+            titleEl.innerHTML = '👑 Yönetici (Admin)';
+            titleEl.style.color = '#ef4444';
+            if (boxEl) boxEl.style.borderColor = '#ef4444';
+        } else {
+            titleEl.innerHTML = '👤 Oyuncu Profili';
+            titleEl.style.color = '#38bdf8';
+            if (boxEl) boxEl.style.borderColor = '#38bdf8';
+        }
+    }
+
     // Oyuncu İsim & Durum
     const nameEl = document.getElementById('interactionPlayerName');
-    if (nameEl) nameEl.innerText = targetPlayer.name;
+    if (nameEl) {
+        if (isTargetMod) {
+            nameEl.innerHTML = `${targetPlayer.name} <span style="font-size:12px; background:linear-gradient(135deg, #0284c7, #0369a1); color:white; font-weight:800; padding:2px 8px; border-radius:6px; vertical-align:middle; margin-left:6px; box-shadow:0 2px 6px rgba(2,132,199,0.3);">🛡️ Moderatör</span>`;
+        } else if (isTargetAdmin) {
+            nameEl.innerHTML = `${targetPlayer.name} <span style="font-size:12px; background:linear-gradient(135deg, #ef4444, #dc2626); color:white; font-weight:800; padding:2px 8px; border-radius:6px; vertical-align:middle; margin-left:6px; box-shadow:0 2px 6px rgba(239,68,68,0.3);">👑 Admin</span>`;
+        } else {
+            nameEl.innerText = targetPlayer.name;
+        }
+    }
 
     const locEl = document.getElementById('interactionPlayerLocation');
     if (locEl) {

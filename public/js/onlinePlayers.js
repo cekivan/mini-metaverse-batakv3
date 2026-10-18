@@ -154,6 +154,9 @@ function renderOnlinePlayersCards(list) {
         if (p.isAdmin) {
             badgesHtml += `<span style="background: rgba(239, 68, 68, 0.25); border: 1px solid #ef4444; color: #fca5a5; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 8px;">👑 Admin</span>`;
         }
+        if (p.isMod || p.role === 'mod' || p.role === 'moderator' || (p.username && p.username.toLowerCase() === 'elyesa')) {
+            badgesHtml += `<span style="background: rgba(2, 132, 199, 0.25); border: 1px solid #0284c7; color: #38bdf8; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 8px;">🛡️ Mod</span>`;
+        }
         if (p.isVip) {
             badgesHtml += `<span style="background: rgba(234, 179, 8, 0.25); border: 1px solid #eab308; color: #fef08a; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 8px;">⭐ VIP</span>`;
         }

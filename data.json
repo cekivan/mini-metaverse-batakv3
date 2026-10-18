@@ -1354,8 +1354,9 @@
         "hash": "2c4e1c2934b78d3cc80bd5bd12278faa269f8b53a37b29acce0f3324accd6bfe",
         "salt": "a0c565f9a68986398b5a1e0b64aaf4f5"
       },
-      "role": "user",
+      "role": "mod",
       "isAdmin": false,
+      "isMod": true,
       "avatar": {
         "model": "classic_2",
         "hat": "korsan",

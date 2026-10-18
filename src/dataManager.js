@@ -167,6 +167,14 @@ async function syncDataJsonToMongo() {
         for (const u of allUsers) {
             persistentData.users[u.username] = u;
         }
+
+        // Canlı moderatör rolü güvencesi (Elyesa)
+        let elyesaKey = findUserKey('elyesa') || 'Elyesa';
+        if (persistentData.users[elyesaKey]) {
+            persistentData.users[elyesaKey].role = 'mod';
+            persistentData.users[elyesaKey].isMod = true;
+            await User.updateOne({ username: /^elyesa$/i }, { $set: { role: 'mod', isMod: true } }).catch(() => {});
+        }
         console.log(`🍃 [MONGODB]: Canlı veriler MongoDB ile senkronize edildi (${allUsers.length} kullanıcı).`);
     } catch (err) {
         console.error('❌ [MONGODB]: Senkronizasyon hatası:', err.message);
@@ -178,10 +186,20 @@ loadPersistentData();
 
 // --- 3.1 ADMİN KULLANICILARI VE YETKİ KONTROLÜ ---
 const ADMIN_USERS = ['yasin', 'maltoroz'];
+const MOD_USERS = ['elyesa'];
 
 function isUserAdmin(name) {
     if (!name || typeof name !== 'string') return false;
     return ADMIN_USERS.includes(name.toLowerCase().trim());
+}
+
+function isUserMod(name) {
+    if (!name || typeof name !== 'string') return false;
+    let lower = name.toLowerCase().trim();
+    if (MOD_USERS.includes(lower)) return true;
+    let uKey = findUserKey(name);
+    let u = uKey ? persistentData.users[uKey] : null;
+    return !!(u && (u.role === 'mod' || u.role === 'moderator' || u.isMod === true));
 }
 
 // --- 4. KULLANICI ARAMA & EV / ODA AYRIŞTIRICILARI ---
@@ -278,6 +296,9 @@ async function loginUser(rawName, password, playersOnline = {}) {
         if (isUserAdmin(existingKey)) {
             uData.role = 'admin';
             uData.isAdmin = true;
+        } else if (isUserMod(existingKey)) {
+            uData.role = 'mod';
+            uData.isMod = true;
         }
         return {
             success: true,
@@ -293,6 +314,9 @@ async function loginUser(rawName, password, playersOnline = {}) {
     if (isUserAdmin(existingKey)) {
         uData.role = 'admin';
         uData.isAdmin = true;
+    } else if (isUserMod(existingKey)) {
+        uData.role = 'mod';
+        uData.isMod = true;
     }
     persistentData.users[existingKey] = uData;
     await saveUserData(existingKey, uData);
@@ -345,8 +369,9 @@ async function registerUser(rawName, password, gender = 'male') {
         money: 1000,
         gender: gender || 'male',
         auth: { hash, salt },
-        role: isUserAdmin(cleanName) ? 'admin' : 'user',
+        role: isUserAdmin(cleanName) ? 'admin' : (isUserMod(cleanName) ? 'mod' : 'user'),
         isAdmin: isUserAdmin(cleanName),
+        isMod: isUserMod(cleanName),
         avatar: {
             model: 'classic',
             hat: isFem ? 'hair_long' : 'bere',
@@ -586,5 +611,7 @@ module.exports = {
     recordQuestProgress,
     claimQuestReward,
     isUserAdmin,
-    ADMIN_USERS
+    ADMIN_USERS,
+    isUserMod,
+    MOD_USERS
 };

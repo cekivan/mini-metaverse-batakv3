@@ -147,6 +147,8 @@ function getAdminOnlineUsers(players) {
             x: Math.round(p.x || 0),
             y: Math.round(p.y || 0),
             isAdmin: !!p.isAdmin,
+            isMod: !!(p.isMod || p.role === 'mod' || p.role === 'moderator' || (p.name && p.name.toLowerCase() === 'elyesa')),
+            role: p.role || (p.isAdmin ? 'admin' : ((p.isMod || (p.name && p.name.toLowerCase() === 'elyesa')) ? 'mod' : 'user')),
             isFishing: !!p.isFishing,
             hasTea: !!p.hasTea,
             isMuted: isMuted,
