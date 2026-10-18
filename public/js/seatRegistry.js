@@ -84,6 +84,17 @@ const STATIC_ROOM_SEATS = {
         // Plaj Şezlongları
         { x: 600, y: 330, facing: 'right', label: 'Plaj Şezlongu' },
         { x: 606, y: 356, facing: 'right', label: 'Plaj Şezlongu' }
+    ],
+    sanalika_cadde: [
+        // 1. Cadde & Durak Bankları
+        { x: 440, y: 585, facing: 'down', label: '10. Cadde Durak Bankı' },
+        { x: 520, y: 380, facing: 'down', label: '1. Cadde Bulvar Bankı' },
+        { x: 790, y: 335, facing: 'down', label: 'Sonbahar Park Bankı' },
+        { x: 910, y: 560, facing: 'left', label: 'Meydan Bankı' },
+        // Sahil & Plaj Şezlongları
+        { x: 1220, y: 760, facing: 'right', label: '1. Cadde Plaj Şezlongu' },
+        { x: 1260, y: 810, facing: 'right', label: '1. Cadde Plaj Şezlongu' },
+        { x: 1330, y: 840, facing: 'right', label: '1. Cadde Plaj Şezlongu' }
     ]
 };
 

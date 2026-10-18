@@ -116,6 +116,7 @@ function getPlayerDetailedLocation(sid, p) {
     if (r === "dedenin_yeri") return `⚡ Dedenin Yeri Casino (X: ${x}, Y: ${y})`;
     if (r === "emlakci") return `🏢 Prestij Emlak Ofisi (X: ${x}, Y: ${y})`;
     if (r === "sokak") return `🏙️ Sokak / Çarşı (X: ${x}, Y: ${y})`;
+    if (r === "sanalika_cadde") return `🏙️ 1. Cadde (İzometrik 3D) (X: ${x}, Y: ${y})`;
     if (r.startsWith("house_")) {
         let owner = r.replace("house_", "");
         return `🏠 ${owner}'in Evi (X: ${x}, Y: ${y})`;

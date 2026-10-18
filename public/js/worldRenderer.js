@@ -61,6 +61,10 @@ function renderStaticRoomTo(bctx, room, width, height) {
         renderStaticDedeninYeriTo(bctx, width, height);
     } else if (room === 'emlakci') {
         renderStaticEmlakciTo(bctx, width, height);
+    } else if (room === 'sanalika_cadde') {
+        if (typeof renderStaticSanalikaCaddeTo === 'function') {
+            renderStaticSanalikaCaddeTo(bctx, width, height);
+        }
     } else if (room.startsWith('house_')) {
         let type = room.replace('house_', '');
         if (typeof renderStaticHouseTo === 'function') {
@@ -1929,6 +1933,19 @@ function checkWorldCollision(x, y) {
     let pBottom = y + 7;
 
     // 1. Ekran / Dünya Dış Sınırları
+    if (currentRoom === "sanalika_cadde") {
+        if (x < 25 || x > 1575 || y < 45 || y > 925) return true;
+        // Kiralık binaların katı duvar sınırları
+        if (x >= 70 && x <= 380 && y >= 80 && y <= 275) return true; // Lidya Plaza
+        if (x >= 30 && x <= 290 && y >= 390 && y <= 580) return true; // Cadde Bistro
+        if (x >= 440 && x <= 700 && y >= 50 && y <= 215) return true; // Moda Butik
+        if (x >= 1140 && x <= 1480 && y >= 50 && y <= 245) return true; // Metropol Sineması
+        if (x >= 420 && x <= 710 && y >= 720 && y <= 900) return true; // VIP Lounge
+        // Derin deniz suyu sınırı
+        if (x > 1420 && y > 840) return true;
+        return false;
+    }
+
     if (currentRoom === "sokak") {
         // Sol koridor (sahile geçiş) ve sağ koridor (caddeye geçiş) açık!
         if (x < 14 && !(y >= 180 && y <= 330)) return true;

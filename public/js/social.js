@@ -64,7 +64,7 @@ function openPlayerInteractionModal(targetId, targetPlayer) {
 
     const locEl = document.getElementById('interactionPlayerLocation');
     if (locEl) {
-        let roomNames = { 'sokak': '🌳 Meydan', 'cadde': '🛣️ Cadde', 'dedenin_yeri': '⚡ Dedenin Yeri', 'emlakci': '🏢 Emlak Ofisi', 'kafe': '☕ Kafe', 'sahil': '🏖️ Sahil', 'nargile_cafe': '💨 Nargile Cafe', 'market': '🛒 Market', 'ganyan': '🏇 Ganyan Bayii' };
+        let roomNames = { 'sokak': '🌳 Meydan', 'cadde': '🛣️ Cadde', 'dedenin_yeri': '⚡ Dedenin Yeri', 'emlakci': '🏢 Emlak Ofisi', 'kafe': '☕ Kafe', 'sahil': '🏖️ Sahil', 'nargile_cafe': '💨 Nargile Cafe', 'market': '🛒 Market', 'ganyan': '🏇 Ganyan Bayii', 'sanalika_cadde': '🏙️ 1. Cadde' };
         let rName = roomNames[targetPlayer.room] || targetPlayer.room;
         if (targetPlayer.room && targetPlayer.room.startsWith('house_')) {
             rName = `🏠 ${targetPlayer.room.replace('house_', '')}'in Evi`;
@@ -424,7 +424,7 @@ function renderFriendsListUI(friends) {
         return;
     }
 
-    let roomNames = { 'sokak': '🌳 Meydan', 'cadde': '🛣️ Cadde', 'dedenin_yeri': '⚡ Dedenin Yeri', 'emlakci': '🏢 Emlak Ofisi', 'kafe': '☕ Kafe', 'sahil': '🏖️ Sahil', 'nargile_cafe': '💨 Nargile Cafe', 'market': '🛒 Market', 'ganyan': '🏇 Ganyan Bayii' };
+    let roomNames = { 'sokak': '🌳 Meydan', 'cadde': '🛣️ Cadde', 'dedenin_yeri': '⚡ Dedenin Yeri', 'emlakci': '🏢 Emlak Ofisi', 'kafe': '☕ Kafe', 'sahil': '🏖️ Sahil', 'nargile_cafe': '💨 Nargile Cafe', 'market': '🛒 Market', 'ganyan': '🏇 Ganyan Bayii', 'sanalika_cadde': '🏙️ 1. Cadde' };
 
     list.forEach(f => {
         let uName = getFriendUsername(f);

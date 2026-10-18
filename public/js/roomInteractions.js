@@ -343,6 +343,15 @@
             return false;
         }
 
+        // --- 1. CADDE (SANALİKA İZOMETRİK HARİTA) ---
+        if (currentRoom === "sanalika_cadde") {
+            if (typeof handleSanalikaCaddeClick === 'function') {
+                let handled = handleSanalikaCaddeClick(clickX, clickY);
+                if (handled) return true;
+            }
+            return false;
+        }
+
         // --- PRESTİJ GAYRİMENKUL & EMLAK OFİSİ ---
         if (currentRoom === "emlakci") {
             // Çıkış kapısı

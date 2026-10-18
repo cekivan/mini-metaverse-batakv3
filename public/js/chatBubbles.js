@@ -22,7 +22,8 @@ const CHAT_ROOM_NAMES = {
     'nargile_cafe': 'Nargile',
     'market': 'Market',
     'ganyan': 'Ganyan',
-    'vip_casino': 'Casino'
+    'vip_casino': 'Casino',
+    'sanalika_cadde': '1. Cadde'
 };
 
 function getChatRoomLabel(roomKey) {

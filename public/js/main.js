@@ -336,8 +336,11 @@ const ROOM_TRANSITION_SPAWNS = {
     ganyan: { default: { x: 400, y: 410 } },
     dedenin_yeri: { default: { x: 400, y: 410 } },
     nargile_cafe: { default: { x: 400, y: 390 } },
-    market: { default: { x: 400, y: 420 } }
+    market: { default: { x: 400, y: 420 } },
+    sanalika_cadde: { default: { x: 750, y: 520 } }
 };
+let sanalikaCamera = { x: 0, y: 0 };
+window.sanalikaCamera = sanalikaCamera;
 let roomTransitionCooldownUntil = 0;
 let roomTransitionFadeAlpha = 0;
 
@@ -363,6 +366,13 @@ function changeRoom(newRoom, targetSpawn) {
     currentRoom = newRoom;
     roomTransitionFadeAlpha = 0.95; // Sinematik mekan geçiş kararması (Fade in)
     if (typeof bgCache !== 'undefined') bgCache.invalidate();
+    if (newRoom === 'sanalika_cadde') {
+        sanalikaCamera.x = Math.max(0, Math.min(1600 - canvas.width, 750 - canvas.width / 2));
+        sanalikaCamera.y = Math.max(0, Math.min(960 - canvas.height, 520 - canvas.height / 2));
+    } else {
+        sanalikaCamera.x = 0;
+        sanalikaCamera.y = 0;
+    }
     if (typeof handleRoomChangedVoice === 'function') {
         handleRoomChangedVoice(newRoom);
     }
@@ -972,12 +982,18 @@ function handleCanvasTapOrClick(clickX, clickY) {
     if (now - lastCanvasTapTime < 140) return;
     lastCanvasTapTime = now;
 
+    // Dünya koordinatlarına çevir (Eğer kamera aktifse)
+    let camX = (currentRoom === 'sanalika_cadde' && window.sanalikaCamera) ? window.sanalikaCamera.x : 0;
+    let camY = (currentRoom === 'sanalika_cadde' && window.sanalikaCamera) ? window.sanalikaCamera.y : 0;
+    let worldX = clickX + camX;
+    let worldY = clickY + camY;
+
     // 1. ÖNCELİK: Başka bir oyuncunun üzerine tıklama kontrolü (Sosyal Etkileşim Menüsü)
     let clickedOtherPlayer = null;
     for (let id in players) {
         if (id === myId) continue;
         let p = players[id];
-        let dist = Math.hypot(clickX - p.x, clickY - p.y);
+        let dist = Math.hypot(worldX - p.x, worldY - p.y);
         if (dist <= 26) {
             clickedOtherPlayer = { id, player: p };
             break;
@@ -992,7 +1008,7 @@ function handleCanvasTapOrClick(clickX, clickY) {
 
     // 2. ÖNCELİK: Kendi üzerine tıklayarak oturuyorsa ayağa kalkma
     if (players[myId] && players[myId].action === 'sitting') {
-        let myDist = Math.hypot(clickX - players[myId].x, clickY - players[myId].y);
+        let myDist = Math.hypot(worldX - players[myId].x, worldY - players[myId].y);
         if (myDist <= 28) {
             standUpIfSitting();
             return;
@@ -1001,7 +1017,7 @@ function handleCanvasTapOrClick(clickX, clickY) {
 
     // 3. Modüler Mekan Etkileşim Motoru (public/js/roomInteractions.js)
     if (typeof handleRoomInteractionClick === 'function') {
-        let handled = handleRoomInteractionClick(clickX, clickY, currentRoom, players[myId], canvas.width, canvas.height);
+        let handled = handleRoomInteractionClick(worldX, worldY, currentRoom, players[myId], (currentRoom === 'sanalika_cadde' ? 1600 : canvas.width), (currentRoom === 'sanalika_cadde' ? 960 : canvas.height));
         if (handled) return;
     }
 
@@ -1028,8 +1044,14 @@ function handleCanvasTapOrClick(clickX, clickY) {
         if (players[myId].action === 'sitting') {
             standUpIfSitting();
         }
-        let targetX = Math.max(16, Math.min(canvas.width - 16, clickX));
-        let targetY = Math.max(38, Math.min(canvas.height - 20, clickY));
+        let targetX, targetY;
+        if (currentRoom === 'sanalika_cadde') {
+            targetX = Math.max(30, Math.min(1570, worldX));
+            targetY = Math.max(45, Math.min(925, worldY));
+        } else {
+            targetX = Math.max(16, Math.min(canvas.width - 16, clickX));
+            targetY = Math.max(38, Math.min(canvas.height - 20, clickY));
+        }
 
         targetWalkPos = { x: targetX, y: targetY };
         if (!tapRipples) tapRipples = [];
@@ -1288,7 +1310,27 @@ function gameLoop(timestamp) {
     let dt = lastGameLoopTime ? Math.min((now - lastGameLoopTime) / 1000, 0.1) : 0.016;
     lastGameLoopTime = now;
 
+    // Kamera Takibi ve Yumuşak Enterpolasyon (Lerp)
+    if (currentRoom === 'sanalika_cadde' && players[myId]) {
+        let p = players[myId];
+        let targetCamX = p.x - canvas.width / 2;
+        let targetCamY = p.y - canvas.height / 2;
+        targetCamX = Math.max(0, Math.min(1600 - canvas.width, targetCamX));
+        targetCamY = Math.max(0, Math.min(960 - canvas.height, targetCamY));
+        sanalikaCamera.x += (targetCamX - sanalikaCamera.x) * Math.min(1, 14 * dt);
+        sanalikaCamera.y += (targetCamY - sanalikaCamera.y) * Math.min(1, 14 * dt);
+    } else {
+        sanalikaCamera.x = 0;
+        sanalikaCamera.y = 0;
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    let isCamActive = (currentRoom === 'sanalika_cadde' && (sanalikaCamera.x !== 0 || sanalikaCamera.y !== 0));
+    if (isCamActive) {
+        ctx.save();
+        ctx.translate(-Math.round(sanalikaCamera.x), -Math.round(sanalikaCamera.y));
+    }
 
     // 1. Ortamı Çiz
     if (currentRoom === "kafe") {
@@ -1307,6 +1349,8 @@ function gameLoop(timestamp) {
         if (typeof drawDedeninYeriEnvironment === 'function') drawDedeninYeriEnvironment();
     } else if (currentRoom === "emlakci") {
         if (typeof drawEmlakciEnvironment === 'function') drawEmlakciEnvironment();
+    } else if (currentRoom === "sanalika_cadde") {
+        if (typeof drawSanalikaCaddeEnvironment === 'function') drawSanalikaCaddeEnvironment();
     } else if (currentRoom.startsWith("house_")) {
         if (typeof drawHouseEnvironment === 'function') drawHouseEnvironment();
     } else {
@@ -1510,10 +1554,12 @@ function gameLoop(timestamp) {
             }
         }
 
-        let minBoundX = (currentRoom === "sokak" || currentRoom === "cadde") ? 12 : 18;
-        let maxBoundX = (currentRoom === "sokak" || currentRoom === "sahil") ? canvas.width - 12 : canvas.width - 18;
+        let minBoundX = (currentRoom === "sanalika_cadde") ? 30 : ((currentRoom === "sokak" || currentRoom === "cadde") ? 12 : 18);
+        let maxBoundX = (currentRoom === "sanalika_cadde") ? 1570 : ((currentRoom === "sokak" || currentRoom === "sahil") ? canvas.width - 12 : canvas.width - 18);
+        let minBoundY = (currentRoom === "sanalika_cadde") ? 45 : 38;
+        let maxBoundY = (currentRoom === "sanalika_cadde") ? 920 : canvas.height - 20;
         p.x = Math.max(minBoundX, Math.min(maxBoundX, p.x));
-        p.y = Math.max(38, Math.min(canvas.height - 20, p.y));
+        p.y = Math.max(minBoundY, Math.min(maxBoundY, p.y));
 
         // Ağ Trafiği Throttling & Hassas Sayı Sıkıştırması (Bant Genişliği %40 Tasarruf)
         let posChanged = (Math.abs(p.x - lastEmittedX) > 0.3 || Math.abs(p.y - lastEmittedY) > 0.3);
@@ -1618,6 +1664,38 @@ function gameLoop(timestamp) {
     // 5. Nargile Cafe Yoğun Ekran Dumanı (20. Fırt Felaketi: Tüm ekranı 5 sn kaplayıp kimseyi göstermez)
     if (currentRoom === 'nargile_cafe' && typeof window.drawNargileScreenSmoke === 'function') {
         window.drawNargileScreenSmoke(ctx);
+    }
+
+    // Kamera koordinat matrisini geri yükle
+    if (isCamActive) {
+        ctx.restore();
+    }
+
+    // 5.1 Sanalika 1. Cadde HUD Sokak İsimliği ve Koordinat Göstergesi
+    if (currentRoom === 'sanalika_cadde') {
+        ctx.save();
+        ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
+        ctx.beginPath();
+        ctx.roundRect(14, 14, 205, 34, 10);
+        ctx.fill();
+        ctx.strokeStyle = "#0284c7";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.fillStyle = "#38bdf8";
+        ctx.font = "bold 12px sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("📍 1. CADDE (İzometrik)", 24, 34);
+
+        if (players[myId]) {
+            let px = Math.round(players[myId].x);
+            let py = Math.round(players[myId].y);
+            ctx.fillStyle = "#94a3b8";
+            ctx.font = "10px monospace";
+            ctx.textAlign = "right";
+            ctx.fillText(`${px}, ${py}`, 206, 34);
+        }
+        ctx.restore();
     }
 
     // 6. Sinematik Mekan Geçiş Kararması / Açılması (Fade Transition)

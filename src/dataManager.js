@@ -47,6 +47,9 @@ function verifyPassword(password, storedHash, salt) {
 async function saveUserData(username, updateFields = null) {
     if (!username) return;
     const uKey = findUserKey(username) || username;
+    if (updateFields && persistentData.users[uKey]) {
+        Object.assign(persistentData.users[uKey], updateFields);
+    }
     const dataToSave = updateFields || persistentData.users[uKey];
     if (!dataToSave) return;
 
@@ -64,6 +67,11 @@ async function saveUserData(username, updateFields = null) {
             console.error(`❌ [MONGODB HATA]: ${username} kullanıcısı kaydedilemedi:`, err.message);
         }
     }
+
+    // Yerel data.json yedeğini daima senkronize tut
+    try {
+        fs.writeFileSync(DATA_FILE, JSON.stringify(persistentData, null, 2), 'utf-8');
+    } catch (_) {}
 }
 
 async function savePersistentData(targetUsername = null) {
