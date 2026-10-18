@@ -211,7 +211,7 @@ function sendSideChat() {
     if (window.socket) {
         window.socket.emit('chatMessage', {
             msg: rawMsg,
-            channel: targetChannel
+            channel: activeSendChannel
         });
         input.value = "";
         updateChatCharCounter();

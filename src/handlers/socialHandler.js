@@ -12,7 +12,7 @@ function registerSocialHandlers(io, socket, players, helpers) {
     socket.on('chatMessage', (data) => {
         if (!players[socket.id] || !data) return;
 
-        let rawMsg = typeof data === 'string' ? data : (data.msg || '');
+        let rawMsg = typeof data === 'string' ? data : (typeof data.msg === 'string' ? data.msg : '');
         let targetChannel = (typeof data === 'object' && data.channel) ? data.channel : 'room';
 
         rawMsg = (rawMsg || '').trim();
