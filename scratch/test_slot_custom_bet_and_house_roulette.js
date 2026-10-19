@@ -13,8 +13,13 @@ async function runTests() {
 
     // 1. Verify Codebase Assertions
     console.log("--- 1. Statik Kod Analizi Doğrulaması ---");
+<<<<<<< HEAD
     const config = require('../src/config');
     assert.strictEqual(config.FURNITURE_PRICES.roulette_table, 5950, "Shared price config must set roulette_table to 5950");
+=======
+    const configContent = fs.readFileSync('src/config.js', 'utf8');
+    assert(configContent.includes("'roulette_table': 850"), "src/config.js must contain roulette_table: 850 in FURNITURE_PRICES");
+>>>>>>> 1970266af90dc7109f9dabca9189fef5685ad2db
     console.log("✓ src/config.js içinde roulette_table: 850 TL tanımlı!");
 
     const housingContent = fs.readFileSync('public/js/housing.js', 'utf8');

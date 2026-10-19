@@ -5,6 +5,7 @@
         houseMultiplier: 3,
         slotMachineMultiplier: 7,
         pokerTableMultiplier: 7,
+        lemonadeStandMultiplier: 3,
         handheldItemAddition: 100,
         dailyQuestMultiplier: 3
     };
@@ -110,6 +111,7 @@
         slot_machine: 750, roulette_table: 850
     };
     const furniturePrices = { ...baseFurniturePrices };
+    furniturePrices.meyve_arabasi *= PRICE_RULES.lemonadeStandMultiplier;
     furniturePrices.slot_machine *= PRICE_RULES.slotMachineMultiplier;
     furniturePrices.roulette_table *= PRICE_RULES.pokerTableMultiplier;
 
