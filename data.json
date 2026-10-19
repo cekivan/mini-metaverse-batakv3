@@ -1,0 +1,157 @@
+{
+  "users": {
+    "EvSahibi": {
+      "money": 1005,
+      "name": "EvSahibi"
+    },
+    "Oyuncu": {
+      "money": 2000,
+      "name": "Oyuncu"
+    },
+    "asd": {
+      "username": "asd",
+      "money": 1000,
+      "gender": "male",
+      "auth": {
+        "hash": "65b050ffafbf5cdc20297af00c81cb3dd30e9b73dcd3aabe6e3c4b4dcb63e914",
+        "salt": "0ec4233810ce4fa5d236b47259e921cd"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "isMod": false,
+      "avatar": {
+        "model": "classic",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "deneme": {
+      "username": "deneme",
+      "money": 990,
+      "gender": "male",
+      "auth": {
+        "hash": "6312683ccc46bec034c53ff94f074fa93c58b3aa0d3be91c10d719d988e185e0",
+        "salt": "2da534154ab275dabd50d68492758e6d"
+      },
+      "role": "user",
+      "isAdmin": false,
+      "isMod": false,
+      "avatar": {
+        "model": "classic_2",
+        "hat": "bere",
+        "face": "none",
+        "skinColor": "#ffd1a4",
+        "shirtColor": "#3b82f6",
+        "color": "#3b82f6",
+        "heldItem": "none",
+        "shoes": "sneakers"
+      },
+      "inventory": [
+        "hats_bere",
+        "skins_#facc15",
+        "shirts_#3b82f6",
+        "shoes_sneakers",
+        "face_none",
+        "props_none"
+      ],
+      "friends": [],
+      "friendRequests": [],
+      "house": null,
+      "houses": {},
+      "furnitureInventory": [],
+      "propInventory": {},
+      "dailyQuests": {
+        "date": "2026-10-19",
+        "quests": [
+          {
+            "id": "okey101_play",
+            "title": "🀄 101 Okey Partisi",
+            "desc": "101 Okey masasında 1 el tamamla",
+            "target": 1,
+            "reward": 180,
+            "current": 0,
+            "claimed": false
+          },
+          {
+            "id": "batak_play",
+            "title": "🃏 Koz Batak Ustası",
+            "desc": "Batak masasında 1 el tamamla",
+            "target": 1,
+            "reward": 150,
+            "current": 0,
+            "claimed": false
+          },
+          {
+            "id": "tavla_play",
+            "title": "🎲 Tavla Mücadelesi",
+            "desc": "Tavla masasında 1 oyun tamamla",
+            "target": 1,
+            "reward": 120,
+            "current": 0,
+            "claimed": false
+          },
+          {
+            "id": "drink_tea",
+            "title": "☕ Tavşan Kanlı Çay",
+            "desc": "Kıraathane çay ocağından taze çay iç",
+            "target": 1,
+            "reward": 60,
+            "current": 0,
+            "claimed": false
+          },
+          {
+            "id": "go_fishing",
+            "title": "🎣 Göl Kenarı Balıkçısı",
+            "desc": "Göl kenarında 1 kez olta atıp balık tut",
+            "target": 1,
+            "reward": 90,
+            "current": 1,
+            "claimed": false
+          }
+        ]
+      }
+    }
+  },
+  "leaderboard": {
+    "billiard": {
+      "yasin": 1
+    },
+    "batak": {
+      "🤖 Çaycı İsmail": 1186,
+      "🤖 Mahmut Emmi": 1047,
+      "🤖 Dayı Recep": 128,
+      "🤖 Hasan Dayı": 254,
+      "yasin": 49,
+      "maltoroz": 8,
+      "ahmet": 56,
+      "cemal": 47
+    },
+    "tavla": {
+      "yasin": 1
+    },
+    "okey101": {
+      "yasin": 1
+    },
+    "xox": {},
+    "amiral": {}
+  }
+}
