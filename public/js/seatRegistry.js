@@ -56,7 +56,10 @@ const STATIC_ROOM_SEATS = {
         { x: 512, y: 218, facing: 'down', label: 'Meydan Bankı' }
     ],
     cadde: [
+<<<<<<< HEAD
         { x: 122, y: 412, facing: 'down', label: 'Park Bankı' },
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         { x: 362, y: 412, facing: 'down', label: 'Park Bankı' },
         { x: 402, y: 227, facing: 'down', label: 'Bulvar Bankı' }
     ],
@@ -84,6 +87,7 @@ const STATIC_ROOM_SEATS = {
         // Plaj Şezlongları
         { x: 600, y: 330, facing: 'right', label: 'Plaj Şezlongu' },
         { x: 606, y: 356, facing: 'right', label: 'Plaj Şezlongu' }
+<<<<<<< HEAD
     ],
     sanalika_cadde: [
         // 1. Cadde & Durak Bankları
@@ -114,6 +118,8 @@ const STATIC_ROOM_SEATS = {
         { x: 440, y: 285, facing: 'down', label: 'Fıskiye Meydan Bankı' },
         { x: 590, y: 285, facing: 'down', label: 'Billboard Önü Bankı' },
         { x: 360, y: 405, facing: 'up', label: 'Çınar Altı Park Bankı' }
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     ]
 };
 

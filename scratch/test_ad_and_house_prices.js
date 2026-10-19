@@ -5,16 +5,21 @@ const config = require('../src/config');
 const adManager = require('../src/adManager');
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 console.log("=== Testing Ad Price (1100 TL) & House Prices (3x) ===");
 =======
 console.log("=== Testing Ad Price (1100 TL) & House Prices (+10%) ===");
 >>>>>>> 1970266af90dc7109f9dabca9189fef5685ad2db
+=======
+console.log("=== Testing Ad Price (1100 TL) & House Prices (+10%) ===");
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
 // 1. Verify adManager.AD_PRICE
 assert.strictEqual(adManager.AD_PRICE, 1100, "AdManager AD_PRICE must be 1100 TL");
 console.log("✔ Backend adManager.AD_PRICE is 1100 TL");
 
 // 2. Verify config.HOUSE_PRICES
+<<<<<<< HEAD
 <<<<<<< HEAD
 assert.strictEqual(config.HOUSE_PRICES.standart, 4125, "Standart house price must be 4125 TL");
 assert.strictEqual(config.HOUSE_PRICES.garden, 8250, "Garden house price must be 8250 TL");
@@ -28,6 +33,8 @@ assert(housingCode.includes("price: SHARED_PRICES.HOUSE_PRICES.garden"), "housin
 assert(housingCode.includes("price: SHARED_PRICES.HOUSE_PRICES.pool"), "housing.js must read pool price from the shared price book");
 console.log("✔ Frontend housing.js HOUSE_INFO prices verified (4125, 8250, 12375 TL)");
 =======
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 assert.strictEqual(config.HOUSE_PRICES.standart, 1375, "Standart house price must be 1375 TL (1250 + 10%)");
 assert.strictEqual(config.HOUSE_PRICES.garden, 2750, "Garden house price must be 2750 TL (2500 + 10%)");
 assert.strictEqual(config.HOUSE_PRICES.pool, 4125, "Pool house price must be 4125 TL (3750 + 10%)");
@@ -39,7 +46,10 @@ assert(housingCode.includes("price: 1375"), "housing.js must have price: 1375 fo
 assert(housingCode.includes("price: 2750"), "housing.js must have price: 2750 for garden");
 assert(housingCode.includes("price: 4125"), "housing.js must have price: 4125 for pool");
 console.log("✔ Frontend housing.js HOUSE_INFO prices verified (1375, 2750, 4125 TL)");
+<<<<<<< HEAD
 >>>>>>> 1970266af90dc7109f9dabca9189fef5685ad2db
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
 // 4. Verify public/index.html
 const indexHtml = fs.readFileSync(path.resolve(__dirname, '../public/index.html'), 'utf8');

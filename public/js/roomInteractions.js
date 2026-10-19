@@ -90,6 +90,7 @@
                 check: (p, w, h) => p.y >= h - 35 && p.x >= w / 2 - 45 && p.x <= w / 2 + 45,
                 target: 'sokak'
             }
+<<<<<<< HEAD
         ],
         star_caddesi: [
             {
@@ -122,6 +123,8 @@
                 check: (p, w, h) => p.x >= 845 && p.x <= 910 && p.y <= 165,
                 target: 'market'
             }
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         ]
     };
 
@@ -367,16 +370,21 @@
                 }
                 return true;
             }
+<<<<<<< HEAD
             // Cadde Reklam Panosu
             if (clickX >= 465 && clickX <= 735 && clickY >= 335 && clickY <= 470) {
                 if (typeof openBillboardAdModal === 'function') openBillboardAdModal();
                 return true;
             }
             // Pet Shop Kulübesi
+=======
+            // Pet Shop Kulübesi (Sol Alt)
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             if (clickX >= 25 && clickX <= 175 && clickY >= 335 && clickY <= 465) {
                 if (typeof openPetShopModal === 'function') openPetShopModal();
                 return true;
             }
+<<<<<<< HEAD
             return false;
         }
 
@@ -403,6 +411,12 @@
             if (typeof handleMeydanV2Click === 'function') {
                 let handled = handleMeydanV2Click(clickX, clickY, p);
                 if (handled) return true;
+=======
+            // Cadde Reklam Panosu
+            if (clickX >= 465 && clickX <= 735 && clickY >= 335 && clickY <= 470) {
+                if (typeof openBillboardAdModal === 'function') openBillboardAdModal();
+                return true;
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             }
             return false;
         }
@@ -744,14 +758,18 @@
                 if (typeof changeRoom === 'function') changeRoom('dedenin_yeri');
                 return true;
             }
+<<<<<<< HEAD
             if (p.x >= 465 && p.x <= 735 && p.y >= 335) {
                 if (typeof openBillboardAdModal === 'function') openBillboardAdModal();
                 return true;
             }
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             if (p.x <= 185 && p.y >= 330) {
                 if (typeof openPetShopModal === 'function') openPetShopModal();
                 return true;
             }
+<<<<<<< HEAD
             return false;
         }
 
@@ -767,6 +785,11 @@
             if (typeof handleMeydanV2MobileInteract === 'function') {
                 let handled = handleMeydanV2MobileInteract(p);
                 if (handled) return true;
+=======
+            if (p.x >= 465 && p.x <= 735 && p.y >= 335) {
+                if (typeof openBillboardAdModal === 'function') openBillboardAdModal();
+                return true;
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             }
             return false;
         }

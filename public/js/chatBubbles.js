@@ -22,8 +22,12 @@ const CHAT_ROOM_NAMES = {
     'nargile_cafe': 'Nargile',
     'market': 'Market',
     'ganyan': 'Ganyan',
+<<<<<<< HEAD
     'vip_casino': 'Casino',
     'sanalika_cadde': '1. Cadde'
+=======
+    'vip_casino': 'Casino'
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 };
 
 function getChatRoomLabel(roomKey) {
@@ -191,6 +195,7 @@ function sendSideChat() {
     let rawMsg = input.value.trim();
     if (!rawMsg) return;
 
+<<<<<<< HEAD
     // Hızlı Işınlanma Komutları: /cadde, /sanalika, /1cadde
     if (rawMsg.toLowerCase() === '/cadde' || rawMsg.toLowerCase() === '/sanalika' || rawMsg.toLowerCase() === '/1cadde') {
         input.value = "";
@@ -201,6 +206,17 @@ function sendSideChat() {
             changeRoom('sanalika_cadde');
         }
         return;
+=======
+    let targetChannel = activeSendChannel;
+
+    // Slash command kısayolları: /all, /g, /genel => All chat; /oda, /o, /room => Oda chat
+    if (rawMsg.startsWith('/all ') || rawMsg.startsWith('/g ') || rawMsg.startsWith('/genel ')) {
+        targetChannel = 'all';
+        rawMsg = rawMsg.replace(/^\/(all|g|genel)\s+/, '').trim();
+    } else if (rawMsg.startsWith('/oda ') || rawMsg.startsWith('/o ') || rawMsg.startsWith('/room ')) {
+        targetChannel = 'room';
+        rawMsg = rawMsg.replace(/^\/(oda|o|room)\s+/, '').trim();
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     }
 
     if (!rawMsg) return;
@@ -211,7 +227,11 @@ function sendSideChat() {
     if (window.socket) {
         window.socket.emit('chatMessage', {
             msg: rawMsg,
+<<<<<<< HEAD
             channel: activeSendChannel
+=======
+            channel: targetChannel
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         });
         input.value = "";
         updateChatCharCounter();

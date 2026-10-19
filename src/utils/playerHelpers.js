@@ -116,9 +116,12 @@ function getPlayerDetailedLocation(sid, p) {
     if (r === "dedenin_yeri") return `⚡ Dedenin Yeri Casino (X: ${x}, Y: ${y})`;
     if (r === "emlakci") return `🏢 Prestij Emlak Ofisi (X: ${x}, Y: ${y})`;
     if (r === "sokak") return `🏙️ Sokak / Çarşı (X: ${x}, Y: ${y})`;
+<<<<<<< HEAD
     if (r === "sanalika_cadde") return `🏙️ 1. Cadde (İzometrik 3D) (X: ${x}, Y: ${y})`;
     if (r === "star_caddesi") return `🌟 Star Caddesi (1000x625) (X: ${x}, Y: ${y})`;
     if (r === "meydanv2") return `🏙️ Meydan v2 (1000x625) (X: ${x}, Y: ${y})`;
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     if (r.startsWith("house_")) {
         let owner = r.replace("house_", "");
         return `🏠 ${owner}'in Evi (X: ${x}, Y: ${y})`;
@@ -150,8 +153,11 @@ function getAdminOnlineUsers(players) {
             x: Math.round(p.x || 0),
             y: Math.round(p.y || 0),
             isAdmin: !!p.isAdmin,
+<<<<<<< HEAD
             isMod: !!(p.isMod || p.role === 'mod' || p.role === 'moderator' || (p.name && p.name.toLowerCase() === 'elyesa')),
             role: p.role || (p.isAdmin ? 'admin' : ((p.isMod || (p.name && p.name.toLowerCase() === 'elyesa')) ? 'mod' : 'user')),
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             isFishing: !!p.isFishing,
             hasTea: !!p.hasTea,
             isMuted: isMuted,

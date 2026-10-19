@@ -25,17 +25,24 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
+<<<<<<< HEAD
         enum: ['user', 'admin', 'mod', 'moderator'],
+=======
+        enum: ['user', 'admin'],
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         default: 'user'
     },
     isAdmin: {
         type: Boolean,
         default: false
     },
+<<<<<<< HEAD
     isMod: {
         type: Boolean,
         default: false
     },
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     avatar: {
         model: { type: String, default: 'classic' },
         hat: { type: String, default: 'bere' },

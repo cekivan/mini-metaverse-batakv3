@@ -175,6 +175,7 @@ const WARDROBE_CATALOG = {
         { id: 'oyuncak_araba', name: 'Küçük Oyuncak Araba', cost: 300, icon: '🚗', model: 'all' }
     ]
 };
+<<<<<<< HEAD
 for (const [category, items] of Object.entries(WARDROBE_CATALOG)) {
     if (category === 'shirts') continue;
     for (const item of items) {
@@ -186,6 +187,8 @@ for (const [category, items] of Object.entries(WARDROBE_CATALOG)) {
         item.cost = price;
     }
 }
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 WARDROBE_CATALOG.shirts = WARDROBE_CATALOG.tshirts;
 
 let currentWardrobeTab = 'hats';

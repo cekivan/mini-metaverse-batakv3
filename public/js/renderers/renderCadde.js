@@ -175,8 +175,15 @@ function renderStaticCaddeTo(bctx, width, height) {
     bctx.fillStyle = "#f8fafc";
     bctx.beginPath(); bctx.arc(fX, fY, 6, 0, Math.PI * 2); bctx.fill();
 
+<<<<<<< HEAD
     // Park Bankları, Pet Shop ve Sokak Lambaları
     drawPetShopBooth(bctx, 30, 340, 140, 110);
+=======
+    // Sol Park Alanında Sevimli Patiler Pet Shop Kulübesi (x: 30, y: 340, w: 140, h: 110)
+    drawPetShopBooth(bctx, 30, 340, 140, 110);
+
+    // Park Bankları ve Sokak Lambaları
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     drawBench(bctx, 340, 410);
     drawBench(bctx, 380, 225);
 
@@ -185,6 +192,131 @@ function renderStaticCaddeTo(bctx, width, height) {
     drawLampPost(bctx, 420, 360);
 }
 
+<<<<<<< HEAD
+=======
+// Sevimli Patiler Pet Shop Binası Çizimi
+function drawPetShopBooth(bctx, psX, psY, psW, psH) {
+    bctx.save();
+
+    // 1. Zemin Taban Gölgesi
+    bctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+    bctx.beginPath();
+    bctx.roundRect(psX + 4, psY + psH - 8, psW + 4, 12, 6);
+    bctx.fill();
+
+    // 2. Ana Ahşap Kulübe Gövdesi (Sıcak Pastel Sarı / Karamel Ahşap)
+    bctx.fillStyle = isNightMode ? "#451a03" : "#fef3c7";
+    bctx.beginPath();
+    bctx.roundRect(psX, psY + 18, psW, psH - 18, 8);
+    bctx.fill();
+    bctx.strokeStyle = "#d97706";
+    bctx.lineWidth = 2;
+    bctx.stroke();
+
+    // Ahşap lambri çizgileri
+    bctx.strokeStyle = isNightMode ? "rgba(255,255,255,0.08)" : "rgba(217, 119, 6, 0.2)";
+    bctx.lineWidth = 1;
+    for (let ly = psY + 28; ly < psY + psH - 6; ly += 9) {
+        bctx.beginPath();
+        bctx.moveTo(psX + 3, ly);
+        bctx.lineTo(psX + psW - 3, ly);
+        bctx.stroke();
+    }
+
+    // 3. Şık Çizgili Tente (Kavuniçi / Beyaz Çizgiler)
+    let stripeCount = 8;
+    let stripeW = psW / stripeCount;
+    for (let i = 0; i < stripeCount; i++) {
+        bctx.fillStyle = (i % 2 === 0) ? "#f97316" : "#ffffff";
+        bctx.beginPath();
+        bctx.roundRect(psX + i * stripeW, psY + 16, stripeW, 14, [0, 0, 4, 4]);
+        bctx.fill();
+    }
+    bctx.strokeStyle = "#ea580c";
+    bctx.lineWidth = 1.2;
+    bctx.strokeRect(psX, psY + 16, psW, 14);
+
+    // 4. Işıklı Tabela (PET SHOP 🐾)
+    bctx.fillStyle = isNightMode ? "#1e293b" : "#ea580c";
+    bctx.beginPath();
+    bctx.roundRect(psX + 6, psY, psW - 12, 20, 6);
+    bctx.fill();
+    bctx.strokeStyle = "#facc15";
+    bctx.lineWidth = 1.5;
+    bctx.stroke();
+
+    bctx.fillStyle = "#fef08a";
+    bctx.font = "bold 11px sans-serif";
+    bctx.textAlign = "center";
+    bctx.fillText("🐾 PET SHOP 🐾", psX + psW / 2, psY + 14);
+
+    // 5. Vitrin Penceresi (Sol Taraf: x: psX + 8, y: psY + 36, w: 74, h: 54)
+    let winX = psX + 8, winY = psY + 36, winW = 74, winH = 54;
+    bctx.fillStyle = isNightMode ? "rgba(254, 240, 138, 0.18)" : "#e0f2fe";
+    bctx.beginPath();
+    bctx.roundRect(winX, winY, winW, winH, 4);
+    bctx.fill();
+    bctx.strokeStyle = "#b45309";
+    bctx.lineWidth = 1.8;
+    bctx.stroke();
+
+    // Vitrin İçi Detayları: Sevimli Kedi ve Köpek Silueti
+    bctx.font = "18px sans-serif";
+    bctx.fillText("🐱", winX + 22, winY + 28);
+    bctx.fillText("🐶", winX + 52, winY + 28);
+
+    // Vitrin Altındaki "15 Dk Yoldaş" Etiketi
+    bctx.fillStyle = "rgba(15, 23, 42, 0.75)";
+    bctx.beginPath();
+    bctx.roundRect(winX + 4, winY + winH - 18, winW - 8, 14, 3);
+    bctx.fill();
+    bctx.fillStyle = "#facc15";
+    bctx.font = "bold 8px sans-serif";
+    bctx.fillText("15 Dk Yoldaş ⏳", winX + winW / 2, winY + winH - 7);
+
+    // 6. Hizmet Kapısı / Gişesi (Sağ Taraf: x: psX + 88, y: psY + 36, w: 44, h: 64)
+    let doorX = psX + 88, doorY = psY + 36, doorW = 44, doorH = 64;
+    bctx.fillStyle = "#78350f";
+    bctx.beginPath();
+    bctx.roundRect(doorX, doorY, doorW, doorH, 4);
+    bctx.fill();
+    bctx.strokeStyle = "#f59e0b";
+    bctx.lineWidth = 1.5;
+    bctx.stroke();
+
+    // Kapı Camı
+    bctx.fillStyle = isNightMode ? "rgba(254, 240, 138, 0.25)" : "#bae6fd";
+    bctx.fillRect(doorX + 5, doorY + 6, doorW - 10, 22);
+    bctx.strokeStyle = "#451a03";
+    bctx.lineWidth = 1;
+    bctx.strokeRect(doorX + 5, doorY + 6, doorW - 10, 22);
+
+    // Kapı Tokmağı
+    bctx.fillStyle = "#facc15";
+    bctx.beginPath();
+    bctx.arc(doorX + doorW - 8, doorY + 38, 2.2, 0, Math.PI * 2);
+    bctx.fill();
+
+    // "AÇIK" Rozeti
+    bctx.fillStyle = "#10b981";
+    bctx.beginPath();
+    bctx.roundRect(doorX + 6, doorY + 44, doorW - 12, 12, 3);
+    bctx.fill();
+    bctx.fillStyle = "#ffffff";
+    bctx.font = "bold 7.5px sans-serif";
+    bctx.fillText("AÇIK", doorX + doorW / 2, doorY + 53);
+
+    // 7. Kapı Önü Pati Paspası
+    bctx.fillStyle = "#334155";
+    bctx.fillRect(doorX + 2, psY + psH - 4, doorW - 4, 5);
+    bctx.fillStyle = "#fef08a";
+    bctx.font = "bold 6px sans-serif";
+    bctx.fillText("🐾 GİR", doorX + doorW / 2, psY + psH);
+
+    bctx.restore();
+}
+
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 function drawCaddeEnvironment() {
     let bg = bgCache.getCanvas('cadde', canvas.width, canvas.height);
     ctx.drawImage(bg, 0, 0);
@@ -227,7 +359,14 @@ function drawCaddeEnvironment() {
     let isCasinoHover = (canvasMouseX >= 440 && canvasMouseX <= 740 && canvasMouseY >= 12 && canvasMouseY <= 125);
     let isExitStreetHover = (canvasMouseX <= 66 && canvasMouseY >= 140 && canvasMouseY <= 315);
 
+<<<<<<< HEAD
     if (isPetShopHover) {
+=======
+    if (isBillboardCaddeHover) {
+        hoveredTableId = 'billboard_cadde';
+        setGameCursor('pointer');
+    } else if (isPetShopHover) {
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         hoveredTableId = 'cadde_petshop';
         ctx.strokeStyle = "#fb923c";
         ctx.lineWidth = 3;
@@ -237,9 +376,12 @@ function drawCaddeEnvironment() {
         ctx.textAlign = "center";
         ctx.fillText("🐾 Sevimli Patiler Pet Shop (Tıkla)", 100, 332);
         setGameCursor('pointer');
+<<<<<<< HEAD
     } else if (isBillboardCaddeHover) {
         hoveredTableId = 'billboard_cadde';
         setGameCursor('pointer');
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     } else if (isGanyanHover) {
         hoveredTableId = 'cadde_ganyan';
         ctx.strokeStyle = "#facc15";
@@ -278,6 +420,7 @@ function drawCaddeEnvironment() {
 // 13. DEDENİN YERİ CASINO & BLACKJACK 21 SALONU (İÇ MEKAN)
 // ============================================================================
 
+<<<<<<< HEAD
 function drawPetShopBooth(bctx, psX, psY, psW, psH) {
     bctx.save();
     bctx.fillStyle = "rgba(0, 0, 0, 0.35)";
@@ -350,4 +493,9 @@ if (typeof window !== 'undefined') {
     window.renderStaticCaddeTo = renderStaticCaddeTo;
     window.drawCaddeEnvironment = drawCaddeEnvironment;
     window.drawPetShopBooth = drawPetShopBooth;
+=======
+if (typeof window !== 'undefined') {
+    window.renderStaticCaddeTo = renderStaticCaddeTo;
+    window.drawCaddeEnvironment = drawCaddeEnvironment;
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 }

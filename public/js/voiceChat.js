@@ -65,8 +65,12 @@
                 dedenin_yeri: '⚡ Dedenin Yeri',
                 ganyan: '🏇 Ganyan Bayii',
                 market: '🛒 Market',
+<<<<<<< HEAD
                 emlakci: '🏢 Emlak Ofisi',
                 sanalika_cadde: '🏙️ 1. Cadde'
+=======
+                emlakci: '🏢 Emlak Ofisi'
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             };
             return names[r] || `🏠 Ev (${r})`;
         }

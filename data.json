@@ -1,6 +1,7 @@
 {
   "users": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "EvSahibi": {
       "money": 1005,
       "name": "EvSahibi"
@@ -21,6 +22,12 @@
       "_id": "6ad3debb1552c02d3989a159",
       "username": "yasin",
       "money": 2898,
+=======
+    "yasin": {
+      "_id": "6ad3debb1552c02d3989a159",
+      "username": "yasin",
+      "money": 1198,
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "gender": "male",
       "auth": {
         "hash": "f971b4fe5d3824a081cf8a822f54f75bef7054f50824de8e50d3d7882874c491",
@@ -35,7 +42,11 @@
         "skinColor": "#8d5524",
         "shirtColor": "outfit_c2_street_cool",
         "color": "outfit_c2_street_cool",
+<<<<<<< HEAD
         "heldItem": "asagold",
+=======
+        "heldItem": "cocktail_pineapple",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         "shoes": "sneakers",
         "shirt": "polo",
         "outfit": "outfit_c2_street_cool"
@@ -422,7 +433,11 @@
             "desc": "Batak masasında 1 el tamamla",
             "target": 1,
             "reward": 50,
+<<<<<<< HEAD
             "current": 1,
+=======
+            "current": 0,
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             "claimed": false,
             "_id": "6ad3debb1552c02d3989a15b"
           },
@@ -465,9 +480,14 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:51.839Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0,
       "isMod": false
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     },
     "babake": {
       "_id": "6ad3debb1552c02d3989a15f",
@@ -519,7 +539,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:51.944Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "rümeysa": {
@@ -574,6 +598,7 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:52.043Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
@@ -582,6 +607,22 @@
         "hash": "4bd549a11414f5688a4f9c2fe3a0a4b2b9660e7a927dab9d2094d25e2e8e1778",
         "salt": "a85797869fedc737ed7b36d006d30420"
       },
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "ahmet": {
+      "_id": "6ad3debc1552c02d3989a161",
+      "username": "ahmet",
+      "money": 20000,
+      "gender": "male",
+      "auth": {
+        "hash": null,
+        "salt": null
+      },
+      "role": "user",
+      "isAdmin": false,
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "avatar": {
         "model": "classic",
         "hat": "bere",
@@ -594,6 +635,7 @@
         "shirt": null,
         "outfit": null
       },
+<<<<<<< HEAD
       "dailyQuests": {
         "date": "",
         "quests": []
@@ -605,6 +647,8 @@
       "gender": "male",
       "role": "user",
       "isAdmin": false,
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "inventory": [
         "hats_bere",
         "skins_#facc15",
@@ -617,6 +661,13 @@
       "friends": [],
       "friendRequests": [],
       "house": null,
+<<<<<<< HEAD
+=======
+      "dailyQuests": {
+        "date": "",
+        "quests": []
+      },
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "teaExpiresAt": null,
       "banExpiresAt": null,
       "banReason": null,
@@ -626,7 +677,11 @@
       "propInventory": {},
       "houses": {},
       "createdAt": "2026-10-17T20:46:52.143Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "maltoroz": {
@@ -738,7 +793,11 @@
       "muteReason": null,
       "houses": {},
       "createdAt": "2026-10-17T20:46:52.241Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "denemelik": {
@@ -789,7 +848,11 @@
       "muteReason": null,
       "houses": {},
       "createdAt": "2026-10-17T20:46:52.347Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "qwdqd": {
@@ -840,7 +903,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:52.447Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "aşldkwşlqkd": {
@@ -891,7 +958,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:52.545Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "taktukhamdi": {
@@ -942,7 +1013,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:52.645Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "Black_Widow": {
@@ -1046,7 +1121,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:52.748Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "deneme": {
@@ -1153,7 +1232,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:52.847Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "mehmet": {
@@ -1204,7 +1287,11 @@
       "propInventory": {},
       "houses": {},
       "createdAt": "2026-10-17T20:46:52.953Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "cemal": {
@@ -1255,7 +1342,11 @@
       "propInventory": {},
       "houses": {},
       "createdAt": "2026-10-17T20:46:53.094Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "kadın": {
@@ -1307,7 +1398,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:53.196Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "ceki": {
@@ -1361,18 +1456,27 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T20:46:53.295Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "Elyesa": {
       "_id": "6ad3f0c9435135d09468fd7c",
       "username": "Elyesa",
+<<<<<<< HEAD
       "money": 330193,
+=======
+      "money": 49250,
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "gender": "male",
       "auth": {
         "hash": "2c4e1c2934b78d3cc80bd5bd12278faa269f8b53a37b29acce0f3324accd6bfe",
         "salt": "a0c565f9a68986398b5a1e0b64aaf4f5"
       },
+<<<<<<< HEAD
       "role": "mod",
       "isAdmin": false,
       "avatar": {
@@ -1385,6 +1489,20 @@
         "heldItem": "tespih2",
         "shoes": "boots_thigh_high",
         "shirt": "leather",
+=======
+      "role": "user",
+      "isAdmin": false,
+      "avatar": {
+        "model": "classic_2",
+        "hat": "korsan",
+        "face": "beard",
+        "skinColor": "#8d5524",
+        "shirtColor": "#0f172a",
+        "color": "#0f172a",
+        "heldItem": "kilic",
+        "shoes": "boots",
+        "shirt": "#0f172a",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         "outfit": null
       },
       "inventory": [
@@ -1409,6 +1527,7 @@
         "shoes_boots",
         "pants_pants_classic_black",
         "tshirts_#0f172a",
+<<<<<<< HEAD
         "faces_beard",
         "skins_#ffd1a4",
         "outfits_outfit_c2_gentleman",
@@ -1420,6 +1539,13 @@
         "props_kilic": 1,
         "props_tespih2": 1,
         "props_oyuncak_araba": 1
+=======
+        "faces_beard"
+      ],
+      "propInventory": {
+        "props_kilic": 1,
+        "props_tespih2": 1
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       },
       "furnitureInventory": [],
       "friends": [
@@ -1430,6 +1556,7 @@
       "house": null,
       "houses": {},
       "dailyQuests": {
+<<<<<<< HEAD
         "date": "2026-10-17",
         "quests": [
           {
@@ -1483,6 +1610,10 @@
             "_id": "6ad40b22435135d094695018"
           }
         ]
+=======
+        "date": "",
+        "quests": []
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       },
       "teaExpiresAt": null,
       "banExpiresAt": null,
@@ -1491,9 +1622,14 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:03:53.473Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:55:53.365Z",
       "__v": 0,
       "isMod": true
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     },
     "taha": {
       "_id": "6ad3f0d2435135d09468fd7d",
@@ -1557,7 +1693,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:04:02.082Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "sebon": {
@@ -1578,7 +1718,11 @@
         "skinColor": "#ffd1a4",
         "shirtColor": "leather",
         "color": "leather",
+<<<<<<< HEAD
         "heldItem": "none",
+=======
+        "heldItem": "cay",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         "shoes": "sneakers",
         "shirt": "leather",
         "outfit": null
@@ -1595,7 +1739,12 @@
         "props_kilic"
       ],
       "propInventory": {
+<<<<<<< HEAD
         "props_kilic": 2
+=======
+        "props_kilic": 2,
+        "props_cay": 1
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       },
       "furnitureInventory": [],
       "friends": [],
@@ -1603,6 +1752,7 @@
       "house": null,
       "houses": {},
       "dailyQuests": {
+<<<<<<< HEAD
         "date": "2026-10-17",
         "quests": [
           {
@@ -1658,13 +1808,23 @@
         ]
       },
       "teaExpiresAt": null,
+=======
+        "date": "",
+        "quests": []
+      },
+      "teaExpiresAt": 1792279836465,
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "banExpiresAt": null,
       "banReason": null,
       "bannedBy": null,
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:13:16.672Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "Pelin": {
@@ -1713,13 +1873,21 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:35:27.389Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "Pelinn": {
       "_id": "6ad3f888435135d094690825",
       "username": "Pelinn",
+<<<<<<< HEAD
       "money": 11000,
+=======
+      "money": 30,
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "gender": "female",
       "auth": {
         "hash": "b3966ca90f284579b3b74a8a47ece9faf1305caff8eaa320ca67e1cbca7c8049",
@@ -1770,9 +1938,14 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:36:56.686Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0,
       "isMod": false
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     },
     "amdöndüren": {
       "_id": "6ad3fa06435135d094690862",
@@ -1820,7 +1993,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:43:18.083Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "kaşar": {
@@ -1869,7 +2046,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:43:47.889Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "bacıdürten": {
@@ -1921,7 +2102,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:44:18.585Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "EskişehirKaşarı": {
@@ -1976,7 +2161,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:44:50.287Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "BacıKovalayan": {
@@ -2029,7 +2218,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:45:25.282Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "KırmıziŞortli": {
@@ -2081,7 +2274,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:45:54.383Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "BabaNoluyooo": {
@@ -2133,7 +2330,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:47:14.481Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "Kimolumbu": {
@@ -2183,7 +2384,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:47:41.580Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "BenTahayım": {
@@ -2235,7 +2440,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:52:14.273Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "Benİbneyim": {
@@ -2290,7 +2499,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:52:26.886Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "BenElyesayımAmaİbne": {
@@ -2343,7 +2556,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:52:49.390Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "tahaKALPpelin": {
@@ -2392,7 +2609,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:53:23.085Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "YasinimBen": {
@@ -2445,7 +2666,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:53:53.780Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "SonerKüçük": {
@@ -2494,7 +2719,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:54:36.279Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "test_u_24315": {
@@ -2545,7 +2774,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:55:04.360Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T22:55:04.360Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "test_u_15175": {
@@ -2596,7 +2829,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:55:04.493Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T22:55:04.493Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "ÖmerÇelik": {
@@ -2649,7 +2886,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:55:08.280Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "MuzcuArman": {
@@ -2702,7 +2943,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:55:57.276Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "KüçükElyesa": {
@@ -2755,7 +3000,11 @@
             "reward": 60,
             "current": 0,
             "claimed": false,
+<<<<<<< HEAD
             "_id": "6ad40b22435135d09469501e"
+=======
+            "_id": "6ad404b6435135d0946926ed"
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
           },
           {
             "id": "batak_play",
@@ -2765,7 +3014,11 @@
             "reward": 50,
             "current": 0,
             "claimed": false,
+<<<<<<< HEAD
             "_id": "6ad40b22435135d09469501f"
+=======
+            "_id": "6ad404b6435135d0946926ee"
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
           },
           {
             "id": "tavla_play",
@@ -2775,7 +3028,11 @@
             "reward": 40,
             "current": 0,
             "claimed": false,
+<<<<<<< HEAD
             "_id": "6ad40b22435135d094695020"
+=======
+            "_id": "6ad404b6435135d0946926ef"
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
           },
           {
             "id": "drink_tea",
@@ -2785,7 +3042,11 @@
             "reward": 20,
             "current": 0,
             "claimed": false,
+<<<<<<< HEAD
             "_id": "6ad40b22435135d094695021"
+=======
+            "_id": "6ad404b6435135d0946926f0"
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
           },
           {
             "id": "go_fishing",
@@ -2795,7 +3056,11 @@
             "reward": 30,
             "current": 1,
             "claimed": false,
+<<<<<<< HEAD
             "_id": "6ad40b22435135d094695022"
+=======
+            "_id": "6ad404b6435135d0946926f1"
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
           }
         ]
       },
@@ -2806,7 +3071,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:57:32.480Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "yav": {
@@ -2855,7 +3124,11 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T22:58:22.380Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "__v": 0
     },
     "HarryPother": {
@@ -2904,11 +3177,18 @@
       "muteExpiresAt": null,
       "muteReason": null,
       "createdAt": "2026-10-17T23:07:35.985Z",
+<<<<<<< HEAD
       "updatedAt": "2026-10-18T01:50:39.246Z",
       "__v": 0
     },
     "bil_u1_56913": {
       "_id": "6ad40535101e9329cd423754",
+=======
+      "updatedAt": "2026-10-17T23:28:54.391Z",
+      "__v": 0
+    },
+    "bil_u1_56913": {
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "username": "bil_u1_56913",
       "money": 1000,
       "gender": "male",
@@ -2936,12 +3216,16 @@
         "face_none",
         "props_none"
       ],
+<<<<<<< HEAD
       "propInventory": {},
       "furnitureInventory": [],
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "friends": [],
       "friendRequests": [],
       "house": null,
       "houses": {},
+<<<<<<< HEAD
       "dailyQuests": {
         "date": "",
         "quests": []
@@ -2958,6 +3242,12 @@
     },
     "bil_u2_80101": {
       "_id": "6ad40535101e9329cd423755",
+=======
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "bil_u2_80101": {
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "username": "bil_u2_80101",
       "money": 1000,
       "gender": "male",
@@ -2985,12 +3275,16 @@
         "face_none",
         "props_none"
       ],
+<<<<<<< HEAD
       "propInventory": {},
       "furnitureInventory": [],
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "friends": [],
       "friendRequests": [],
       "house": null,
       "houses": {},
+<<<<<<< HEAD
       "dailyQuests": {
         "date": "",
         "quests": []
@@ -3277,6 +3571,21 @@
       "role": "user",
       "isAdmin": false,
       "isMod": false,
+=======
+      "furnitureInventory": [],
+      "propInventory": {}
+    },
+    "test": {
+      "username": "test",
+      "money": 10013923,
+      "gender": "male",
+      "auth": {
+        "hash": "ad1564cdc2d7d62d8159cb8872e670b46cbb470f74eb553f7d6f151768d9f362",
+        "salt": "f9f9b7a14316fd5c2e56807d949fa2ad"
+      },
+      "role": "user",
+      "isAdmin": false,
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
       "avatar": {
         "model": "classic",
         "hat": "bere",
@@ -3301,6 +3610,7 @@
       "houses": {},
       "furnitureInventory": [],
       "propInventory": {}
+<<<<<<< HEAD
 <<<<<<< HEAD
     },
     "deneme": {
@@ -3390,6 +3700,8 @@
       }
 =======
 >>>>>>> 1970266af90dc7109f9dabca9189fef5685ad2db
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     }
   },
   "leaderboard": {

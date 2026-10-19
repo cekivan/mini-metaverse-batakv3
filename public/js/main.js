@@ -66,6 +66,7 @@ socket.on('loginSuccess', (data) => {
         }
 
         const ADMIN_NAMES = ['yasin', 'maltoroz'];
+<<<<<<< HEAD
         const MOD_NAMES = ['elyesa'];
         const isUserAdmin = !!(data.isAdmin || data.role === 'admin' || (data.username && ADMIN_NAMES.includes(data.username.toLowerCase())));
         const isUserMod = !!(data.isMod || data.role === 'mod' || data.role === 'moderator' || (data.username && MOD_NAMES.includes(data.username.toLowerCase())));
@@ -86,6 +87,11 @@ socket.on('loginSuccess', (data) => {
                 adminBtn.style.background = 'linear-gradient(135deg, #0284c7, #0369a1)';
                 adminBtn.style.boxShadow = '0 4px 12px rgba(2,132,199,0.4)';
             }
+=======
+        if (data.isAdmin || (data.username && ADMIN_NAMES.includes(data.username.toLowerCase()))) {
+            const adminBtn = document.getElementById('adminPanelNavBtn');
+            if (adminBtn) adminBtn.style.display = 'flex';
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         }
 
         // Yeni Güncellemeler (Beta v1.3) Panelini Aç
@@ -336,6 +342,7 @@ const ROOM_TRANSITION_SPAWNS = {
     ganyan: { default: { x: 400, y: 410 } },
     dedenin_yeri: { default: { x: 400, y: 410 } },
     nargile_cafe: { default: { x: 400, y: 390 } },
+<<<<<<< HEAD
     market: { default: { x: 400, y: 420 } },
     sanalika_cadde: { default: { x: 750, y: 520 } },
     star_caddesi: {
@@ -356,6 +363,10 @@ const ROOM_TRANSITION_SPAWNS = {
 };
 let sanalikaCamera = { x: 0, y: 0 };
 window.sanalikaCamera = sanalikaCamera;
+=======
+    market: { default: { x: 400, y: 420 } }
+};
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 let roomTransitionCooldownUntil = 0;
 let roomTransitionFadeAlpha = 0;
 
@@ -380,6 +391,7 @@ function changeRoom(newRoom, targetSpawn) {
     }
     currentRoom = newRoom;
     roomTransitionFadeAlpha = 0.95; // Sinematik mekan geçiş kararması (Fade in)
+<<<<<<< HEAD
 
     // Dinamik Ekran Büyütme (Star Caddesi & Meydan v2: 1000 x 625, Diğerleri: 800 x 500)
     if (newRoom === 'star_caddesi' || newRoom === 'meydanv2') {
@@ -407,6 +419,9 @@ function changeRoom(newRoom, targetSpawn) {
         sanalikaCamera.x = 0;
         sanalikaCamera.y = 0;
     }
+=======
+    if (typeof bgCache !== 'undefined') bgCache.invalidate();
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     if (typeof handleRoomChangedVoice === 'function') {
         handleRoomChangedVoice(newRoom);
     }
@@ -464,7 +479,11 @@ function changeRoom(newRoom, targetSpawn) {
             myPet.isMoving = false;
         }
 
+<<<<<<< HEAD
         // Sevimli Patiler Yoldaş Peti Varsa Oyuncuyla Beraber Yeni Mekana Geçsin
+=======
+        // Sevimli Evcil Hayvan (Pet) Varsa Oyuncuyla Beraber Anında Yeni Mekana Geçsin
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         if (window.activeCompanionPets && window.activeCompanionPets[myId]) {
             let myCompPet = window.activeCompanionPets[myId];
             myCompPet.room = newRoom;
@@ -480,8 +499,11 @@ function changeRoom(newRoom, targetSpawn) {
         fishBtn.style.display = (newRoom === 'sahil') ? 'flex' : 'none';
     }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     updateSwanBoatButtonUI();
 
     const editBtn = document.getElementById('btnEditHouseFurniture');
@@ -1027,18 +1049,25 @@ function handleCanvasTapOrClick(clickX, clickY) {
     if (now - lastCanvasTapTime < 140) return;
     lastCanvasTapTime = now;
 
+<<<<<<< HEAD
     // Dünya koordinatlarına çevir (Eğer kamera aktifse)
     let camX = (currentRoom === 'sanalika_cadde' && window.sanalikaCamera) ? window.sanalikaCamera.x : 0;
     let camY = (currentRoom === 'sanalika_cadde' && window.sanalikaCamera) ? window.sanalikaCamera.y : 0;
     let worldX = clickX + camX;
     let worldY = clickY + camY;
 
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     // 1. ÖNCELİK: Başka bir oyuncunun üzerine tıklama kontrolü (Sosyal Etkileşim Menüsü)
     let clickedOtherPlayer = null;
     for (let id in players) {
         if (id === myId) continue;
         let p = players[id];
+<<<<<<< HEAD
         let dist = Math.hypot(worldX - p.x, worldY - p.y);
+=======
+        let dist = Math.hypot(clickX - p.x, clickY - p.y);
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         if (dist <= 26) {
             clickedOtherPlayer = { id, player: p };
             break;
@@ -1053,7 +1082,11 @@ function handleCanvasTapOrClick(clickX, clickY) {
 
     // 2. ÖNCELİK: Kendi üzerine tıklayarak oturuyorsa ayağa kalkma
     if (players[myId] && players[myId].action === 'sitting') {
+<<<<<<< HEAD
         let myDist = Math.hypot(worldX - players[myId].x, worldY - players[myId].y);
+=======
+        let myDist = Math.hypot(clickX - players[myId].x, clickY - players[myId].y);
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         if (myDist <= 28) {
             standUpIfSitting();
             return;
@@ -1062,7 +1095,11 @@ function handleCanvasTapOrClick(clickX, clickY) {
 
     // 3. Modüler Mekan Etkileşim Motoru (public/js/roomInteractions.js)
     if (typeof handleRoomInteractionClick === 'function') {
+<<<<<<< HEAD
         let handled = handleRoomInteractionClick(worldX, worldY, currentRoom, players[myId], (currentRoom === 'sanalika_cadde' ? 1600 : canvas.width), (currentRoom === 'sanalika_cadde' ? 960 : canvas.height));
+=======
+        let handled = handleRoomInteractionClick(clickX, clickY, currentRoom, players[myId], canvas.width, canvas.height);
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         if (handled) return;
     }
 
@@ -1089,6 +1126,7 @@ function handleCanvasTapOrClick(clickX, clickY) {
         if (players[myId].action === 'sitting') {
             standUpIfSitting();
         }
+<<<<<<< HEAD
         let targetX, targetY;
         if (currentRoom === 'sanalika_cadde') {
             targetX = Math.max(30, Math.min(1570, worldX));
@@ -1097,6 +1135,10 @@ function handleCanvasTapOrClick(clickX, clickY) {
             targetX = Math.max(16, Math.min(canvas.width - 16, clickX));
             targetY = Math.max(38, Math.min(canvas.height - 20, clickY));
         }
+=======
+        let targetX = Math.max(16, Math.min(canvas.width - 16, clickX));
+        let targetY = Math.max(38, Math.min(canvas.height - 20, clickY));
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
         targetWalkPos = { x: targetX, y: targetY };
         if (!tapRipples) tapRipples = [];
@@ -1355,6 +1397,7 @@ function gameLoop(timestamp) {
     let dt = lastGameLoopTime ? Math.min((now - lastGameLoopTime) / 1000, 0.1) : 0.016;
     lastGameLoopTime = now;
 
+<<<<<<< HEAD
     // Kamera Takibi ve Yumuşak Enterpolasyon (Lerp)
     if (currentRoom === 'sanalika_cadde' && players[myId]) {
         let p = players[myId];
@@ -1377,6 +1420,10 @@ function gameLoop(timestamp) {
         ctx.translate(-Math.round(sanalikaCamera.x), -Math.round(sanalikaCamera.y));
     }
 
+=======
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     // 1. Ortamı Çiz
     if (currentRoom === "kafe") {
         drawCafeEnvironment();
@@ -1394,12 +1441,15 @@ function gameLoop(timestamp) {
         if (typeof drawDedeninYeriEnvironment === 'function') drawDedeninYeriEnvironment();
     } else if (currentRoom === "emlakci") {
         if (typeof drawEmlakciEnvironment === 'function') drawEmlakciEnvironment();
+<<<<<<< HEAD
     } else if (currentRoom === "sanalika_cadde") {
         if (typeof drawSanalikaCaddeEnvironment === 'function') drawSanalikaCaddeEnvironment();
     } else if (currentRoom === "star_caddesi") {
         if (typeof drawStarCaddesiEnvironment === 'function') drawStarCaddesiEnvironment();
     } else if (currentRoom === "meydanv2") {
         if (typeof drawMeydanV2Environment === 'function') drawMeydanV2Environment();
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     } else if (currentRoom.startsWith("house_")) {
         if (typeof drawHouseEnvironment === 'function') drawHouseEnvironment();
     } else {
@@ -1603,12 +1653,19 @@ function gameLoop(timestamp) {
             }
         }
 
+<<<<<<< HEAD
         let minBoundX = (currentRoom === "sanalika_cadde") ? 30 : ((currentRoom === "sokak" || currentRoom === "cadde") ? 12 : 18);
         let maxBoundX = (currentRoom === "sanalika_cadde") ? 1570 : ((currentRoom === "sokak" || currentRoom === "sahil") ? canvas.width - 12 : canvas.width - 18);
         let minBoundY = (currentRoom === "sanalika_cadde") ? 45 : 38;
         let maxBoundY = (currentRoom === "sanalika_cadde") ? 920 : canvas.height - 20;
         p.x = Math.max(minBoundX, Math.min(maxBoundX, p.x));
         p.y = Math.max(minBoundY, Math.min(maxBoundY, p.y));
+=======
+        let minBoundX = (currentRoom === "sokak" || currentRoom === "cadde") ? 12 : 18;
+        let maxBoundX = (currentRoom === "sokak" || currentRoom === "sahil") ? canvas.width - 12 : canvas.width - 18;
+        p.x = Math.max(minBoundX, Math.min(maxBoundX, p.x));
+        p.y = Math.max(38, Math.min(canvas.height - 20, p.y));
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
         // Ağ Trafiği Throttling & Hassas Sayı Sıkıştırması (Bant Genişliği %40 Tasarruf)
         let posChanged = (Math.abs(p.x - lastEmittedX) > 0.3 || Math.abs(p.y - lastEmittedY) > 0.3);
@@ -1719,6 +1776,7 @@ function gameLoop(timestamp) {
         window.drawNargileScreenSmoke(ctx);
     }
 
+<<<<<<< HEAD
     // Kamera koordinat matrisini geri yükle
     if (isCamActive) {
         ctx.restore();
@@ -1751,6 +1809,8 @@ function gameLoop(timestamp) {
         ctx.restore();
     }
 
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     // 6. Sinematik Mekan Geçiş Kararması / Açılması (Fade Transition)
     if (roomTransitionFadeAlpha > 0) {
         ctx.save();

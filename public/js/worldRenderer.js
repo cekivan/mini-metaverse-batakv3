@@ -61,6 +61,7 @@ function renderStaticRoomTo(bctx, room, width, height) {
         renderStaticDedeninYeriTo(bctx, width, height);
     } else if (room === 'emlakci') {
         renderStaticEmlakciTo(bctx, width, height);
+<<<<<<< HEAD
     } else if (room === 'sanalika_cadde') {
         if (typeof renderStaticSanalikaCaddeTo === 'function') {
             renderStaticSanalikaCaddeTo(bctx, width, height);
@@ -73,6 +74,8 @@ function renderStaticRoomTo(bctx, room, width, height) {
         if (typeof renderStaticMeydanV2To === 'function') {
             renderStaticMeydanV2To(bctx, width, height);
         }
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     } else if (room.startsWith('house_')) {
         let type = room.replace('house_', '');
         if (typeof renderStaticHouseTo === 'function') {
@@ -1941,6 +1944,7 @@ function checkWorldCollision(x, y) {
     let pBottom = y + 7;
 
     // 1. Ekran / Dünya Dış Sınırları
+<<<<<<< HEAD
     if (currentRoom === "sanalika_cadde") {
         if (x < 25 || x > 1575 || y < 45 || y > 925) return true;
         // Kiralık binaların katı duvar sınırları
@@ -1968,6 +1972,8 @@ function checkWorldCollision(x, y) {
         return false;
     }
 
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     if (currentRoom === "sokak") {
         // Sol koridor (sahile geçiş) ve sağ koridor (caddeye geçiş) açık!
         if (x < 14 && !(y >= 180 && y <= 330)) return true;
@@ -2138,12 +2144,21 @@ function checkWorldCollision(x, y) {
             if (!isAtGanyanDoor && !isAtCasinoDoor) return true;
             if (y < 75) return true;
         }
+<<<<<<< HEAD
         // Alt Sağdaki Reklam Panosu (x: 470..730, y >= 345)
         if (x >= 465 && x <= 735 && y >= 345 && y <= 470) {
             return true;
         }
         // Pet Shop Kulübesi (x: 28..170, y: 340..455)
         if (x >= 28 && x <= 170 && y >= 340 && y <= 455) {
+=======
+        // Sol Alt Park Alanındaki Pet Shop Binası (Katı Engel: x: 30..170, y: 340..455)
+        if (x >= 28 && x <= 170 && y >= 340 && y <= 455) {
+            return true;
+        }
+        // Alt Sağdaki Reklam Panosu (x: 470..730, y >= 345)
+        if (x >= 465 && x <= 735 && y >= 345 && y <= 470) {
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             return true;
         }
         // Alt Park Alanındaki Süs Havuzu (Katı Engel: x: 185..255, y: 380..450)

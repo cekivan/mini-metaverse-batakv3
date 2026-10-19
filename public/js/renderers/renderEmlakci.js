@@ -1,6 +1,9 @@
 // public/js/renderers/renderEmlakci.js - Prestij Gayrimenkul Emlak Ofisi Çizim Modülü
 function renderStaticEmlakciTo(bctx, width, height) {
+<<<<<<< HEAD
     const housePrices = window.METAVERSE_PRICES.HOUSE_PRICES;
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     // 1. Zemin: Parlak İtalyan Mermer Karo (Kare Mermer & Altın Çıta)
     bctx.fillStyle = "#0f172a";
     bctx.fillRect(0, 0, width, height);
@@ -115,6 +118,7 @@ function renderStaticEmlakciTo(bctx, width, height) {
     // 5. ÜÇ ADET 3D MİMARİ EV MAKETİ (AYNI MARKETTEKİ PODYUMLAR GİBİ!)
     // =========================================================================
     // Podyum 1: 🏢 Standart Şehir Dairesi (Sol: x: 90, y: 215, w: 160, h: 140)
+<<<<<<< HEAD
     drawMaketPedestal(bctx, 90, 215, 160, 140, `🏢 Standart Daire (${housePrices.standart.toLocaleString('tr-TR')} TL)`, "#38bdf8");
     drawMiniApartmentBuilding(bctx, 170, 255);
 
@@ -124,6 +128,17 @@ function renderStaticEmlakciTo(bctx, width, height) {
 
     // Podyum 3: 🏰 Bahçeli & Havuzlu Villa (Sağ: x: 550, y: 215, w: 160, h: 140)
     drawMaketPedestal(bctx, 550, 215, 160, 140, `🏰 Havuzlu Villa (${housePrices.pool.toLocaleString('tr-TR')} TL)`, "#f59e0b");
+=======
+    drawMaketPedestal(bctx, 90, 215, 160, 140, "🏢 Standart Daire (1.250 TL)", "#38bdf8");
+    drawMiniApartmentBuilding(bctx, 170, 255);
+
+    // Podyum 2: 🏡 Verandalı Bahçeli Ev (Orta: x: 320, y: 215, w: 160, h: 140)
+    drawMaketPedestal(bctx, 320, 215, 160, 140, "🏡 Bahçeli Ev (2.500 TL)", "#22c55e");
+    drawMiniCountryHouse(bctx, 400, 255);
+
+    // Podyum 3: 🏰 Bahçeli & Havuzlu Villa (Sağ: x: 550, y: 215, w: 160, h: 140)
+    drawMaketPedestal(bctx, 550, 215, 160, 140, "🏰 Havuzlu Villa (3.750 TL)", "#f59e0b");
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     drawMiniLuxuryVilla(bctx, 630, 255);
 
     // 6. Sol Alt: Müşteri Bekleme & Dinlenme Köşesi (Deri Kanepe & Sehpa)

@@ -171,7 +171,11 @@ function spawnFatherPet(ownerId) {
 
     // Mekandakilere küçük sistem bildirimi
     if (ioRef) {
+<<<<<<< HEAD
         ioRef.to(room).emit('systemMessage', `✨ ${username} babayı tuttu! 🧔‍♂️`);
+=======
+        ioRef.to(room).emit('systemMessage', "✨ Bir oyuncu babayı tuttu!");
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         
         // Gökten inen mucizevi efekt bildirimi (Saf DTO)
         ioRef.to(room).emit('fatherMiracleSpawn', {

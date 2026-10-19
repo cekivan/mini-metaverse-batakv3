@@ -41,6 +41,7 @@ const ROOM_SPAWN_MAP = {
     },
     market: {
         default: { x: 400, y: 420 }
+<<<<<<< HEAD
     },
     sanalika_cadde: {
         default: { x: 750, y: 520 }
@@ -59,6 +60,8 @@ const ROOM_SPAWN_MAP = {
         market: { x: 880, y: 195 },
         housing_portal: { x: 180, y: 560 },
         default: { x: 500, y: 350 }
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     }
 };
 

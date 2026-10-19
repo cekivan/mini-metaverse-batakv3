@@ -47,9 +47,12 @@ function verifyPassword(password, storedHash, salt) {
 async function saveUserData(username, updateFields = null) {
     if (!username) return;
     const uKey = findUserKey(username) || username;
+<<<<<<< HEAD
     if (updateFields && persistentData.users[uKey]) {
         Object.assign(persistentData.users[uKey], updateFields);
     }
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     const dataToSave = updateFields || persistentData.users[uKey];
     if (!dataToSave) return;
 
@@ -67,11 +70,14 @@ async function saveUserData(username, updateFields = null) {
             console.error(`❌ [MONGODB HATA]: ${username} kullanıcısı kaydedilemedi:`, err.message);
         }
     }
+<<<<<<< HEAD
 
     // Yerel data.json yedeğini daima senkronize tut
     try {
         fs.writeFileSync(DATA_FILE, JSON.stringify(persistentData, null, 2), 'utf-8');
     } catch (_) {}
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 }
 
 async function savePersistentData(targetUsername = null) {
@@ -175,6 +181,7 @@ async function syncDataJsonToMongo() {
         for (const u of allUsers) {
             persistentData.users[u.username] = u;
         }
+<<<<<<< HEAD
 
         // Canlı moderatör rolü güvencesi (Elyesa)
         let elyesaKey = findUserKey('elyesa') || 'Elyesa';
@@ -183,6 +190,8 @@ async function syncDataJsonToMongo() {
             persistentData.users[elyesaKey].isMod = true;
             await User.updateOne({ username: /^elyesa$/i }, { $set: { role: 'mod', isMod: true } }).catch(() => {});
         }
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         console.log(`🍃 [MONGODB]: Canlı veriler MongoDB ile senkronize edildi (${allUsers.length} kullanıcı).`);
     } catch (err) {
         console.error('❌ [MONGODB]: Senkronizasyon hatası:', err.message);
@@ -194,13 +203,17 @@ loadPersistentData();
 
 // --- 3.1 ADMİN KULLANICILARI VE YETKİ KONTROLÜ ---
 const ADMIN_USERS = ['yasin', 'maltoroz'];
+<<<<<<< HEAD
 const MOD_USERS = ['elyesa'];
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
 function isUserAdmin(name) {
     if (!name || typeof name !== 'string') return false;
     return ADMIN_USERS.includes(name.toLowerCase().trim());
 }
 
+<<<<<<< HEAD
 function isUserMod(name) {
     if (!name || typeof name !== 'string') return false;
     let lower = name.toLowerCase().trim();
@@ -210,6 +223,8 @@ function isUserMod(name) {
     return !!(u && (u.role === 'mod' || u.role === 'moderator' || u.isMod === true));
 }
 
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 // --- 4. KULLANICI ARAMA & EV / ODA AYRIŞTIRICILARI ---
 function findUserKey(name) {
     if (!name || typeof name !== 'string') return null;
@@ -304,9 +319,12 @@ async function loginUser(rawName, password, playersOnline = {}) {
         if (isUserAdmin(existingKey)) {
             uData.role = 'admin';
             uData.isAdmin = true;
+<<<<<<< HEAD
         } else if (isUserMod(existingKey)) {
             uData.role = 'mod';
             uData.isMod = true;
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         }
         return {
             success: true,
@@ -322,9 +340,12 @@ async function loginUser(rawName, password, playersOnline = {}) {
     if (isUserAdmin(existingKey)) {
         uData.role = 'admin';
         uData.isAdmin = true;
+<<<<<<< HEAD
     } else if (isUserMod(existingKey)) {
         uData.role = 'mod';
         uData.isMod = true;
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     }
     persistentData.users[existingKey] = uData;
     await saveUserData(existingKey, uData);
@@ -377,9 +398,14 @@ async function registerUser(rawName, password, gender = 'male') {
         money: 1000,
         gender: gender || 'male',
         auth: { hash, salt },
+<<<<<<< HEAD
         role: isUserAdmin(cleanName) ? 'admin' : (isUserMod(cleanName) ? 'mod' : 'user'),
         isAdmin: isUserAdmin(cleanName),
         isMod: isUserMod(cleanName),
+=======
+        role: isUserAdmin(cleanName) ? 'admin' : 'user',
+        isAdmin: isUserAdmin(cleanName),
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         avatar: {
             model: 'classic',
             hat: isFem ? 'hair_long' : 'bere',
@@ -514,11 +540,19 @@ function getTodayDateString() {
 }
 
 const DEFAULT_DAILY_QUESTS_DEF = [
+<<<<<<< HEAD
     { id: 'okey101_play', title: '🀄 101 Okey Partisi', desc: "101 Okey masasında 1 el tamamla", target: 1, reward: config.DAILY_QUEST_REWARDS.okey101_play },
     { id: 'batak_play', title: '🃏 Koz Batak Ustası', desc: "Batak masasında 1 el tamamla", target: 1, reward: config.DAILY_QUEST_REWARDS.batak_play },
     { id: 'tavla_play', title: '🎲 Tavla Mücadelesi', desc: "Tavla masasında 1 oyun tamamla", target: 1, reward: config.DAILY_QUEST_REWARDS.tavla_play },
     { id: 'drink_tea', title: '☕ Tavşan Kanlı Çay', desc: "Kıraathane çay ocağından taze çay iç", target: 1, reward: config.DAILY_QUEST_REWARDS.drink_tea },
     { id: 'go_fishing', title: '🎣 Göl Kenarı Balıkçısı', desc: "Göl kenarında 1 kez olta atıp balık tut", target: 1, reward: config.DAILY_QUEST_REWARDS.go_fishing }
+=======
+    { id: 'okey101_play', title: '🀄 101 Okey Partisi', desc: "101 Okey masasında 1 el tamamla", target: 1, reward: 60 },
+    { id: 'batak_play', title: '🃏 Koz Batak Ustası', desc: "Batak masasında 1 el tamamla", target: 1, reward: 50 },
+    { id: 'tavla_play', title: '🎲 Tavla Mücadelesi', desc: "Tavla masasında 1 oyun tamamla", target: 1, reward: 40 },
+    { id: 'drink_tea', title: '☕ Tavşan Kanı Çay', desc: "Kıraathane çay ocağından taze çay iç", target: 1, reward: 20 },
+    { id: 'go_fishing', title: '🎣 Göl Kenarı Balıkçısı', desc: "Göl kenarında 1 kez olta atıp balık tut", target: 1, reward: 30 }
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 ];
 
 async function getUserDailyQuests(username) {
@@ -550,6 +584,7 @@ async function getUserDailyQuests(username) {
             }))
         };
         await saveUserData(uKey, { dailyQuests: uData.dailyQuests });
+<<<<<<< HEAD
     } else {
         let rewardsUpdated = false;
         for (const quest of uData.dailyQuests.quests) {
@@ -562,6 +597,8 @@ async function getUserDailyQuests(username) {
         if (rewardsUpdated) {
             await saveUserData(uKey, { dailyQuests: uData.dailyQuests });
         }
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     }
 
     return uData.dailyQuests.quests;
@@ -631,7 +668,11 @@ module.exports = {
     recordQuestProgress,
     claimQuestReward,
     isUserAdmin,
+<<<<<<< HEAD
     ADMIN_USERS,
     isUserMod,
     MOD_USERS
+=======
+    ADMIN_USERS
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 };

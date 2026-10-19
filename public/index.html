@@ -17,6 +17,7 @@
                 <span>🗺️ Mekanlar</span>
                 <span id="placesArrow" style="font-size: 10px; transition: transform 0.2s;">▼</span>
             </button>
+<<<<<<< HEAD
             <div id="placesDropdownMenu" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 250px; max-height: 80vh; overflow-y: auto; background: rgba(15, 23, 42, 0.98); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; padding: 6px; box-shadow: 0 20px 45px rgba(0,0,0,0.75); backdrop-filter: blur(16px); z-index: 10050; flex-direction: column; gap: 4px;">
                 <button type="button" class="place-menu-item" style="color: #38bdf8; font-weight: 800; border-left: 3px solid #38bdf8; background: rgba(56, 189, 248, 0.16);" onclick="selectPlace('meydanv2')">
                     <span>🏙️ Meydan v2 (1000x625)</span>
@@ -27,6 +28,9 @@
                     <span style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 6px; margin-left: auto;">TEST</span>
                 </button>
                 <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 3px 0;"></div>
+=======
+            <div id="placesDropdownMenu" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 220px; background: rgba(15, 23, 42, 0.96); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; padding: 6px; box-shadow: 0 20px 45px rgba(0,0,0,0.75); backdrop-filter: blur(16px); z-index: 10050; flex-direction: column; gap: 4px;">
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
                 <button type="button" class="place-menu-item" onclick="selectPlace('sokak')">🌳 Meydan (Merkez)</button>
                 <button type="button" class="place-menu-item" onclick="selectPlace('kafe')">☕ Kafe & Oyun Salonu</button>
                 <button type="button" class="place-menu-item" onclick="selectPlace('nargile_cafe')">💨 Nargile Cafe & 101</button>
@@ -322,11 +326,19 @@
 
     <!-- 3.1 ADMİN KONTROL PANELİ (SADECE YASİN KULLANICISI İÇİN) -->
     <div id="adminPanelModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 25000; justify-content: center; align-items: center; color: white;">
+<<<<<<< HEAD
         <div id="adminPanelModalBox" style="background: #0f172a; padding: 24px; border-radius: 18px; width: 94%; max-width: 720px; max-height: 88vh; overflow-y: auto; text-align: left; box-shadow: 0 15px 45px rgba(0,0,0,0.9); border: 2px solid #ef4444;">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px; margin-bottom:14px;">
                 <div>
                     <h2 id="adminPanelModalTitle" style="color: #ef4444; margin: 0; display:flex; align-items:center; gap:8px; font-size:22px;">👑 Admin Kontrol & Yönetim Paneli</h2>
                     <div id="adminPanelModalDesc" style="font-size: 13px; color: #94a3b8; margin-top: 4px;">Aktif oyuncuların canlı konumlarını gör, bakiye yönet ve sunucuya duyuru yayınla.</div>
+=======
+        <div style="background: #0f172a; padding: 24px; border-radius: 18px; width: 94%; max-width: 720px; max-height: 88vh; overflow-y: auto; text-align: left; box-shadow: 0 15px 45px rgba(0,0,0,0.9); border: 2px solid #ef4444;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px; margin-bottom:14px;">
+                <div>
+                    <h2 style="color: #ef4444; margin: 0; display:flex; align-items:center; gap:8px; font-size:22px;">👑 Admin Kontrol & Yönetim Paneli</h2>
+                    <div style="font-size: 13px; color: #94a3b8; margin-top: 4px;">Aktif oyuncuların canlı konumlarını gör, bakiye yönet ve sunucuya duyuru yayınla.</div>
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
                 </div>
                 <div style="display:flex; align-items:center; gap:8px;">
                     <button onclick="refreshAdminUsers()" style="background: rgba(56,189,248,0.2); border: 1px solid #38bdf8; color: #38bdf8; font-weight: bold; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer;">🔄 Yenile</button>
@@ -608,9 +620,15 @@
 
     <!-- 1. OYUNCU ETKİLEŞİM MODALI (Karaktere Tıklanınca Açılır) -->
     <div id="playerInteractionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 24000; justify-content: center; align-items: center; color: white;">
+<<<<<<< HEAD
         <div id="playerInteractionModalBox" style="background: #1e293b; padding: 22px; border-radius: 18px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 15px 45px rgba(0,0,0,0.9); border: 2px solid #38bdf8; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <h3 id="playerInteractionModalTitle" style="color: #38bdf8; margin: 0; font-size: 18px;">👤 Oyuncu Profili</h3>
+=======
+        <div style="background: #1e293b; padding: 22px; border-radius: 18px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 15px 45px rgba(0,0,0,0.9); border: 2px solid #38bdf8; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="color: #38bdf8; margin: 0; font-size: 18px;">👤 Oyuncu Profili</h3>
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
                 <button onclick="closePlayerInteractionModal()" style="background: rgba(255,255,255,0.1); border:none; color:white; font-size:16px; padding:4px 10px; border-radius:6px; cursor:pointer;">✕</button>
             </div>
             
@@ -714,7 +732,10 @@
                     <button type="button" class="online-filter-chip" data-room="cadde" onclick="setOnlineRoomFilter('cadde', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.7); color: #cbd5e1; white-space: nowrap;">🛣️ Cadde</button>
                     <button type="button" class="online-filter-chip" data-room="dedenin_yeri" onclick="setOnlineRoomFilter('dedenin_yeri', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.7); color: #cbd5e1; white-space: nowrap;">⚡ Casino</button>
                     <button type="button" class="online-filter-chip" data-room="emlakci" onclick="setOnlineRoomFilter('emlakci', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.7); color: #cbd5e1; white-space: nowrap;">🏢 Emlak</button>
+<<<<<<< HEAD
                     <button type="button" class="online-filter-chip" data-room="sanalika_cadde" onclick="setOnlineRoomFilter('sanalika_cadde', this)" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.7); color: #cbd5e1; white-space: nowrap;">🏙️ 1. Cadde</button>
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
                 </div>
             </div>
 
@@ -827,7 +848,11 @@
             <button onclick="closeMaketInspectModal()" style="position: absolute; top: 14px; right: 16px; background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer;">✕</button>
             <div id="maketModalEmoji" style="font-size: 56px; margin-bottom: 8px;">🏢</div>
             <h2 id="maketModalTitle" style="color: #38bdf8; margin: 0 0 6px 0; font-size: 22px; font-weight: 800;">Standart Şehir Dairesi</h2>
+<<<<<<< HEAD
             <div id="maketModalPrice" style="color: #facc15; font-size: 20px; font-weight: 800; margin-bottom: 12px;">Fiyat yükleniyor...</div>
+=======
+            <div id="maketModalPrice" style="color: #facc15; font-size: 20px; font-weight: 800; margin-bottom: 12px;">1.250 TL</div>
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             <p id="maketModalDesc" style="color: #cbd5e1; font-size: 13px; line-height: 1.5; margin-bottom: 18px;">Sıcak ve konforlu 1+1 şehir dairesi.</p>
             <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; margin-bottom: 20px; text-align: left; font-size: 12px; color: #94a3b8; display: flex; align-items: center; gap: 10px;">
                 <span style="font-size: 28px;">🤵</span>
@@ -847,7 +872,11 @@
             <div id="houseConfirmEmoji" style="font-size: 56px; margin-bottom: 6px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));">🏡</div>
             <h2 style="color: #f8fafc; margin: 0 0 6px 0; font-size: 20px; font-weight: 800;">Ev Satın Alma Onayı</h2>
             <div id="houseConfirmName" style="color: #38bdf8; font-size: 16px; font-weight: 800; margin-bottom: 4px;">Bahçeli & Havuzlu Villa</div>
+<<<<<<< HEAD
             <div id="houseConfirmPrice" style="color: #facc15; font-size: 22px; font-weight: 900; margin-bottom: 12px;">Fiyat yükleniyor...</div>
+=======
+            <div id="houseConfirmPrice" style="color: #facc15; font-size: 22px; font-weight: 900; margin-bottom: 12px;">3.750 TL</div>
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             
             <p style="color: #cbd5e1; font-size: 13.5px; line-height: 1.5; margin: 0 0 16px 0;">
                 Bu evi satın almak istediğinize emin misiniz? Satın aldığınızda mülk tapusu kalıcı olarak adınıza tescillenecektir.
@@ -2684,9 +2713,17 @@
         </div>
     </div>
 
+<<<<<<< HEAD
     <!-- PET SHOP MODAL -->
     <div id="petShopModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); z-index: 10080; justify-content: center; align-items: center;">
         <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.98)); border: 2px solid #fb923c; border-radius: 24px; width: 92%; max-width: 520px; padding: 24px 26px; box-shadow: 0 25px 60px rgba(251, 146, 60, 0.25); color: white; display: flex; flex-direction: column; gap: 16px;">
+=======
+    <!-- 17. PET SHOP MAĞAZASI PANELİ (KEDİ, KÖPEK, FARE) -->
+    <div id="petShopModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); z-index: 10080; justify-content: center; align-items: center;">
+        <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.98)); border: 2px solid #fb923c; border-radius: 24px; width: 92%; max-width: 520px; padding: 24px 26px; box-shadow: 0 25px 60px rgba(251, 146, 60, 0.25); color: white; display: flex; flex-direction: column; gap: 16px;">
+            
+            <!-- Başlık ve Kapat Butonu -->
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.12); padding-bottom: 12px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <span style="font-size: 28px;">🐾</span>
@@ -2695,12 +2732,20 @@
                         <div style="font-size: 12px; color: #94a3b8;">15 Dakika Boyunca Yanından Ayrılmayan Sadık Dostlar</div>
                     </div>
                 </div>
+<<<<<<< HEAD
                 <button type="button" onclick="closePetShopModal()" style="background: rgba(255,255,255,0.08); border: none; color: #cbd5e1; font-size: 18px; width: 34px; height: 34px; border-radius: 50%; cursor: pointer;">✕</button>
             </div>
+=======
+                <button type="button" onclick="closePetShopModal()" style="background: rgba(255,255,255,0.08); border: none; color: #cbd5e1; font-size: 18px; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;">✕</button>
+            </div>
+
+            <!-- Bakiye ve Bilgi Şeridi -->
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(251, 146, 60, 0.3); border-radius: 12px; padding: 10px 16px;">
                 <div style="font-size: 13px; color: #cbd5e1;">Mevcut Bakiyeniz:</div>
                 <div id="petShopUserMoney" style="font-size: 16px; font-weight: 900; color: #34d399;">0 TL</div>
             </div>
+<<<<<<< HEAD
             <div id="petShopActivePetNotice" style="display: none; font-size: 12px; color: #fde047; background: rgba(234, 179, 8, 0.12); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 10px; padding: 8px 12px;"></div>
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
                 <!-- Kedi -->
@@ -2757,6 +2802,66 @@
             <div style="display: flex; gap: 10px; margin-top: 4px;">
                 <button type="button" onclick="closeStarCaddeInspectModal()" style="flex: 1; padding: 10px; border: none; border-radius: 10px; background: linear-gradient(135deg, #0284c7, #0369a1); color: white; font-weight: 800; cursor: pointer;">Tamam</button>
             </div>
+=======
+
+            <div id="petShopActivePetNotice" style="display: none; font-size: 12px; color: #fde047; background: rgba(234, 179, 8, 0.12); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 10px; padding: 8px 12px; line-height: 1.4;"></div>
+
+            <!-- Pet Kartları (Kedi, Köpek, Fare) -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                
+                <!-- 1. KEDİ -->
+                <div style="background: rgba(30, 41, 59, 0.8); border: 1.5px solid rgba(249, 115, 22, 0.4); border-radius: 16px; padding: 14px 10px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; transition: transform 0.15s, border-color 0.15s;" onmouseover="this.style.borderColor='#f97316'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(249, 115, 22, 0.4)'; this.style.transform='none'">
+                    <div>
+                        <div style="font-size: 38px; line-height: 1.1; margin-bottom: 4px;">🐱</div>
+                        <div style="font-size: 15px; font-weight: 900; color: #fed7aa;">Sevimli Kedi</div>
+                        <div style="font-size: 11px; color: #94a3b8; margin: 4px 0 8px 0; line-height: 1.3;">Mırıldanır, miyavlar, peşinden koşturur.</div>
+                    </div>
+                    <div>
+                        <div style="background: rgba(249, 115, 22, 0.15); border-radius: 8px; padding: 4px; font-size: 13px; font-weight: 900; color: #fb923c; margin-bottom: 8px;">2.000 TL</div>
+                        <button type="button" onclick="requestBuyPet('cat')" style="width: 100%; padding: 8px 0; border: none; border-radius: 10px; background: linear-gradient(135deg, #f97316, #ea580c); color: white; font-weight: 800; font-size: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35);">
+                            Sahiplen 🐾
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. KÖPEK -->
+                <div style="background: rgba(30, 41, 59, 0.8); border: 1.5px solid rgba(234, 179, 8, 0.4); border-radius: 16px; padding: 14px 10px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; transition: transform 0.15s, border-color 0.15s;" onmouseover="this.style.borderColor='#eab308'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(234, 179, 8, 0.4)'; this.style.transform='none'">
+                    <div>
+                        <div style="font-size: 38px; line-height: 1.1; margin-bottom: 4px;">🐶</div>
+                        <div style="font-size: 15px; font-weight: 900; color: #fef08a;">Sadık Köpek</div>
+                        <div style="font-size: 11px; color: #94a3b8; margin: 4px 0 8px 0; line-height: 1.3;">Kuyruk sallar, neşeli havlar, korur.</div>
+                    </div>
+                    <div>
+                        <div style="background: rgba(234, 179, 8, 0.15); border-radius: 8px; padding: 4px; font-size: 13px; font-weight: 900; color: #facc15; margin-bottom: 8px;">3.000 TL</div>
+                        <button type="button" onclick="requestBuyPet('dog')" style="width: 100%; padding: 8px 0; border: none; border-radius: 10px; background: linear-gradient(135deg, #eab308, #ca8a04); color: #0f172a; font-weight: 900; font-size: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(234, 179, 8, 0.35);">
+                            Sahiplen 🐾
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. FARE -->
+                <div style="background: rgba(30, 41, 59, 0.8); border: 1.5px solid rgba(56, 189, 248, 0.4); border-radius: 16px; padding: 14px 10px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; transition: transform 0.15s, border-color 0.15s;" onmouseover="this.style.borderColor='#38bdf8'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(56, 189, 248, 0.4)'; this.style.transform='none'">
+                    <div>
+                        <div style="font-size: 38px; line-height: 1.1; margin-bottom: 4px;">🐭</div>
+                        <div style="font-size: 15px; font-weight: 900; color: #bae6fd;">Hızlı Fare</div>
+                        <div style="font-size: 11px; color: #94a3b8; margin: 4px 0 8px 0; line-height: 1.3;">Peynir arar, cikler, pıtır pıtır gezer.</div>
+                    </div>
+                    <div>
+                        <div style="background: rgba(56, 189, 248, 0.15); border-radius: 8px; padding: 4px; font-size: 13px; font-weight: 900; color: #38bdf8; margin-bottom: 8px;">1.500 TL</div>
+                        <button type="button" onclick="requestBuyPet('mouse')" style="width: 100%; padding: 8px 0; border: none; border-radius: 10px; background: linear-gradient(135deg, #0284c7, #0369a1); color: white; font-weight: 800; font-size: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.35);">
+                            Sahiplen 🐾
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bilgilendirme Notu -->
+            <div style="font-size: 11px; color: #64748b; text-align: center; line-height: 1.4;">
+                ⏱️ Satın alınan evcil hayvan tam <b>15 dakika</b> boyunca yanınızda gezer, tüm mekanlara sizinle gelir ve süresi bitince evine döner.
+            </div>
+
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         </div>
     </div>
 
@@ -2766,11 +2871,18 @@
         var socket = io();
         window.socket = socket;
     </script>
+<<<<<<< HEAD
     <script src="js/economyPrices.js?v=2"></script>
     <script src="js/audio.js?v=2"></script>
     <script src="js/authUI.js?v=2"></script>
     <script src="js/chatBubbles.js?v=3"></script>
     <script src="js/wardrobe.js?v=4"></script>
+=======
+    <script src="js/audio.js?v=2"></script>
+    <script src="js/authUI.js?v=2"></script>
+    <script src="js/chatBubbles.js?v=2"></script>
+    <script src="js/wardrobe.js?v=2"></script>
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     <script src="js/avatarRenderer.js?v=2"></script>
     <script src="js/worldRenderer.js?v=2"></script>
     <script src="js/renderers/renderSahil.js?v=1"></script>
@@ -2778,10 +2890,14 @@
     <script src="js/renderers/renderCasino.js?v=1"></script>
     <script src="js/renderers/renderNargile.js?v=1"></script>
     <script src="js/renderers/renderMarket.js?v=1"></script>
+<<<<<<< HEAD
     <script src="js/renderers/renderEmlakci.js?v=2"></script>
     <script src="js/renderers/renderSanalikaCadde.js?v=1"></script>
     <script src="js/renderers/renderStarCaddesi.js?v=1"></script>
     <script src="js/renderers/renderMeydanV2.js?v=1"></script>
+=======
+    <script src="js/renderers/renderEmlakci.js?v=1"></script>
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     <script src="js/seatRegistry.js?v=2"></script>
     <script src="js/roomInteractions.js?v=2"></script>
     <script src="js/tableLobbyUI.js?v=2"></script>
@@ -2792,7 +2908,11 @@
     <script src="js/social.js?v=2"></script>
     <script src="js/onlinePlayers.js?v=1"></script>
     <script src="js/furnitureDrawers.js?v=2"></script>
+<<<<<<< HEAD
     <script src="js/housing.js?v=4"></script>
+=======
+    <script src="js/housing.js?v=2"></script>
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     <script src="js/billboardAd.js?v=2"></script>
     <script src="js/cocktailBar.js?v=2"></script>
     <script src="js/main.js?v=2"></script>

@@ -44,6 +44,7 @@ function registerAuthHandlers(io, socket, players, helpers) {
             isFishing: false,
             hasSwanBoat: false,
             isAdmin: isAdmin,
+<<<<<<< HEAD
             isMod: (uData.role === 'mod' || uData.role === 'moderator' || uData.isMod === true || (username && username.toLowerCase() === 'elyesa')),
             role: isAdmin ? 'admin' : ((uData.role === 'mod' || uData.role === 'moderator' || uData.isMod === true || (username && username.toLowerCase() === 'elyesa')) ? 'mod' : 'user'),
             isMuted: !!(uData.muteExpiresAt && Date.now() < uData.muteExpiresAt)
@@ -52,6 +53,11 @@ function registerAuthHandlers(io, socket, players, helpers) {
         const isMod = players[socket.id].isMod;
         const userRole = players[socket.id].role;
 
+=======
+            isMuted: !!(uData.muteExpiresAt && Date.now() < uData.muteExpiresAt)
+        };
+
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         if (hasValidTea) {
             givePlayerTeaWithTimer(socket.id, username, uData.teaExpiresAt - Date.now());
         }
@@ -65,8 +71,11 @@ function registerAuthHandlers(io, socket, players, helpers) {
             propInventory: uData.propInventory || {},
             friendRequests: uData.friendRequests || [],
             isAdmin: isAdmin,
+<<<<<<< HEAD
             isMod: isMod,
             role: userRole,
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
             username: username,
             friends: dataManager.getFriendListData(username, players),
             houses: uData.houses || (uData.house ? { [uData.house.type]: uData.house } : {}),
@@ -86,7 +95,11 @@ function registerAuthHandlers(io, socket, players, helpers) {
         socket.to("sokak").emit('newPlayer', { id: socket.id, player: players[socket.id] });
         if (typeof broadcastOnlineCount === 'function') broadcastOnlineCount();
 
+<<<<<<< HEAD
         console.log(`${username} oyuna girdi! Bakiye: ${uData.money} TL (Admin: ${isAdmin}, Mod: ${isMod})`);
+=======
+        console.log(`${username} oyuna girdi! Bakiye: ${uData.money} TL (Admin: ${isAdmin})`);
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
         // Devam eden oyun kontrolü (Reconnect Teklifi)
         const activeGames = gameCoordinator.getActiveGames();

@@ -71,7 +71,11 @@ const helpers = {
 // Baba Peti (Denizden Babam Çıksa Yerim) Yöneticisini Başlat
 fatherPetManager.init(io, players, dataManager);
 
+<<<<<<< HEAD
 // Sevimli Patiler Pet Shop Yöneticisini Başlat
+=======
+// Sevimli Evcil Hayvan (Pet Shop) Yöneticisini Başlat
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 petManager.init(io, players, dataManager);
 
 // Altılı Ganyan Hipodrom Yarış Motorunu Başlat
@@ -113,7 +117,10 @@ connectToDatabase();
 io.on('connection', (socket) => {
     // 1. Modüler Handler'ları Kaydet
     registerAuthHandlers(io, socket, players, helpers);
+<<<<<<< HEAD
     registerPetShopHandlers(io, socket, players);
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
     registerSocialHandlers(io, socket, players, helpers);
     registerHousingHandlers(io, socket, players);
     registerEconomyHandlers(io, socket, players, helpers);
@@ -125,6 +132,10 @@ io.on('connection', (socket) => {
     registerSlotHandlers(io, socket, players);
     registerGanyanHandlers(io, socket, players);
     registerNargileLoungeHandlers(io, socket, players);
+<<<<<<< HEAD
+=======
+    registerPetShopHandlers(io, socket, players);
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
     // Çevrimiçi Oyuncu Sayısını Gönder
     socket.emit('onlineCountUpdate', Object.keys(players).filter(sid => players[sid] && players[sid].name).length);

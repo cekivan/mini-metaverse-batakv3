@@ -28,6 +28,7 @@ function openPlayerInteractionModal(targetId, targetPlayer) {
     const modal = document.getElementById('playerInteractionModal');
     if (!modal) return;
 
+<<<<<<< HEAD
     const titleEl = document.getElementById('playerInteractionModalTitle');
     const boxEl = document.getElementById('playerInteractionModalBox');
     const targetName = (targetPlayer.name || '').toLowerCase();
@@ -65,6 +66,15 @@ function openPlayerInteractionModal(targetId, targetPlayer) {
     const locEl = document.getElementById('interactionPlayerLocation');
     if (locEl) {
         let roomNames = { 'sokak': '🌳 Meydan', 'cadde': '🛣️ Cadde', 'dedenin_yeri': '⚡ Dedenin Yeri', 'emlakci': '🏢 Emlak Ofisi', 'kafe': '☕ Kafe', 'sahil': '🏖️ Sahil', 'nargile_cafe': '💨 Nargile Cafe', 'market': '🛒 Market', 'ganyan': '🏇 Ganyan Bayii', 'sanalika_cadde': '🏙️ 1. Cadde' };
+=======
+    // Oyuncu İsim & Durum
+    const nameEl = document.getElementById('interactionPlayerName');
+    if (nameEl) nameEl.innerText = targetPlayer.name;
+
+    const locEl = document.getElementById('interactionPlayerLocation');
+    if (locEl) {
+        let roomNames = { 'sokak': '🌳 Meydan', 'cadde': '🛣️ Cadde', 'dedenin_yeri': '⚡ Dedenin Yeri', 'emlakci': '🏢 Emlak Ofisi', 'kafe': '☕ Kafe', 'sahil': '🏖️ Sahil', 'nargile_cafe': '💨 Nargile Cafe', 'market': '🛒 Market', 'ganyan': '🏇 Ganyan Bayii' };
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         let rName = roomNames[targetPlayer.room] || targetPlayer.room;
         if (targetPlayer.room && targetPlayer.room.startsWith('house_')) {
             rName = `🏠 ${targetPlayer.room.replace('house_', '')}'in Evi`;
@@ -424,7 +434,11 @@ function renderFriendsListUI(friends) {
         return;
     }
 
+<<<<<<< HEAD
     let roomNames = { 'sokak': '🌳 Meydan', 'cadde': '🛣️ Cadde', 'dedenin_yeri': '⚡ Dedenin Yeri', 'emlakci': '🏢 Emlak Ofisi', 'kafe': '☕ Kafe', 'sahil': '🏖️ Sahil', 'nargile_cafe': '💨 Nargile Cafe', 'market': '🛒 Market', 'ganyan': '🏇 Ganyan Bayii', 'sanalika_cadde': '🏙️ 1. Cadde' };
+=======
+    let roomNames = { 'sokak': '🌳 Meydan', 'cadde': '🛣️ Cadde', 'dedenin_yeri': '⚡ Dedenin Yeri', 'emlakci': '🏢 Emlak Ofisi', 'kafe': '☕ Kafe', 'sahil': '🏖️ Sahil', 'nargile_cafe': '💨 Nargile Cafe', 'market': '🛒 Market', 'ganyan': '🏇 Ganyan Bayii' };
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
     list.forEach(f => {
         let uName = getFriendUsername(f);

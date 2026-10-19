@@ -9,12 +9,17 @@ console.log("=== TESTING CURLY BROWN HAIR & BLUE WORKER OVERALLS ===");
 // 1. Verify WARDROBE_ITEM_PRICES
 assert.strictEqual(config.WARDROBE_ITEM_PRICES['hats_hair_curly_brown'], 290, "hats_hair_curly_brown price must be 290");
 <<<<<<< HEAD
+<<<<<<< HEAD
 assert.strictEqual(config.WARDROBE_ITEM_PRICES['shirts_overalls_blue'], 560, "shirts_overalls_blue price must be 560");
 console.log("✅ Config prices verified: hats_hair_curly_brown (290 TL), shirts_overalls_blue (560 TL)");
 =======
 assert.strictEqual(config.WARDROBE_ITEM_PRICES['shirts_overalls_blue'], 280, "shirts_overalls_blue price must be 280");
 console.log("✅ Config prices verified: hats_hair_curly_brown (290 TL), shirts_overalls_blue (280 TL)");
 >>>>>>> 1970266af90dc7109f9dabca9189fef5685ad2db
+=======
+assert.strictEqual(config.WARDROBE_ITEM_PRICES['shirts_overalls_blue'], 280, "shirts_overalls_blue price must be 280");
+console.log("✅ Config prices verified: hats_hair_curly_brown (290 TL), shirts_overalls_blue (280 TL)");
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
 // 2. Verify wardrobe.js catalog
 const wardrobeCode = fs.readFileSync(path.join(__dirname, '../public/js/wardrobe.js'), 'utf8');

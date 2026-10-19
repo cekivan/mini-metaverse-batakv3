@@ -8,6 +8,7 @@ console.log('Testing Slot Machine Market and House Integration...');
 
 // 1. Config Test
 <<<<<<< HEAD
+<<<<<<< HEAD
 assert.strictEqual(config.FURNITURE_PRICES['slot_machine'], 5250, 'Slot machine price should be 5250 TL in config');
 assert.strictEqual(config.FURNITURE_PRICES['roulette_table'], 5950, 'VIP roulette table price should be 5950 TL in config');
 console.log('✔ config.FURNITURE_PRICES slot_machine and roulette_table prices verified.');
@@ -15,6 +16,10 @@ console.log('✔ config.FURNITURE_PRICES slot_machine and roulette_table prices 
 assert.strictEqual(config.FURNITURE_PRICES['slot_machine'], 750, 'Slot machine price should be 750 TL in config');
 console.log('✔ config.FURNITURE_PRICES slot_machine is 750 TL.');
 >>>>>>> 1970266af90dc7109f9dabca9189fef5685ad2db
+=======
+assert.strictEqual(config.FURNITURE_PRICES['slot_machine'], 750, 'Slot machine price should be 750 TL in config');
+console.log('✔ config.FURNITURE_PRICES slot_machine is 750 TL.');
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
 // 2. Client-side Housing Catalog & Drawers Test
 const housingJs = fs.readFileSync('public/js/housing.js', 'utf8');
@@ -95,6 +100,7 @@ mockSocket.handlers['slot_spin']({ betAmount: 100 });
 assert(emittedEvents.some(e => e.ev === 'slot_result'), 'Must emit slot_result');
 const spinRes = emittedEvents.find(e => e.ev === 'slot_result').data;
 <<<<<<< HEAD
+<<<<<<< HEAD
 assert.strictEqual(spinRes.commissionPaid, 5, '100 TL bet should pay 5 TL commission (5%)');
 assert.strictEqual(spinRes.houseOwner, 'EvSahibi', 'Commission must be credited to EvSahibi');
 assert.strictEqual(mockUsers['EvSahibi'].money, 1005, 'EvSahibi money should increase by 5 TL to 1005 TL');
@@ -103,19 +109,29 @@ assert.strictEqual(spinRes.commissionPaid, 1, '100 TL bet should pay 1 TL commis
 assert.strictEqual(spinRes.houseOwner, 'EvSahibi', 'Commission must be credited to EvSahibi');
 assert.strictEqual(mockUsers['EvSahibi'].money, 1001, 'EvSahibi money should increase by 1 TL to 1001 TL');
 >>>>>>> 1970266af90dc7109f9dabca9189fef5685ad2db
+=======
+assert.strictEqual(spinRes.commissionPaid, 1, '100 TL bet should pay 1 TL commission (1%)');
+assert.strictEqual(spinRes.houseOwner, 'EvSahibi', 'Commission must be credited to EvSahibi');
+assert.strictEqual(mockUsers['EvSahibi'].money, 1001, 'EvSahibi money should increase by 1 TL to 1001 TL');
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
 // Verify owner received online notifications
 assert(ioEmits.some(e => e.ev === 'moneyUpdate' && e.target === 'sock_owner'), 'Owner must receive moneyUpdate');
 assert(ioEmits.some(e => e.ev === 'systemMessage' && e.target === 'sock_owner'), 'Owner must receive systemMessage notification');
 <<<<<<< HEAD
+<<<<<<< HEAD
 console.log('✔ Slot 5% house commission calculated, credited, and notified successfully.');
 =======
 console.log('✔ Slot 1% house commission calculated, credited, and notified successfully.');
 >>>>>>> 1970266af90dc7109f9dabca9189fef5685ad2db
+=======
+console.log('✔ Slot 1% house commission calculated, credited, and notified successfully.');
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
 // Test Spin with 500 TL bet
 emittedEvents = [];
 ioEmits = [];
+<<<<<<< HEAD
 <<<<<<< HEAD
 mockSocket._rateLimits = {};
 mockSocket.handlers['slot_spin']({ betAmount: 500 });
@@ -124,11 +140,16 @@ assert.strictEqual(spinRes500.commissionPaid, 25, '500 TL bet should pay 25 TL c
 assert.strictEqual(mockUsers['EvSahibi'].money, 1030, 'EvSahibi money should increase by 25 TL to 1030 TL');
 console.log('✔ 500 TL bet awarded 25 TL commission.');
 =======
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 mockSocket.handlers['slot_spin']({ betAmount: 500 });
 const spinRes500 = emittedEvents.find(e => e.ev === 'slot_result').data;
 assert.strictEqual(spinRes500.commissionPaid, 5, '500 TL bet should pay 5 TL commission (1%)');
 assert.strictEqual(mockUsers['EvSahibi'].money, 1006, 'EvSahibi money should increase by 5 TL to 1006 TL');
 console.log('✔ 500 TL bet awarded 5 TL commission.');
+<<<<<<< HEAD
 >>>>>>> 1970266af90dc7109f9dabca9189fef5685ad2db
+=======
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 
 console.log('All Slot Machine Market & House tests passed successfully! 🎉');

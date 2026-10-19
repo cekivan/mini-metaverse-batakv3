@@ -79,6 +79,7 @@ function updateHouseEditButtonVisibility() {
 window.updateHouseEditButtonVisibility = updateHouseEditButtonVisibility;
 
 // --- 1. EMLAKÇI MODALI (Prestij Emlak - Satış Danışmanı Mert Bey) ---
+<<<<<<< HEAD
 const SHARED_PRICES = window.METAVERSE_PRICES;
 document.getElementById('maketModalPrice').innerText =
     `${SHARED_PRICES.HOUSE_PRICES.standart.toLocaleString('tr-TR')} TL`;
@@ -88,20 +89,34 @@ const HOUSE_INFO = {
     'standart': {
         name: 'Standart Şehir Dairesi',
         price: SHARED_PRICES.HOUSE_PRICES.standart,
+=======
+const HOUSE_INFO = {
+    'standart': {
+        name: 'Standart Şehir Dairesi',
+        price: 1375,
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         emoji: '🏢',
         color: '#38bdf8',
         desc: 'Sıcak ve konforlu 1+1 şehir dairesi. Ahşap parke zemin ve modern tavan aydınlatması.'
     },
     'garden': {
         name: 'Verandalı Bahçeli Ev',
+<<<<<<< HEAD
         price: SHARED_PRICES.HOUSE_PRICES.garden,
+=======
+        price: 2750,
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         emoji: '🏡',
         color: '#22c55e',
         desc: 'Doğayla iç içe müstakil yaşam! Geniş ahşap veranda, elma ağaçları ve yemyeşil bahçe manzarası.'
     },
     'pool': {
         name: 'Bahçeli & Havuzlu Villa',
+<<<<<<< HEAD
         price: SHARED_PRICES.HOUSE_PRICES.pool,
+=======
+        price: 4125,
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
         emoji: '🏰',
         color: '#f59e0b',
         desc: 'Lüksün zirvesi! Özel turkuaz yüzme havuzu, güneşlenme şezlongları ve mermer teras.'
@@ -328,6 +343,7 @@ window.closeMaketInspectModal = closeMaketInspectModal;
 
 // --- 2. MOBİLYA VE EV MARKETİ MODALI ---
 const FURNITURE_CATALOG = {
+<<<<<<< HEAD
     'bitki': { name: 'Dev Salon Deve Tabanı', price: SHARED_PRICES.FURNITURE_PRICES.bitki, emoji: '🪴', w: 48, h: 62, desc: 'Seramik saksıda dekoratif parlak yapraklı Monstera.' },
     'hali': { name: 'Anadolu Dokuma Halısı', price: SHARED_PRICES.FURNITURE_PRICES.hali, emoji: '🧶', w: 126, h: 76, desc: 'Saçaklı, çift bordürlü otantik el dokuma salon halısı.' },
     'sedir': { name: 'Otantik Şark Sediri', price: SHARED_PRICES.FURNITURE_PRICES.sedir, emoji: '🛋️', w: 94, h: 54, desc: 'Kadife minderli, altın püsküllü otantik şark sediri.' },
@@ -344,6 +360,24 @@ const FURNITURE_CATALOG = {
     'meyve_arabasi': { name: 'Limonata Standı', price: SHARED_PRICES.FURNITURE_PRICES.meyve_arabasi, emoji: '🍋', w: 78, h: 68, desc: 'Tentesi, taze sıkılmış limonata sürahisi, bardakları ve tekerlekleriyle seyyar Limonata Standı. Tıklayan misafirlere limonata satarak ev sahibine kazanç sağlar.' },
     'slot_machine': { name: 'Vegas Slot Makinesi', price: SHARED_PRICES.FURNITURE_PRICES.slot_machine, emoji: '🎰', w: 58, h: 74, desc: 'Evinize lüks bir Vegas Slot Makinesi kurun! Evinizi ziyaret eden misafirleriniz veya siz oynadıkça, her çevirmeden ev sahibine %5 komisyon kazandırır.' },
     'roulette_table': { name: 'VIP Rulet Masası', price: SHARED_PRICES.FURNITURE_PRICES.roulette_table, emoji: '🎡', w: 88, h: 64, desc: 'Evinize özel lüks Avrupa Rulet Masası! Tıklayarak arkadaşlarınızla veya tek başınıza rulet oynayabilirsiniz.' }
+=======
+    'bitki': { name: 'Dev Salon Deve Tabanı', price: 200, emoji: '🪴', w: 48, h: 62, desc: 'Seramik saksıda dekoratif parlak yapraklı Monstera.' },
+    'hali': { name: 'Anadolu Dokuma Halısı', price: 240, emoji: '🧶', w: 126, h: 76, desc: 'Saçaklı, çift bordürlü otantik el dokuma salon halısı.' },
+    'sedir': { name: 'Otantik Şark Sediri', price: 280, emoji: '🛋️', w: 94, h: 54, desc: 'Kadife minderli, altın püsküllü otantik şark sediri.' },
+    'kitaplik': { name: 'Masif Ahşap Kütüphane', price: 320, emoji: '📚', w: 74, h: 80, desc: 'Deri ciltli kitaplar ve antika küreli oymalı meşe kitaplık.' },
+    'berjer': { name: 'Lüks Deri Berjer', price: 360, emoji: '🪑', w: 56, h: 52, desc: 'Hakiki kapitone deri dikişli, konforlu berjer koltuk.' },
+    'yemek_masasi': { name: 'Masif Ahşap Yemek Masası', price: 400, emoji: '🪑', w: 92, h: 60, desc: 'Dantel runner örtülü, vazolu ve sandalyeli yemek masası.' },
+    'akvaryum': { name: 'Canlı Resif Akvaryumu', price: 440, emoji: '🐠', w: 76, h: 56, desc: 'İçinde balıkların yüzdüğü, aydınlatmalı lüks akvaryum.' },
+    'tv': { name: 'Smart Curved TV Konsolu', price: 480, emoji: '📺', w: 90, h: 62, desc: 'Kavisli plazma ekran ve şık lake TV ünitesi.' },
+    'gramofon': { name: 'Antika Pirinç Gramofon', price: 520, emoji: '🎺', w: 54, h: 54, desc: 'Ceviz sandıklı, döner plaklı nostaljik altın gramofon.' },
+    'somine': { name: 'Doğal Taş Şömine', price: 550, emoji: '🪵', w: 84, h: 70, desc: 'Doğal taş kemerli, çıtırdayan odunlu rustik şömine.' },
+    'bilgisayar': { name: 'RGB Oyuncu Battle Station', price: 570, emoji: '🖥️', w: 88, h: 64, desc: 'Çift kavisli monitör, RGB neon kasa ve profesyonel oyuncu koltuğu.' },
+    'arcade': { name: 'Retro Atari Oyun Kabini', price: 590, emoji: '🕹️', w: 56, h: 72, desc: 'Işıklı tabelalı, jetonlu klasik Space Invaders retro atari kabini.' },
+    'piyano': { name: 'Lüks Kuyruklu Konser Piyanosu', price: 600, emoji: '🎹', w: 96, h: 78, desc: 'Açık kapaklı, altın telli siyah lake konser piyanosu.' },
+    'meyve_arabasi': { name: 'Limonata Standı', price: 490, emoji: '🍋', w: 78, h: 68, desc: 'Tentesi, taze sıkılmış limonata sürahisi, bardakları ve tekerlekleriyle seyyar Limonata Standı. Tıklayan misafirlere limonata satarak ev sahibine kazanç sağlar.' },
+    'slot_machine': { name: 'Vegas Slot Makinesi', price: 750, emoji: '🎰', w: 58, h: 74, desc: 'Evinize lüks bir Vegas Slot Makinesi kurun! Evinizi ziyaret eden misafirleriniz veya siz oynadıkça, her çevirmeden ev sahibine %5 komisyon kazandırır.' },
+    'roulette_table': { name: 'VIP Rulet Masası', price: 850, emoji: '🎡', w: 88, h: 64, desc: 'Evinize özel lüks Avrupa Rulet Masası! Tıklayarak arkadaşlarınızla veya tek başınıza rulet oynayabilirsiniz.' }
+>>>>>>> 64a17288a360563a489a99fd0bb3bea7bb8cdf6b
 };
 window.FURNITURE_CATALOG = FURNITURE_CATALOG;
 
