@@ -14,8 +14,6 @@ module.exports = {
     BACKUP_FILE: path.resolve(__dirname, '../data.json.bak'),
     TEMP_FILE: path.resolve(__dirname, '../data.json.tmp'),
 
-    // Geriye Dönük Uyumluluk Şifresi (Eski hesaplar için yedek master şifre)
-    LEGACY_MASTER_PASS: "yasin54",
 
     // Başlangıç Masa Şablonları
     BASE_TABLE_CONFIGS: {
